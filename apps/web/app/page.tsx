@@ -4,13 +4,22 @@ export default function Home() {
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
       {/* Navigation */}
-      <Link
-        href="/about"
-        className="absolute top-8 right-8 md:top-12 md:right-16 font-mono text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors animate-fade-up z-10"
-        style={{ animationDelay: '0.5s' }}
-      >
-        About
-      </Link>
+      <nav className="absolute top-8 right-8 md:top-12 md:right-16 flex flex-col items-end gap-3 z-10">
+        <Link
+          href="/projects"
+          className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors animate-fade-up"
+          style={{ animationDelay: '0.5s' }}
+        >
+          Projects
+        </Link>
+        <Link
+          href="/about"
+          className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors animate-fade-up"
+          style={{ animationDelay: '0.6s' }}
+        >
+          About
+        </Link>
+      </nav>
 
       {/* Noise texture overlay */}
       <div
