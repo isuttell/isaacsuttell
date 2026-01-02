@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@isaacsuttell/ui": "workspace:*",
+    "@vercel/analytics": "^1.6.1",
     "convex": "^1.31.2",
     "next": "16.1.1",
     "react": "19.2.3",

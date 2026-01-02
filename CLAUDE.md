@@ -14,8 +14,7 @@ bun run typecheck      # Type check all packages
 ### Convex commands (run from root)
 
 ```bash
-bun run convex:dev     # Dev sync
-bun run convex:deploy  # Deploy to production
+bun convex dev --once  # Dev sync
 ```
 
 ### Package-specific commands
@@ -30,6 +29,7 @@ bun run build --filter=web
 **Stack**: Next.js 16 (App Router) + Convex + Tailwind CSS 4 + TypeScript
 
 **Monorepo Structure**:
+
 ```
 ├── apps/
 │   └── web/                  # Next.js frontend
@@ -51,11 +51,13 @@ bun run build --filter=web
 **Hosting**: Vercel (frontend) + Convex Cloud (backend)
 
 **Git Workflow**:
+
 - All changes via pull requests
 - Merges to `main` auto-deploy to production
 - PRs get preview deployments
 
 **Vercel Configuration** (vercel.json at root):
+
 - Build command deploys Convex first, then builds Next.js
 - `NEXT_PUBLIC_CONVEX_URL` injected automatically during deploy
 
@@ -68,6 +70,7 @@ bun run build --filter=web
 ## Convex Patterns
 
 Backend functions live in `packages/backend/convex/`. Use:
+
 - `query` for reads
 - `mutation` for writes
 - `action` for external API calls only
@@ -77,6 +80,7 @@ Backend functions live in `packages/backend/convex/`. Use:
 ### Folder Structure
 
 Organize by resource: `convex/users/`, `convex/videos/`, etc.
+
 - Put business logic in `convex/model/` with public functions as thin wrappers
 - Separate validators into dedicated files
 
@@ -95,19 +99,23 @@ Organize by resource: `convex/users/`, `convex/videos/`, etc.
 ## Best Practices
 
 **Server vs Client Components**:
+
 - Default to Server Components (no 'use client' directive)
 - Add 'use client' only for: interactivity, hooks, browser APIs
 - Keep client components small; push state down
 
 **Data Fetching**:
+
 - Use Convex `useQuery` for reactive data
 - All external API calls through Convex actions
 
 **State Management**:
+
 - Convex is your state manager - no need for Redux/Zustand
 - Use `useState` only for ephemeral UI state
 - Never duplicate Convex data in local state
 
 **Shared Packages**:
+
 - UI components: `@isaacsuttell/ui`
 - Configs: `@isaacsuttell/config`
