@@ -1,21 +1,21 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Cormorant_Garamond, Geist_Mono } from 'next/font/google';
+import './globals.css';
 
 const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["300", "400", "600", "700"],
+  variable: '--font-cormorant',
+  subsets: ['latin'],
+  weight: ['300', '400', '600', '700'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Isaac Suttell",
-  description: "Personal website of Isaac Suttell",
+  title: 'Isaac Suttell',
+  description: 'Personal website of Isaac Suttell',
 };
 
 export default function RootLayout({
@@ -25,9 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${cormorant.variable} ${geistMono.variable} antialiased`}>
-        {children}
-      </body>
+      <body className={`${cormorant.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   );
 }
