@@ -1,0 +1,11 @@
+{
+  "name": "@isaacsuttell/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/nextjs": "./tsconfig/nextjs.json",
+    "./eslint": "./eslint/base.js"
+  }
+}
