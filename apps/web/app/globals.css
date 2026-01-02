@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@source "../../../packages/ui/src";
 
 :root {
   --background: #0c0c0c;
@@ -39,4 +40,32 @@ body {
 .animate-fade-up {
   animation: fade-up 0.8s ease-out forwards;
   opacity: 0;
+}
+
+@keyframes lightbox-bg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lightbox-image {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-lightbox-bg {
+  animation: lightbox-bg 0.2s ease-out forwards;
+}
+
+.animate-lightbox-image {
+  animation: lightbox-image 0.3s ease-out forwards;
 }

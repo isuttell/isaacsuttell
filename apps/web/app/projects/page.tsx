@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Projects | Isaac Suttell',
@@ -66,15 +67,26 @@ export default function Projects() {
               Experiments in real-time graphics and physics simulations.
             </p>
 
-            <ul className="mt-8 space-y-8">
+            <ul className="mt-8 space-y-12">
               <li>
                 <a
                   href="https://blackhole.zaks.io/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-sm text-accent hover:text-foreground transition-colors"
+                  className="group block"
                 >
-                  Blackhole Visualizer →
+                  <div className="relative aspect-[16/9] w-full max-w-md mb-4 overflow-hidden bg-[#141414]">
+                    <Image
+                      src="/blackhole-simulation.webp"
+                      alt="Blackhole Visualizer"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <span className="font-mono text-sm text-accent group-hover:text-foreground transition-colors">
+                    Blackhole Visualizer →
+                  </span>
                 </a>
                 <p className="mt-2 font-serif text-foreground/90 leading-relaxed">
                   Real-time ray marching through curved spacetime using Schwarzschild geodesics.
@@ -92,9 +104,20 @@ export default function Projects() {
                   href="https://blackhole-audio-visualizer.vercel.app/app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-mono text-sm text-accent hover:text-foreground transition-colors"
+                  className="group block"
                 >
-                  Audio Visualizer →
+                  <div className="relative aspect-[16/9] w-full max-w-md mb-4 overflow-hidden bg-[#141414]">
+                    <Image
+                      src="/blackhole-audio-visualizer.webp"
+                      alt="Audio Visualizer"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <span className="font-mono text-sm text-accent group-hover:text-foreground transition-colors">
+                    Audio Visualizer →
+                  </span>
                 </a>
                 <p className="mt-2 font-serif text-foreground/90 leading-relaxed">
                   Three black holes orbit each other while a particle system emits to the beat of
@@ -103,6 +126,58 @@ export default function Projects() {
                 </p>
                 <p className="mt-2 font-serif text-foreground/60 text-sm">
                   Three.js · Preset systems · Randomizer mode · AI agent for scene generation
+                </p>
+              </li>
+            </ul>
+          </section>
+
+          {/* Photography */}
+          <section className="animate-fade-up" style={{ animationDelay: '0.4s' }}>
+            <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted">
+              Photography
+            </span>
+            <p className="mt-4 font-serif text-foreground/70 leading-relaxed">
+              Portrait, fashion, and astrophotography work.
+            </p>
+
+            <ul className="mt-8 space-y-12">
+              <li>
+                <Link href="/photography/fashion" className="group block">
+                  <div className="relative aspect-[3/4] w-full max-w-[200px] mb-4 overflow-hidden bg-[#141414]">
+                    <Image
+                      src="/photography/fashion/fashion-007.jpg"
+                      alt="Fashion Photography"
+                      fill
+                      sizes="200px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <span className="font-mono text-sm text-accent group-hover:text-foreground transition-colors">
+                    Fashion Photography →
+                  </span>
+                </Link>
+                <p className="mt-2 font-serif text-foreground/90 leading-relaxed">
+                  Portrait and fashion work from my photography years, 2008–2012.
+                </p>
+              </li>
+
+              <li>
+                <Link href="/photography/astro" className="group block">
+                  <div className="relative aspect-[3/4] w-full max-w-[200px] mb-4 overflow-hidden bg-[#141414]">
+                    <Image
+                      src="/photography/astro/2020-11-28-NGC2244_p.jpg"
+                      alt="Astrophotography"
+                      fill
+                      sizes="200px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                  <span className="font-mono text-sm text-accent group-hover:text-foreground transition-colors">
+                    Astrophotography →
+                  </span>
+                </Link>
+                <p className="mt-2 font-serif text-foreground/90 leading-relaxed">
+                  Deep-sky imaging of galaxies, nebulae, and star clusters.
                 </p>
               </li>
             </ul>
