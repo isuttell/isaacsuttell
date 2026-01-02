@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "convex": "^1.31.2",
+    "next": "16.1.1",
     "turbo": "^2"
   },
   "trustedDependencies": [
