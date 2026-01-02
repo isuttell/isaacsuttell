@@ -3,24 +3,6 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
-      {/* Navigation */}
-      <nav className="absolute top-8 right-8 md:top-12 md:right-16 flex flex-col items-end gap-3 z-10">
-        <Link
-          href="/projects"
-          className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors animate-fade-up"
-          style={{ animationDelay: '0.5s' }}
-        >
-          Projects
-        </Link>
-        <Link
-          href="/about"
-          className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors animate-fade-up"
-          style={{ animationDelay: '0.6s' }}
-        >
-          About
-        </Link>
-      </nav>
-
       {/* Noise texture overlay */}
       <div
         className="pointer-events-none fixed inset-0 opacity-[0.03]"
@@ -29,50 +11,65 @@ export default function Home() {
         }}
       />
 
-      {/* Decorative diagonal line */}
-      <div
-        className="absolute top-0 right-[20%] w-px h-[40vh] bg-linear-to-b from-transparent via-muted to-transparent animate-fade-up"
-        style={{ animationDelay: '0.6s' }}
-      />
-
       {/* Main content */}
-      <main className="relative flex min-h-screen flex-col justify-center px-8 md:px-16 lg:px-24">
+      <main className="relative flex min-h-screen flex-col justify-center px-6 md:px-12 lg:px-20">
         {/* Name - asymmetrical layout */}
         <div className="select-none">
-          <h1 className="font-serif tracking-tight">
-            <span className="block text-[15vw] md:text-[12vw] lg:text-[10vw] font-light leading-[0.85] text-foreground animate-fade-up">
+          <h1 className="font-sans tracking-tighter">
+            <span className="block text-[18vw] md:text-[15vw] lg:text-[12vw] font-extrabold leading-[0.85] text-foreground animate-fade-up">
               ISAAC
             </span>
             <span
-              className="block text-[15vw] md:text-[12vw] lg:text-[10vw] font-light leading-[0.85] text-foreground ml-[15vw] md:ml-[20vw] animate-fade-up"
-              style={{ animationDelay: '0.15s' }}
+              className="block text-[18vw] md:text-[15vw] lg:text-[12vw] font-extrabold leading-[0.85] text-foreground ml-[12vw] md:ml-[18vw] animate-fade-up"
+              style={{ animationDelay: '0.1s' }}
             >
               SUTTELL
             </span>
           </h1>
         </div>
 
-        {/* Accent line */}
+        {/* Lime accent line */}
         <div
-          className="mt-12 ml-[15vw] md:ml-[20vw] h-px w-24 bg-accent animate-fade-up"
-          style={{ animationDelay: '0.3s' }}
+          className="mt-8 ml-[12vw] md:ml-[18vw] h-[2px] w-16 bg-lime animate-fade-up"
+          style={{ animationDelay: '0.2s' }}
         />
 
-        {/* Subtle tagline */}
+        {/* Tagline */}
         <p
-          className="mt-8 ml-[15vw] md:ml-[20vw] font-mono text-xs tracking-[0.3em] uppercase text-muted animate-fade-up"
-          style={{ animationDelay: '0.45s' }}
+          className="mt-6 ml-[12vw] md:ml-[18vw] font-mono text-sm tracking-[0.2em] uppercase text-muted animate-fade-up"
+          style={{ animationDelay: '0.3s' }}
         >
           Design & Engineering
         </p>
       </main>
 
-      {/* Bottom decorative element */}
-      <div
-        className="absolute bottom-8 left-8 font-mono text-[10px] tracking-widest text-muted animate-fade-up"
-        style={{ animationDelay: '0.7s' }}
+      {/* Bottom-left navigation cluster */}
+      <nav
+        className="absolute bottom-8 left-6 md:bottom-12 md:left-12 lg:left-20 flex flex-col gap-3 animate-fade-up"
+        style={{ animationDelay: '0.4s' }}
       >
-        <span className="opacity-50">2025</span>
+        <Link
+          href="/projects"
+          className="group flex items-center gap-2 font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-foreground transition-colors glow-lime"
+        >
+          <span className="w-2 h-2 rounded-full bg-lime opacity-0 group-hover:opacity-100 transition-opacity" />
+          Projects
+        </Link>
+        <Link
+          href="/about"
+          className="group flex items-center gap-2 font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-foreground transition-colors glow-lime"
+        >
+          <span className="w-2 h-2 rounded-full bg-lime opacity-0 group-hover:opacity-100 transition-opacity" />
+          About
+        </Link>
+      </nav>
+
+      {/* Year indicator */}
+      <div
+        className="absolute bottom-8 right-6 md:bottom-12 md:right-12 font-mono text-xs tracking-widest text-muted/50 animate-fade-up"
+        style={{ animationDelay: '0.5s' }}
+      >
+        2025
       </div>
     </div>
   );

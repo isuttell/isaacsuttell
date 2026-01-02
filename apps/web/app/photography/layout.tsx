@@ -12,16 +12,10 @@ export default function PhotographyLayout({ children }: { children: ReactNode })
         }}
       />
 
-      {/* Decorative diagonal line */}
-      <div
-        className="absolute top-0 right-[15%] w-px h-[60vh] bg-linear-to-b from-transparent via-muted/50 to-transparent animate-fade-up"
-        style={{ animationDelay: '0.8s' }}
-      />
-
       {/* Back link */}
       <Link
         href="/projects"
-        className="absolute top-8 left-8 md:top-12 md:left-16 font-mono text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors animate-fade-up z-10"
+        className="fixed top-6 left-6 md:top-10 md:left-12 font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-foreground transition-colors z-20 animate-fade-up glow-lime"
         style={{ animationDelay: '0.1s' }}
       >
         ← Projects
@@ -29,12 +23,12 @@ export default function PhotographyLayout({ children }: { children: ReactNode })
 
       {children}
 
-      {/* Bottom decorative element */}
+      {/* Year indicator */}
       <div
-        className="absolute bottom-8 left-8 font-mono text-[10px] tracking-widest text-muted animate-fade-up"
+        className="fixed bottom-6 left-6 md:bottom-10 md:left-12 font-mono text-xs tracking-widest text-muted/50 animate-fade-up"
         style={{ animationDelay: '0.5s' }}
       >
-        <span className="opacity-50">2025</span>
+        2025
       </div>
     </div>
   );

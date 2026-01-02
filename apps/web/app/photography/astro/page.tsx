@@ -9,22 +9,22 @@ export const metadata: Metadata = {
 
 export default function AstroGallery() {
   return (
-    <main className="relative min-h-screen px-8 md:px-16 lg:px-24 py-24 md:py-32">
-      <header className="mb-16 md:mb-24 select-none">
-        <h1 className="font-serif tracking-tight">
-          <span className="block text-[12vw] md:text-[9vw] lg:text-[7vw] font-light leading-[0.85] text-foreground animate-fade-up">
+    <main className="relative min-h-screen px-6 md:px-12 lg:px-20 pt-24 md:pt-28 pb-24">
+      <header className="mb-12 md:mb-16 select-none">
+        <h1 className="font-sans tracking-tighter">
+          <span className="block text-[14vw] md:text-[10vw] lg:text-[8vw] font-extrabold leading-[0.85] text-foreground animate-fade-up">
             ASTRO
           </span>
         </h1>
 
         <div
-          className="mt-8 h-px w-16 bg-accent animate-fade-up"
-          style={{ animationDelay: '0.15s' }}
+          className="mt-6 h-[2px] w-12 bg-lime animate-fade-up"
+          style={{ animationDelay: '0.1s' }}
         />
 
         <p
-          className="mt-8 max-w-lg font-serif text-foreground/70 leading-relaxed animate-fade-up"
-          style={{ animationDelay: '0.2s' }}
+          className="mt-6 max-w-lg font-sans text-foreground/70 leading-relaxed animate-fade-up"
+          style={{ animationDelay: '0.15s' }}
         >
           Deep-sky imaging from 2020–2021. Galaxies, nebulae, and star clusters captured from
           light-polluted San Diego skies with an 8&quot; Newtonian reflector.
@@ -34,8 +34,8 @@ export default function AstroGallery() {
           href="https://app.astrobin.com/u/ZakAstro#gallery"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block mt-6 font-mono text-xs tracking-[0.15em] uppercase text-accent hover:text-foreground transition-colors animate-fade-up"
-          style={{ animationDelay: '0.25s' }}
+          className="inline-block mt-4 font-mono text-sm tracking-[0.15em] uppercase text-lime hover:text-sky transition-colors animate-fade-up glow-lime"
+          style={{ animationDelay: '0.2s' }}
         >
           View full resolution on Astrobin →
         </a>

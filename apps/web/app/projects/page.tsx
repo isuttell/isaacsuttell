@@ -7,6 +7,48 @@ export const metadata: Metadata = {
   description: 'Side projects and experiments in WebGL, simulations, and creative coding.',
 };
 
+const projects = [
+  {
+    id: 'blackhole',
+    title: 'Gravitational Lensing',
+    href: 'https://blackhole.zaks.io/',
+    external: true,
+    image: '/blackhole-simulation.webp',
+    description:
+      'Real-time ray marching through curved spacetime using Schwarzschild geodesics. Light paths computed per-pixel to simulate gravitational lensing, the photon sphere, and relativistic Doppler effects. Includes a voice agent that can answer questions and control the simulation—navigating to different views, toggling overlays, and explaining the physics.',
+    tech: 'WebGL2 · GLSL · Voice AI Agent',
+  },
+  {
+    id: 'audio-viz',
+    title: 'Audio Visualizer',
+    href: 'https://blackhole-audio-visualizer.vercel.app/app',
+    external: true,
+    image: '/blackhole-audio-visualizer.webp',
+    description:
+      'Three black holes orbit each other while a particle system emits to the beat of music frequencies. Particles fall into the black holes according to orbital dynamics.',
+    tech: 'Three.js · Preset systems · AI agent for scene generation',
+  },
+];
+
+const photography = [
+  {
+    id: 'astro',
+    title: 'Astrophotography',
+    href: '/photography/astro',
+    image: '/photography/astro/2020-11-28-NGC2244_p.jpg',
+    description: 'Deep-sky imaging of galaxies, nebulae, and star clusters.',
+    tech: 'Sky-Watcher Evostar 120ED DS-PRO APO · ZWO ASI 1600MM',
+  },
+  {
+    id: 'fashion',
+    title: 'Fashion Photography',
+    href: '/photography/fashion',
+    image: '/photography/fashion/fashion-007.jpg',
+    description: 'Portrait and fashion work from my photography years, 2008–2012.',
+    tech: 'Canon 1Ds Mark III',
+  },
+];
+
 export default function Projects() {
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
@@ -18,179 +60,227 @@ export default function Projects() {
         }}
       />
 
-      {/* Decorative diagonal line */}
-      <div
-        className="absolute top-0 right-[15%] w-px h-[60vh] bg-linear-to-b from-transparent via-muted/50 to-transparent animate-fade-up"
-        style={{ animationDelay: '0.8s' }}
-      />
-
       {/* Back link */}
       <Link
         href="/"
-        className="absolute top-8 left-8 md:top-12 md:left-16 font-mono text-[10px] tracking-[0.3em] uppercase text-muted hover:text-foreground transition-colors animate-fade-up z-10"
+        className="fixed top-6 left-6 md:top-10 md:left-12 font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-foreground transition-colors z-20 animate-fade-up glow-lime"
         style={{ animationDelay: '0.1s' }}
       >
         ← Home
       </Link>
 
       {/* Main content */}
-      <main className="relative min-h-screen px-8 md:px-16 lg:px-24 py-24 md:py-32">
+      <main className="relative min-h-screen px-6 md:px-12 lg:px-20 pt-24 md:pt-28 pb-24">
         {/* Header */}
-        <header className="mb-16 md:mb-24 select-none">
-          <h1 className="font-serif tracking-tight">
-            <span className="block text-[12vw] md:text-[9vw] lg:text-[7vw] font-light leading-[0.85] text-foreground animate-fade-up">
+        <header className="mb-16 md:mb-20 select-none">
+          <h1 className="font-sans tracking-tighter">
+            <span className="block text-[14vw] md:text-[10vw] lg:text-[8vw] font-extrabold leading-[0.85] text-foreground animate-fade-up">
               SIDE
             </span>
             <span
-              className="block text-[12vw] md:text-[9vw] lg:text-[7vw] font-light leading-[0.85] text-foreground ml-[12vw] md:ml-[15vw] animate-fade-up"
-              style={{ animationDelay: '0.15s' }}
+              className="block text-[14vw] md:text-[10vw] lg:text-[8vw] font-extrabold leading-[0.85] text-foreground ml-[10vw] md:ml-[12vw] animate-fade-up"
+              style={{ animationDelay: '0.1s' }}
             >
               PROJECTS
             </span>
           </h1>
 
-          {/* Accent line */}
+          {/* Lime accent line */}
           <div
-            className="mt-8 ml-[12vw] md:ml-[15vw] h-px w-16 bg-accent animate-fade-up"
-            style={{ animationDelay: '0.25s' }}
+            className="mt-6 ml-[10vw] md:ml-[12vw] h-[2px] w-12 bg-lime animate-fade-up"
+            style={{ animationDelay: '0.15s' }}
           />
         </header>
 
-        {/* Project sections */}
-        <div className="ml-[12vw] md:ml-[15vw] max-w-2xl space-y-14">
-          {/* WebGL / Simulations */}
-          <section className="animate-fade-up" style={{ animationDelay: '0.3s' }}>
-            <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted">
+        {/* WebGL / Simulations Section */}
+        <section className="mb-20 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+          <div className="flex items-center gap-3 mb-8">
+            <span className="font-mono text-xs tracking-[0.2em] uppercase text-lime">
               WebGL / Simulations
             </span>
-            <p className="mt-4 font-serif text-foreground/70 leading-relaxed">
-              Experiments in real-time graphics and physics simulations.
-            </p>
+            <div className="flex-1 h-px bg-lime/20" />
+          </div>
 
-            <ul className="mt-8 space-y-12">
-              <li>
+          <div className="space-y-10 md:space-y-12">
+            {projects.map((project) => (
+              <div key={project.id} className="group">
+                {/* Mobile: Full-width cinematic image */}
                 <a
-                  href="https://blackhole.zaks.io/"
+                  href={project.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group block"
+                  className="relative block md:hidden aspect-video w-full overflow-hidden bg-[#141414] border border-muted/20 group-hover:border-lime/50 transition-colors"
                 >
-                  <div className="relative aspect-[16/9] w-full max-w-md mb-4 overflow-hidden bg-[#141414]">
-                    <Image
-                      src="/blackhole-simulation.webp"
-                      alt="Blackhole Visualizer"
-                      fill
-                      sizes="(max-width: 768px) 100vw, 400px"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <span className="font-mono text-sm text-accent group-hover:text-foreground transition-colors">
-                    Blackhole Visualizer →
-                  </span>
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 120px"
+                    className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-background/60 via-transparent to-transparent" />
                 </a>
-                <p className="mt-2 font-serif text-foreground/90 leading-relaxed">
-                  Real-time ray marching through curved spacetime using Schwarzschild geodesics.
-                  Light paths computed per-pixel to simulate gravitational lensing, the photon
-                  sphere, and relativistic Doppler effects.
-                </p>
-                <p className="mt-2 font-serif text-foreground/60 text-sm">
-                  WebGL2 · Cinematic camera presets · Interactive overlays for ISCO and photon
-                  sphere
-                </p>
-              </li>
 
-              <li>
-                <a
-                  href="https://blackhole-audio-visualizer.vercel.app/app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block"
-                >
-                  <div className="relative aspect-[16/9] w-full max-w-md mb-4 overflow-hidden bg-[#141414]">
+                {/* Desktop: Side thumbnail layout */}
+                <div className="hidden md:grid md:grid-cols-[120px_1fr] gap-6 items-start">
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative aspect-square w-full overflow-hidden bg-[#141414] border border-muted/20 group-hover:border-lime transition-colors"
+                  >
                     <Image
-                      src="/blackhole-audio-visualizer.webp"
-                      alt="Audio Visualizer"
+                      src={project.image}
+                      alt={project.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, 400px"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="120px"
+                      className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                     />
-                  </div>
-                  <span className="font-mono text-sm text-accent group-hover:text-foreground transition-colors">
-                    Audio Visualizer →
-                  </span>
-                </a>
-                <p className="mt-2 font-serif text-foreground/90 leading-relaxed">
-                  Three black holes orbit each other while a particle system emits to the beat of
-                  music frequencies. Particles fall into the black holes according to orbital
-                  dynamics, creating swirling patterns in various colors.
-                </p>
-                <p className="mt-2 font-serif text-foreground/60 text-sm">
-                  Three.js · Preset systems · Randomizer mode · AI agent for scene generation
-                </p>
-              </li>
-            </ul>
-          </section>
+                  </a>
 
-          {/* Photography */}
-          <section className="animate-fade-up" style={{ animationDelay: '0.4s' }}>
-            <span className="font-mono text-[10px] tracking-[0.3em] uppercase text-muted">
+                  <div>
+                    <a
+                      href={project.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground hover:text-sky transition-colors"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-lime" />
+                      {project.title}
+                      <span className="text-muted group-hover:translate-x-1 transition-transform">
+                        →
+                      </span>
+                    </a>
+                    <p className="mt-2 font-sans text-foreground/80 leading-relaxed max-w-xl">
+                      {project.description}
+                    </p>
+                    <p className="mt-2 font-mono text-xs tracking-wide text-muted">
+                      {project.tech}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Mobile: Content below image */}
+                <div className="md:hidden mt-4">
+                  <a
+                    href={project.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground hover:text-sky transition-colors"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-lime" />
+                    {project.title}
+                    <span className="text-muted group-hover:translate-x-1 transition-transform">
+                      →
+                    </span>
+                  </a>
+                  <p className="mt-2 font-sans text-sm text-foreground/80 leading-relaxed">
+                    {project.description}
+                  </p>
+                  <p className="mt-2 font-mono text-xs tracking-wide text-muted">{project.tech}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Photography Section */}
+        <section className="animate-fade-up" style={{ animationDelay: '0.3s' }}>
+          <div className="flex items-center gap-3 mb-8">
+            <span className="font-mono text-xs tracking-[0.2em] uppercase text-sky">
               Photography
             </span>
-            <p className="mt-4 font-serif text-foreground/70 leading-relaxed">
-              Portrait, fashion, and astrophotography work.
-            </p>
+            <div className="flex-1 h-px bg-sky/20" />
+          </div>
 
-            <ul className="mt-8 space-y-12">
-              <li>
-                <Link href="/photography/fashion" className="group block">
-                  <div className="relative aspect-[3/4] w-full max-w-[200px] mb-4 overflow-hidden bg-[#141414]">
-                    <Image
-                      src="/photography/fashion/fashion-007.jpg"
-                      alt="Fashion Photography"
-                      fill
-                      sizes="200px"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                  </div>
-                  <span className="font-mono text-sm text-accent group-hover:text-foreground transition-colors">
-                    Fashion Photography →
-                  </span>
+          <div className="space-y-10 md:space-y-12">
+            {photography.map((project) => (
+              <div key={project.id} className="group">
+                {/* Mobile: Full-width cinematic image */}
+                <Link
+                  href={project.href}
+                  className="relative block md:hidden aspect-video w-full overflow-hidden bg-[#141414] border border-muted/20 group-hover:border-sky/50 transition-colors"
+                >
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 120px"
+                    className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-background/60 via-transparent to-transparent" />
                 </Link>
-                <p className="mt-2 font-serif text-foreground/90 leading-relaxed">
-                  Portrait and fashion work from my photography years, 2008–2012.
-                </p>
-              </li>
 
-              <li>
-                <Link href="/photography/astro" className="group block">
-                  <div className="relative aspect-[3/4] w-full max-w-[200px] mb-4 overflow-hidden bg-[#141414]">
+                {/* Desktop: Side thumbnail layout */}
+                <div className="hidden md:grid md:grid-cols-[120px_1fr] gap-6 items-start">
+                  <Link
+                    href={project.href}
+                    className="relative aspect-square w-full overflow-hidden bg-[#141414] border border-muted/20 group-hover:border-sky transition-colors"
+                  >
                     <Image
-                      src="/photography/astro/2020-11-28-NGC2244_p.jpg"
-                      alt="Astrophotography"
+                      src={project.image}
+                      alt={project.title}
                       fill
-                      sizes="200px"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      sizes="120px"
+                      className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                     />
+                  </Link>
+
+                  <div>
+                    <Link
+                      href={project.href}
+                      className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground hover:text-lime transition-colors"
+                    >
+                      <span className="w-2 h-2 rounded-full bg-sky" />
+                      {project.title}
+                      <span className="text-muted group-hover:translate-x-1 transition-transform">
+                        →
+                      </span>
+                    </Link>
+                    <p className="mt-2 font-sans text-foreground/80 leading-relaxed max-w-xl">
+                      {project.description}
+                    </p>
+                    {project.tech && (
+                      <p className="mt-2 font-mono text-xs tracking-wide text-muted">
+                        {project.tech}
+                      </p>
+                    )}
                   </div>
-                  <span className="font-mono text-sm text-accent group-hover:text-foreground transition-colors">
-                    Astrophotography →
-                  </span>
-                </Link>
-                <p className="mt-2 font-serif text-foreground/90 leading-relaxed">
-                  Deep-sky imaging of galaxies, nebulae, and star clusters.
-                </p>
-              </li>
-            </ul>
-          </section>
-        </div>
+                </div>
+
+                {/* Mobile: Content below image */}
+                <div className="md:hidden mt-4">
+                  <Link
+                    href={project.href}
+                    className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground hover:text-lime transition-colors"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-sky" />
+                    {project.title}
+                    <span className="text-muted group-hover:translate-x-1 transition-transform">
+                      →
+                    </span>
+                  </Link>
+                  <p className="mt-2 font-sans text-sm text-foreground/80 leading-relaxed">
+                    {project.description}
+                  </p>
+                  {project.tech && (
+                    <p className="mt-2 font-mono text-xs tracking-wide text-muted">
+                      {project.tech}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
 
-      {/* Bottom decorative element */}
+      {/* Year indicator */}
       <div
-        className="absolute bottom-8 left-8 font-mono text-[10px] tracking-widest text-muted animate-fade-up"
-        style={{ animationDelay: '0.5s' }}
+        className="fixed bottom-6 left-6 md:bottom-10 md:left-12 font-mono text-xs tracking-widest text-muted/50 animate-fade-up"
+        style={{ animationDelay: '0.4s' }}
       >
-        <span className="opacity-50">2025</span>
+        2025
       </div>
     </div>
   );

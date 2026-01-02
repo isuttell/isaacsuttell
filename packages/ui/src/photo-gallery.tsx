@@ -147,14 +147,14 @@ function GalleryImage({ photo, index, isLoaded, onLoad, onClick }: GalleryImageP
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        {/* Corner accent on hover */}
-        <div className="absolute bottom-0 left-0 w-8 h-px bg-[#c9a227] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 delay-100" />
-        <div className="absolute bottom-0 left-0 w-px h-8 bg-[#c9a227] transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-300 delay-100" />
+        {/* Corner accent on hover - lime */}
+        <div className="absolute bottom-0 left-0 w-8 h-[2px] bg-[#a3e635] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 delay-100" />
+        <div className="absolute bottom-0 left-0 w-[2px] h-8 bg-[#a3e635] transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-300 delay-100" />
       </div>
 
       {photo.title && (
         <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-150">
-          <span className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#c9a227]">
+          <span className="font-mono text-xs tracking-[0.2em] uppercase text-[#a3e635]">
             {photo.title}
           </span>
         </div>
@@ -203,7 +203,7 @@ function Lightbox({ photos, currentIndex, onClose, onNavigate }: LightboxProps) 
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0c0c0c]/98 animate-lightbox-bg"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[#0a0a0a]/98 animate-lightbox-bg"
       onClick={onClose}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -213,7 +213,7 @@ function Lightbox({ photos, currentIndex, onClose, onNavigate }: LightboxProps) 
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-6 right-6 z-10 p-2 text-[#f5f0e8]/60 hover:text-[#f5f0e8] transition-colors"
+        className="absolute top-6 right-6 z-10 p-2 text-[#fafafa]/60 hover:text-[#fafafa] transition-colors"
         aria-label="Close lightbox"
       >
         <svg
@@ -235,7 +235,7 @@ function Lightbox({ photos, currentIndex, onClose, onNavigate }: LightboxProps) 
           e.stopPropagation();
           onNavigate('prev');
         }}
-        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-10 p-3 text-[#f5f0e8]/40 hover:text-[#c9a227] transition-colors"
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-10 p-3 text-[#fafafa]/40 hover:text-[#a3e635] transition-colors"
         aria-label="Previous image"
       >
         <svg
@@ -256,7 +256,7 @@ function Lightbox({ photos, currentIndex, onClose, onNavigate }: LightboxProps) 
           e.stopPropagation();
           onNavigate('next');
         }}
-        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-10 p-3 text-[#f5f0e8]/40 hover:text-[#c9a227] transition-colors"
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-10 p-3 text-[#fafafa]/40 hover:text-[#a3e635] transition-colors"
         aria-label="Next image"
       >
         <svg
@@ -290,7 +290,7 @@ function Lightbox({ photos, currentIndex, onClose, onNavigate }: LightboxProps) 
         {/* Caption */}
         {currentPhoto.title && (
           <div className="absolute -bottom-8 left-0 right-0 text-center">
-            <span className="font-mono text-xs tracking-[0.2em] uppercase text-[#c9a227]">
+            <span className="font-mono text-xs tracking-[0.2em] uppercase text-[#a3e635]">
               {currentPhoto.title}
             </span>
           </div>
@@ -304,7 +304,7 @@ function Lightbox({ photos, currentIndex, onClose, onNavigate }: LightboxProps) 
             key={idx}
             className={`
               w-1 h-1 rounded-full transition-all duration-300
-              ${idx === currentIndex ? 'bg-[#c9a227] w-4' : 'bg-[#f5f0e8]/20'}
+              ${idx === currentIndex ? 'bg-[#a3e635] w-4' : 'bg-[#fafafa]/20'}
             `}
           />
         ))}
