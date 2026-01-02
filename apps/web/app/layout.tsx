@@ -1,21 +1,23 @@
-import type { Metadata } from "next";
-import { Cormorant_Garamond, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
+import './globals.css';
 
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["300", "400", "600", "700"],
+const jakarta = Plus_Jakarta_Sans({
+  variable: '--font-jakarta',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const jetbrains = JetBrains_Mono({
+  variable: '--font-jetbrains',
+  subsets: ['latin'],
+  weight: ['400', '500'],
 });
 
 export const metadata: Metadata = {
-  title: "Isaac Suttell",
-  description: "Personal website of Isaac Suttell",
+  title: 'Isaac Suttell',
+  description: 'Personal website of Isaac Suttell',
 };
 
 export default function RootLayout({
@@ -25,8 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${cormorant.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${jakarta.variable} ${jetbrains.variable} antialiased`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
