@@ -52,6 +52,15 @@ body {
   text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes lightbox-bg {
   from {
     opacity: 0;

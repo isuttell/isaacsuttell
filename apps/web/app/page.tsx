@@ -1,8 +1,12 @@
 import Link from 'next/link';
+import { Starfield } from '@isaacsuttell/ui';
 
 export default function Home() {
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
+      {/* Starfield background */}
+      <Starfield className="fixed inset-0" starCount={200} speed={1} />
+
       {/* Noise texture overlay */}
       <div
         className="pointer-events-none fixed inset-0 opacity-[0.03]"
@@ -36,8 +40,12 @@ export default function Home() {
 
         {/* Tagline */}
         <p
-          className="mt-6 ml-[12vw] md:ml-[18vw] font-mono text-sm tracking-[0.2em] uppercase text-muted animate-fade-up"
-          style={{ animationDelay: '0.3s' }}
+          className="mt-6 ml-[12vw] md:ml-[18vw] font-mono text-sm tracking-[0.2em] uppercase text-muted animate-fade-up px-3 py-1 -mx-3 rounded"
+          style={{
+            animationDelay: '0.3s',
+            background:
+              'linear-gradient(90deg, rgba(10,10,10,0.6) 0%, rgba(10,10,10,0.3) 70%, transparent 100%)',
+          }}
         >
           Design & Engineering
         </p>
@@ -45,8 +53,12 @@ export default function Home() {
 
       {/* Bottom-left navigation cluster */}
       <nav
-        className="absolute bottom-8 left-6 md:bottom-12 md:left-12 lg:left-20 flex flex-col gap-3 animate-fade-up"
-        style={{ animationDelay: '0.4s' }}
+        className="absolute bottom-8 left-6 md:bottom-12 md:left-12 lg:left-20 flex flex-col gap-3 animate-fade-up px-4 py-3 -ml-4 rounded"
+        style={{
+          animationDelay: '0.4s',
+          background:
+            'linear-gradient(90deg, rgba(10,10,10,0.6) 0%, rgba(10,10,10,0.3) 60%, transparent 100%)',
+        }}
       >
         <Link
           href="/projects"
