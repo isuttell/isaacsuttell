@@ -5,7 +5,8 @@
   "installCommand": "bun install",
   "framework": "nextjs",
   "outputDirectory": "apps/web/.next",
-  "regions": ["sfo1"],
+  "regions": ["iad1", "sfo1", "dub1"],
+  "nodeVersion": "24",
   "headers": [
     {
       "source": "/(.*)",
