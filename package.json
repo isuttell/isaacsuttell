@@ -3,19 +3,37 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "bun@1.3.5",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
-    "convex": "convex",
-    "convex:dev": "convex dev",
-    "convex:deploy": "convex deploy"
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "convex": "^1.31.2",
-    "turbo": "^2"
+    "eslint": "^9.39.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.7.4",
+    "turbo": "^2",
+    "typescript-eslint": "^8.51.0"
   },
   "trustedDependencies": [
     "sharp",
