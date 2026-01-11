@@ -7,5 +7,8 @@
     "./tsconfig/base": "./tsconfig/base.json",
     "./tsconfig/nextjs": "./tsconfig/nextjs.json",
     "./eslint": "./eslint/base.js"
+  },
+  "devDependencies": {
+    "eslint-plugin-react-compiler": "19.1.0-rc.2"
   }
 }
