@@ -18,8 +18,11 @@
     "react-dom": "^19"
   },
   "devDependencies": {
+    "@isaacsuttell/config": "workspace:*",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "typescript": "^5"
   }
 }
