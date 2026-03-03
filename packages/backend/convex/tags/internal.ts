@@ -1,13 +1,17 @@
 import { v, ConvexError } from 'convex/values';
-import { mutation } from '../_generated/server';
-import { requireAdmin } from '../lib/auth';
+import { internalQuery, internalMutation } from '../_generated/server';
 import { validateSlug } from '../lib/validators';
 
-export const create = mutation({
+export const list = internalQuery({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query('tags').collect();
+  },
+});
+
+export const create = internalMutation({
   args: { name: v.string(), slug: v.string() },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
-
     validateSlug(args.slug);
 
     const existing = await ctx.db
@@ -22,11 +26,9 @@ export const create = mutation({
 
 const TAG_REMOVAL_BATCH_SIZE = 100;
 
-export const remove = mutation({
+export const remove = internalMutation({
   args: { id: v.id('tags') },
   handler: async (ctx, args) => {
-    await requireAdmin(ctx);
-
     const tag = await ctx.db.get(args.id);
     if (!tag) throw new ConvexError('Tag not found');
 
