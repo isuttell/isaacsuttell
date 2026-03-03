@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { useRouter } from 'next/navigation';
 import { api } from '@isaacsuttell/backend/convex/_generated/api';
 import type { Doc } from '@isaacsuttell/backend/convex/_generated/dataModel';
+
+const AUTOSAVE_INTERVAL_MS = 45_000;
 
 function slugify(text: string) {
   return text
@@ -25,13 +27,25 @@ type ArticleData = {
   publishedAt: number | undefined;
 };
 
+function dataEquals(a: ArticleData, b: ArticleData): boolean {
+  return (
+    a.title === b.title &&
+    a.slug === b.slug &&
+    a.content === b.content &&
+    a.excerpt === b.excerpt &&
+    JSON.stringify(a.tags) === JSON.stringify(b.tags) &&
+    a.status === b.status &&
+    a.publishedAt === b.publishedAt
+  );
+}
+
 export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
   const router = useRouter();
   const create = useMutation(api.articles.admin.create);
   const update = useMutation(api.articles.admin.update);
   const tags = useQuery(api.tags.queries.list) ?? [];
 
-  const [data, setData] = useState<ArticleData>({
+  const initialData: ArticleData = {
     title: article?.title ?? '',
     slug: article?.slug ?? '',
     content: article?.content ?? '',
@@ -39,10 +53,25 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
     tags: article?.tags ?? [],
     status: article?.status ?? 'draft',
     publishedAt: article?.publishedAt ?? undefined,
-  });
+  };
+
+  const [data, setData] = useState<ArticleData>(initialData);
   const [autoSlug, setAutoSlug] = useState(!article);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [autosaveStatus, setAutosaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>(
+    'idle'
+  );
+  const lastSavedRef = useRef<ArticleData>(initialData);
+  const dataRef = useRef<ArticleData>(data);
+  dataRef.current = data;
+  const updatedAtRef = useRef<number | undefined>(article?.updatedAt);
+  // Keep ref in sync with reactive article prop from useQuery
+  useEffect(() => {
+    if (article?.updatedAt !== undefined) {
+      updatedAtRef.current = article.updatedAt;
+    }
+  }, [article?.updatedAt]);
 
   const handleTitleChange = useCallback(
     (title: string) => {
@@ -62,6 +91,44 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
     }));
   }, []);
 
+  useEffect(() => {
+    if (!article || saving) return;
+    const isDirty = !dataEquals(data, lastSavedRef.current);
+    if (!isDirty) return;
+
+    const id = setInterval(async () => {
+      const currentData = { ...dataRef.current };
+      if (!dataEquals(currentData, lastSavedRef.current)) {
+        setAutosaveStatus('saving');
+        try {
+          await update({
+            id: article._id,
+            title: currentData.title,
+            slug: currentData.slug,
+            content: currentData.content,
+            excerpt: currentData.excerpt,
+            tags: currentData.tags,
+            status: currentData.status,
+            publishedAt: currentData.publishedAt,
+            expectedUpdatedAt: updatedAtRef.current,
+          });
+          lastSavedRef.current = currentData;
+          // article prop is reactive via useQuery, so updatedAt stays fresh
+          updatedAtRef.current = article.updatedAt;
+          setAutosaveStatus('saved');
+          setTimeout(() => setAutosaveStatus('idle'), 2000);
+        } catch {
+          // Sync with latest server state on conflict
+          updatedAtRef.current = article.updatedAt;
+          setAutosaveStatus('error');
+          setTimeout(() => setAutosaveStatus('idle'), 3000);
+        }
+      }
+    }, AUTOSAVE_INTERVAL_MS);
+
+    return () => clearInterval(id);
+  }, [article, data, saving, update]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
@@ -79,7 +146,11 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
       };
 
       if (article) {
-        await update({ id: article._id, ...payload });
+        await update({
+          id: article._id,
+          expectedUpdatedAt: updatedAtRef.current,
+          ...payload,
+        });
       } else {
         await create(payload);
       }
@@ -226,6 +297,12 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
         >
           Cancel
         </button>
+        {article && autosaveStatus === 'saved' && (
+          <span className="font-mono text-xs text-lime/80">Saved</span>
+        )}
+        {article && autosaveStatus === 'error' && (
+          <span className="font-mono text-xs text-red-400">Autosave failed</span>
+        )}
       </div>
     </form>
   );
