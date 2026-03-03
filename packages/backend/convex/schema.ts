@@ -35,4 +35,46 @@ export default defineSchema({
   })
     .index('by_slug', ['slug'])
     .index('by_name', ['name']),
+
+  mcpOauthPending: defineTable({
+    state: v.string(),
+    clientId: v.string(),
+    redirectUri: v.string(),
+    codeChallenge: v.string(),
+    codeChallengeMethod: v.string(),
+    scope: v.string(),
+    mcpState: v.string(),
+    expiresAt: v.number(),
+  })
+    .index('by_state', ['state'])
+    .index('by_expiresAt', ['expiresAt']),
+
+  mcpOauthCodes: defineTable({
+    code: v.string(),
+    clientId: v.string(),
+    redirectUri: v.string(),
+    codeChallenge: v.string(),
+    userId: v.id('users'),
+    scope: v.string(),
+    expiresAt: v.number(),
+    used: v.boolean(),
+  })
+    .index('by_code', ['code'])
+    .index('by_expiresAt', ['expiresAt']),
+
+  mcpOauthClients: defineTable({
+    clientId: v.string(),
+    redirectUris: v.array(v.string()),
+    clientName: v.optional(v.string()),
+    createdAt: v.number(),
+  }).index('by_clientId', ['clientId']),
+
+  mcpOauthTokens: defineTable({
+    token: v.string(),
+    userId: v.id('users'),
+    scope: v.string(),
+    expiresAt: v.number(),
+  })
+    .index('by_token', ['token'])
+    .index('by_expiresAt', ['expiresAt']),
 });
