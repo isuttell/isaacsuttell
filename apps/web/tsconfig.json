@@ -2,7 +2,8 @@
   "extends": "@isaacsuttell/config/tsconfig/nextjs",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@isaacsuttell/backend/*": ["../../packages/backend/*"]
     }
   },
   "include": [
