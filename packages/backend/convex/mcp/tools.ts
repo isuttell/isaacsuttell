@@ -14,6 +14,59 @@ interface ToolResult {
   isError?: boolean;
 }
 
+// --- Content Processing ---
+
+const CONTENT_CHAR_THRESHOLD = 5000;
+const PREVIEW_LINES = 50;
+
+interface ContentOpts {
+  startLine?: number;
+  endLine?: number;
+  metadataOnly?: boolean;
+}
+
+function processContent(
+  content: string,
+  opts: ContentOpts
+): {
+  content?: string;
+  totalLines: number;
+  totalCharacters: number;
+  contentRange?: { startLine: number; endLine: number };
+  truncated?: boolean;
+  hint?: string;
+} {
+  const lines = content.split('\n');
+  const meta = { totalLines: lines.length, totalCharacters: content.length };
+
+  if (opts.metadataOnly) {
+    return meta;
+  }
+
+  if (opts.startLine !== undefined || opts.endLine !== undefined) {
+    const start = Math.max(1, opts.startLine ?? 1);
+    const end = Math.min(opts.endLine ?? lines.length, lines.length);
+    return {
+      content: lines.slice(start - 1, end).join('\n'),
+      ...meta,
+      contentRange: { startLine: start, endLine: end },
+    };
+  }
+
+  if (content.length > CONTENT_CHAR_THRESHOLD) {
+    const endLine = Math.min(PREVIEW_LINES, lines.length);
+    return {
+      content: lines.slice(0, endLine).join('\n'),
+      ...meta,
+      contentRange: { startLine: 1, endLine },
+      truncated: true,
+      hint: `Content is ${lines.length} lines. Showing first ${endLine}. Use startLine/endLine to fetch more.`,
+    };
+  }
+
+  return { content, ...meta };
+}
+
 // --- Tool Definitions ---
 
 export const TOOLS: ToolDefinition[] = [
@@ -52,12 +105,24 @@ export const TOOLS: ToolDefinition[] = [
   {
     name: 'blog_get_article',
     description:
-      'Get a single article by ID or slug. Returns full content. Exactly one of id or slug must be provided.',
+      'Get a single article by ID or slug. Returns metadata and content. For large articles, content is auto-truncated — use startLine/endLine to fetch specific sections. Exactly one of id or slug must be provided.',
     inputSchema: {
       type: 'object',
       properties: {
         id: { type: 'string', description: 'Convex document ID' },
         slug: { type: 'string', description: 'Article URL slug' },
+        startLine: {
+          type: 'number',
+          description: 'Start line (1-based, inclusive). Omit to start from beginning.',
+        },
+        endLine: {
+          type: 'number',
+          description: 'End line (1-based, inclusive). Omit to read to end.',
+        },
+        metadataOnly: {
+          type: 'boolean',
+          description: 'If true, return only metadata (no content).',
+        },
       },
     },
     annotations: {
@@ -212,7 +277,7 @@ export const TOOLS: ToolDefinition[] = [
   {
     name: 'blog_list_article_versions',
     description:
-      'List version history for an article. Returns snapshots with version number, timestamp, source, and actor. Use blog_restore_article_version to revert to a previous version.',
+      'List version history for an article. Returns version number, title, status, source, and timestamp. Use blog_restore_article_version to revert to a previous version.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -230,7 +295,7 @@ export const TOOLS: ToolDefinition[] = [
   {
     name: 'blog_get_article_version',
     description:
-      'Get full details of a specific article version, including content. Use blog_list_article_versions first to find version numbers.',
+      'Get details of a specific article version. For large content, auto-truncated — use startLine/endLine to fetch sections. Use blog_list_article_versions first to find version numbers.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -238,6 +303,18 @@ export const TOOLS: ToolDefinition[] = [
         version: {
           type: 'number',
           description: 'Version number (from blog_list_article_versions)',
+        },
+        startLine: {
+          type: 'number',
+          description: 'Start line (1-based, inclusive).',
+        },
+        endLine: {
+          type: 'number',
+          description: 'End line (1-based, inclusive).',
+        },
+        metadataOnly: {
+          type: 'boolean',
+          description: 'If true, return only metadata (no content).',
         },
       },
       required: ['articleId', 'version'],
@@ -387,7 +464,7 @@ export async function executeTool(
   try {
     const result = await dispatchTool(ctx, name, args, userId);
     return {
-      content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+      content: [{ type: 'text', text: JSON.stringify(result) }],
     };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error occurred';
@@ -414,7 +491,16 @@ async function dispatchTool(
         paginationOpts: { numItems: limit, cursor },
       });
       return {
-        articles: results.page.map(({ content: _, ...rest }) => rest),
+        articles: results.page.map((a) => ({
+          _id: a._id,
+          title: a.title,
+          slug: a.slug,
+          status: a.status,
+          excerpt: a.excerpt,
+          tags: a.tags,
+          publishedAt: a.publishedAt,
+          updatedAt: a.updatedAt,
+        })),
         nextCursor: results.isDone ? null : results.continueCursor,
         isDone: results.isDone,
       };
@@ -427,18 +513,33 @@ async function dispatchTool(
       if (args.id && args.slug) {
         throw new Error('Provide either id or slug, not both');
       }
-      if (args.id) {
-        const article = await ctx.runQuery(internal.articles.internal.getById, {
-          id: args.id as Id<'articles'>,
-        });
-        if (!article) throw new Error('Article not found');
-        return article;
-      }
-      const article = await ctx.runQuery(internal.articles.internal.getBySlug, {
-        slug: args.slug as string,
-      });
+      const article = args.id
+        ? await ctx.runQuery(internal.articles.internal.getById, {
+            id: args.id as Id<'articles'>,
+          })
+        : await ctx.runQuery(internal.articles.internal.getBySlug, {
+            slug: args.slug as string,
+          });
       if (!article) throw new Error('Article not found');
-      return article;
+
+      const processed = processContent(article.content, {
+        startLine: args.startLine as number | undefined,
+        endLine: args.endLine as number | undefined,
+        metadataOnly: args.metadataOnly as boolean | undefined,
+      });
+
+      return {
+        _id: article._id,
+        title: article.title,
+        slug: article.slug,
+        excerpt: article.excerpt,
+        tags: article.tags,
+        status: article.status,
+        publishedAt: article.publishedAt,
+        authorId: article.authorId,
+        updatedAt: article.updatedAt,
+        ...processed,
+      };
     }
 
     case 'blog_create_article': {
@@ -509,7 +610,17 @@ async function dispatchTool(
         paginationOpts: { numItems: limit, cursor },
       });
       return {
-        articles: results.page.map(({ content: _, ...rest }) => rest),
+        articles: results.page.map((a) => ({
+          _id: a._id,
+          title: a.title,
+          slug: a.slug,
+          status: a.status,
+          excerpt: a.excerpt,
+          tags: a.tags,
+          updatedAt: a.updatedAt,
+          deletedAt: a.deletedAt,
+          deleteReason: a.deleteReason,
+        })),
         nextCursor: results.isDone ? null : results.continueCursor,
         isDone: results.isDone,
       };
@@ -532,17 +643,15 @@ async function dispatchTool(
         limit,
       });
       return {
-        versions: versions.map((v) => {
-          const { content: _, ...meta } = v.snapshot;
-          return {
-            version: v.version,
-            snapshot: meta,
-            actorId: v.actorId,
-            source: v.source,
-            reason: v.reason,
-            _creationTime: v._creationTime,
-          };
-        }),
+        versions: versions.map((v) => ({
+          version: v.version,
+          title: v.snapshot.title,
+          slug: v.snapshot.slug,
+          status: v.snapshot.status,
+          updatedAt: v.snapshot.updatedAt,
+          source: v.source,
+          reason: v.reason,
+        })),
       };
     }
 
@@ -552,13 +661,26 @@ async function dispatchTool(
         version: args.version as number,
       });
       if (!versionDoc) throw new Error('Version not found');
+
+      const s = versionDoc.snapshot;
+      const processed = processContent(s.content, {
+        startLine: args.startLine as number | undefined,
+        endLine: args.endLine as number | undefined,
+        metadataOnly: args.metadataOnly as boolean | undefined,
+      });
+
       return {
         version: versionDoc.version,
-        snapshot: versionDoc.snapshot,
-        actorId: versionDoc.actorId,
         source: versionDoc.source,
         reason: versionDoc.reason,
-        _creationTime: versionDoc._creationTime,
+        title: s.title,
+        slug: s.slug,
+        excerpt: s.excerpt,
+        tags: s.tags,
+        status: s.status,
+        publishedAt: s.publishedAt,
+        updatedAt: s.updatedAt,
+        ...processed,
       };
     }
 
@@ -611,11 +733,18 @@ async function dispatchTool(
     }
 
     case 'blog_list_tags': {
-      return await ctx.runQuery(internal.tags.internal.list, {});
+      const tags = await ctx.runQuery(internal.tags.internal.list, {});
+      return tags.map((t) => ({ _id: t._id, name: t.name, slug: t.slug }));
     }
 
     case 'blog_list_archived_tags': {
-      return await ctx.runQuery(internal.tags.internal.listArchived, {});
+      const tags = await ctx.runQuery(internal.tags.internal.listArchived, {});
+      return tags.map((t) => ({
+        _id: t._id,
+        name: t.name,
+        slug: t.slug,
+        deletedAt: t.deletedAt,
+      }));
     }
 
     case 'blog_create_tag': {
