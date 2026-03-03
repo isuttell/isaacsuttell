@@ -92,140 +92,165 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
-      {error && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded px-4 py-2 text-red-400 text-sm">
-          {error}
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="font-mono text-xs tracking-wider text-muted uppercase">Title</label>
-          <input
-            type="text"
-            value={data.title}
-            onChange={(e) => handleTitleChange(e.target.value)}
-            required
-            className="w-full bg-[#141414] border border-muted/30 rounded px-3 py-2 text-foreground focus:border-lime/50 focus:outline-none transition-colors"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label className="font-mono text-xs tracking-wider text-muted uppercase">Slug</label>
-          <input
-            type="text"
-            value={data.slug}
-            onChange={(e) => {
-              setAutoSlug(false);
-              setData((d) => ({ ...d, slug: e.target.value }));
-            }}
-            required
-            className="w-full bg-[#141414] border border-muted/30 rounded px-3 py-2 text-foreground font-mono text-sm focus:border-lime/50 focus:outline-none transition-colors"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <label className="font-mono text-xs tracking-wider text-muted uppercase">Excerpt</label>
-        <textarea
-          value={data.excerpt}
-          onChange={(e) => setData((d) => ({ ...d, excerpt: e.target.value }))}
-          required
-          rows={2}
-          className="w-full bg-[#141414] border border-muted/30 rounded px-3 py-2 text-foreground focus:border-lime/50 focus:outline-none transition-colors resize-none"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="font-mono text-xs tracking-wider text-muted uppercase">
-          Content (Markdown)
-        </label>
-        <textarea
-          value={data.content}
-          onChange={(e) => setData((d) => ({ ...d, content: e.target.value }))}
-          required
-          rows={20}
-          className="w-full bg-[#141414] border border-muted/30 rounded px-3 py-2 text-foreground font-mono text-sm leading-relaxed focus:border-lime/50 focus:outline-none transition-colors resize-y"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <label className="font-mono text-xs tracking-wider text-muted uppercase">Tags</label>
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <button
-              key={tag._id}
-              type="button"
-              onClick={() => toggleTag(tag.slug)}
-              className={`font-mono text-xs px-3 py-1 rounded border transition-colors ${
-                data.tags.includes(tag.slug)
-                  ? 'bg-lime/20 border-lime/40 text-lime'
-                  : 'bg-[#141414] border-muted/30 text-muted hover:text-foreground'
-              }`}
-            >
-              {tag.name}
-            </button>
-          ))}
-          {tags.length === 0 && (
-            <span className="font-mono text-xs text-muted">
-              No tags yet. Create tags from the dashboard.
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-12">
+      {/* Sticky Header with Actions */}
+      <div className="sticky top-0 z-10 flex items-center justify-between py-4 bg-background/80 backdrop-blur-md border-b border-white/5 mb-12">
+        <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => router.push('/admin/blog')}
+            className="font-mono text-sm tracking-widest uppercase text-muted hover:text-foreground transition-colors"
+          >
+            &larr; Back
+          </button>
+          {error && (
+            <span className="font-mono text-xs text-red-400 bg-red-400/10 px-2 py-1 rounded">
+              {error}
             </span>
           )}
         </div>
+        <div className="flex items-center gap-4">
+          <span className="font-mono text-xs text-muted uppercase tracking-widest">
+            {data.status}
+          </span>
+          <button
+            type="submit"
+            disabled={saving}
+            className="bg-lime text-background font-mono font-bold uppercase tracking-wide text-xs px-6 py-2.5 rounded hover:bg-lime/90 transition-colors disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : article ? 'Update' : 'Publish'}
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="font-mono text-xs tracking-wider text-muted uppercase">Status</label>
-          <select
-            value={data.status}
-            onChange={(e) =>
-              setData((d) => ({
-                ...d,
-                status: e.target.value as 'draft' | 'published',
-              }))
-            }
-            className="w-full bg-[#141414] border border-muted/30 rounded px-3 py-2 text-foreground focus:border-lime/50 focus:outline-none transition-colors"
-          >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
-        </div>
+      {/* Main Editor Area */}
+      <div className="space-y-8">
+        <textarea
+          value={data.title}
+          onChange={(e) => {
+            handleTitleChange(e.target.value);
+            // Auto-resize
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
+          }}
+          placeholder="Article Title"
+          required
+          rows={1}
+          className="w-full bg-transparent border-none text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-foreground placeholder:text-white/10 focus:outline-none focus:ring-0 resize-none overflow-hidden leading-tight tracking-tight"
+        />
 
-        <div className="space-y-2">
-          <label className="font-mono text-xs tracking-wider text-muted uppercase">
-            Publish Date
-          </label>
-          <input
-            type="datetime-local"
-            value={data.publishedAt ? new Date(data.publishedAt).toISOString().slice(0, 16) : ''}
-            onChange={(e) =>
-              setData((d) => ({
-                ...d,
-                publishedAt: e.target.value ? new Date(e.target.value).getTime() : undefined,
-              }))
-            }
-            className="w-full bg-[#141414] border border-muted/30 rounded px-3 py-2 text-foreground focus:border-lime/50 focus:outline-none transition-colors"
+        <textarea
+          value={data.content}
+          onChange={(e) => {
+            setData((d) => ({ ...d, content: e.target.value }));
+            // Auto-resize
+            e.target.style.height = 'auto';
+            e.target.style.height = e.target.scrollHeight + 'px';
+          }}
+          placeholder="Write your markdown here..."
+          required
+          rows={12}
+          className="w-full bg-transparent border-none font-mono text-lg text-foreground/80 placeholder:text-white/10 focus:outline-none focus:ring-0 resize-none leading-relaxed"
+        />
+      </div>
+
+      <div className="h-px w-full bg-white/5 my-16" />
+
+      {/* Meta Settings */}
+      <div className="space-y-8 bg-[#111] p-8 md:p-12 rounded-2xl border border-white/5">
+        <h3 className="font-sans text-xl font-bold text-foreground mb-6">Article Meta</h3>
+
+        <div className="space-y-3">
+          <label className="font-mono text-xs tracking-widest text-muted uppercase">Excerpt</label>
+          <textarea
+            value={data.excerpt}
+            onChange={(e) => setData((d) => ({ ...d, excerpt: e.target.value }))}
+            required
+            rows={2}
+            className="w-full bg-background border border-white/10 rounded-lg px-4 py-3 text-foreground font-sans focus:border-lime/50 focus:outline-none transition-colors resize-none"
           />
         </div>
-      </div>
 
-      <div className="flex items-center gap-4 pt-4">
-        <button
-          type="submit"
-          disabled={saving}
-          className="bg-lime text-background font-semibold rounded px-6 py-2 hover:bg-lime/90 transition-colors disabled:opacity-50"
-        >
-          {saving ? 'Saving...' : article ? 'Update' : 'Create'}
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push('/admin/blog')}
-          className="font-mono text-sm text-muted hover:text-foreground transition-colors"
-        >
-          Cancel
-        </button>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <label className="font-mono text-xs tracking-widest text-muted uppercase">Slug</label>
+            <input
+              type="text"
+              value={data.slug}
+              onChange={(e) => {
+                setAutoSlug(false);
+                setData((d) => ({ ...d, slug: e.target.value }));
+              }}
+              required
+              className="w-full bg-background border border-white/10 rounded-lg px-4 py-3 text-foreground font-mono text-sm focus:border-lime/50 focus:outline-none transition-colors"
+            />
+          </div>
+
+          <div className="space-y-3">
+            <label className="font-mono text-xs tracking-widest text-muted uppercase">
+              Publish Date
+            </label>
+            <input
+              type="datetime-local"
+              value={
+                data.publishedAt
+                  ? new Date(data.publishedAt - new Date().getTimezoneOffset() * 60000)
+                      .toISOString()
+                      .slice(0, 16)
+                  : ''
+              }
+              onChange={(e) =>
+                setData((d) => ({
+                  ...d,
+                  publishedAt: e.target.value ? new Date(e.target.value).getTime() : undefined,
+                }))
+              }
+              className="w-full bg-background border border-white/10 rounded-lg px-4 py-3 text-foreground font-mono text-sm focus:border-lime/50 focus:outline-none transition-colors scheme-dark"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-3">
+            <label className="font-mono text-xs tracking-widest text-muted uppercase">Status</label>
+            <select
+              value={data.status}
+              onChange={(e) =>
+                setData((d) => ({
+                  ...d,
+                  status: e.target.value as 'draft' | 'published',
+                }))
+              }
+              className="w-full bg-background border border-white/10 rounded-lg px-4 py-3 text-foreground font-mono text-sm focus:border-lime/50 focus:outline-none transition-colors"
+            >
+              <option value="draft">Draft</option>
+              <option value="published">Published</option>
+            </select>
+          </div>
+
+          <div className="space-y-3">
+            <label className="font-mono text-xs tracking-widest text-muted uppercase">Tags</label>
+            <div className="flex flex-wrap gap-2 pt-1">
+              {tags.map((tag) => (
+                <button
+                  key={tag._id}
+                  type="button"
+                  onClick={() => toggleTag(tag.slug)}
+                  className={`font-mono text-[10px] tracking-wider uppercase px-3 py-1.5 rounded transition-all ${
+                    data.tags.includes(tag.slug)
+                      ? 'bg-lime text-background font-bold'
+                      : 'bg-white/5 text-muted hover:text-foreground hover:bg-white/10'
+                  }`}
+                >
+                  {tag.name}
+                </button>
+              ))}
+              {tags.length === 0 && (
+                <span className="font-mono text-xs text-muted">No tags yet.</span>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </form>
   );

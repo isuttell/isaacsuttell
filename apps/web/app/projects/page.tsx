@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import { SiteFooter } from '../components/site-footer';
 
 export const metadata: Metadata = {
   title: 'Projects | Isaac Suttell',
@@ -273,15 +274,9 @@ export default function Projects() {
             ))}
           </div>
         </section>
-      </main>
 
-      {/* Year indicator */}
-      <div
-        className="fixed bottom-6 left-6 md:bottom-10 md:left-12 font-mono text-xs tracking-widest text-muted/50 animate-fade-up"
-        style={{ animationDelay: '0.4s' }}
-      >
-        2025
-      </div>
+        <SiteFooter />
+      </main>
     </div>
   );
 }
