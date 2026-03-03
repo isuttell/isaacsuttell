@@ -8,9 +8,9 @@
  * @module
  */
 
+import type * as articles__model from "../articles/_model.js";
 import type * as articles_admin from "../articles/admin.js";
 import type * as articles_internal from "../articles/internal.js";
-import type * as articles_model from "../articles/model.js";
 import type * as articles_queries from "../articles/queries.js";
 import type * as auth from "../auth.js";
 import type * as crons from "../crons.js";
@@ -35,9 +35,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "articles/_model": typeof articles__model;
   "articles/admin": typeof articles_admin;
   "articles/internal": typeof articles_internal;
-  "articles/model": typeof articles_model;
   "articles/queries": typeof articles_queries;
   auth: typeof auth;
   crons: typeof crons;
