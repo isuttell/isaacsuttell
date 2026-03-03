@@ -74,6 +74,13 @@ export default function Home() {
           <span className="w-2 h-2 rounded-full bg-lime opacity-0 group-hover:opacity-100 transition-opacity" />
           About
         </Link>
+        <Link
+          href="/blog"
+          className="group flex items-center gap-2 font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-foreground transition-colors glow-lime"
+        >
+          <span className="w-2 h-2 rounded-full bg-lime opacity-0 group-hover:opacity-100 transition-opacity" />
+          Blog
+        </Link>
       </nav>
 
       {/* Year indicator */}
@@ -81,7 +88,7 @@ export default function Home() {
         className="absolute bottom-8 right-6 md:bottom-12 md:right-12 font-mono text-xs tracking-widest text-muted/50 animate-fade-up"
         style={{ animationDelay: '0.5s' }}
       >
-        2025
+        {new Date().getFullYear()}
       </div>
     </div>
   );

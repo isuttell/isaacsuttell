@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin "@tailwindcss/typography";
 @source "../../../packages/ui/src";
 
 :root {
@@ -87,4 +88,21 @@ body {
 
 .animate-lightbox-image {
   animation: lightbox-image 0.3s ease-out forwards;
+}
+
+@keyframes line-expand {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 4rem;
+    opacity: 1;
+  }
+}
+
+.animate-line-expand {
+  animation: line-expand 0.6s ease-out forwards;
+  width: 0;
+  opacity: 0;
 }
