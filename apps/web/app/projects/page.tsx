@@ -15,18 +15,18 @@ const projects = [
     external: true,
     image: '/blackhole-simulation.webp',
     description:
-      'Real-time ray marching through curved spacetime using Schwarzschild geodesics. Light paths computed per-pixel to simulate gravitational lensing, the photon sphere, and relativistic Doppler effects. Includes a voice agent that can answer questions and control the simulation—navigating to different views, toggling overlays, and explaining the physics.',
-    tech: 'WebGL2 · GLSL · Voice AI Agent',
+      'Real-time ray marching through curved spacetime using Schwarzschild geodesics. Light paths computed per-pixel to simulate gravitational lensing, the photon sphere, and relativistic Doppler effects.',
+    tech: 'Three.js · WebGL2 · GLSL',
   },
   {
     id: 'audio-viz',
     title: 'Audio Visualizer',
-    href: 'https://blackhole-audio-visualizer.vercel.app/app',
+    href: 'https://visualizer.zaks.io/',
     external: true,
     image: '/blackhole-audio-visualizer.webp',
     description:
-      'Three black holes orbit each other while a particle system emits to the beat of music frequencies. Particles fall into the black holes according to orbital dynamics.',
-    tech: 'Three.js · Preset systems · AI agent for scene generation',
+      'Black spheres orbit each other while a particle system emits to the beat of music frequencies. Particles fall into the black holes according to orbital dynamics.',
+    tech: 'Three.js · WebGL2 · GLSL · AI-generated music and visual presets',
   },
 ];
 
