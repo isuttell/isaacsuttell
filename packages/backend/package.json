@@ -6,13 +6,18 @@
   "scripts": {
     "dev": "convex dev",
     "build": "convex codegen",
-    "deploy": "convex deploy"
+    "deploy": "convex deploy",
+    "test": "vitest run"
   },
   "dependencies": {
+    "@auth/core": "0.37.0",
+    "@convex-dev/auth": "^0.0.91",
     "convex": "^1.31.2"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "typescript": "^5"
+    "convex-test": "^0.0.41",
+    "typescript": "^5",
+    "vitest": "^4.0.18"
   }
 }
