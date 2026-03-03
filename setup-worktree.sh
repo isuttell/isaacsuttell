@@ -27,9 +27,10 @@ bun install
 
 # Copy env files from main worktree
 ENV_FILES=(
-  ".env"
-  "packages/backend/.env.local"
-  "apps/web/.env.local"
+  "packages/backend/.env.development"
+  "packages/backend/.env.production"
+  "apps/web/.env.development"
+  "apps/web/.env.production"
 )
 
 for envfile in "${ENV_FILES[@]}"; do
