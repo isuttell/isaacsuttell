@@ -11,7 +11,7 @@ const PENDING_TTL = 10 * 60 * 1000; // 10 minutes
 const ACCESS_TOKEN_TTL = 60 * 60 * 1000; // 1 hour
 const REFRESH_TOKEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days
 
-const SUPPORTED_SCOPES = ['blog:manage'];
+const SUPPORTED_SCOPES = ['blog:read', 'blog:write', 'blog:delete', 'blog:manage'];
 
 // S256 challenge is always 43 chars of base64url (256 bits without padding)
 const CODE_CHALLENGE_RE = /^[A-Za-z0-9_-]{43}$/;

@@ -20,8 +20,8 @@ export function ProjectInviteCTA() {
             Building something new
           </h3>
           <p className="font-sans text-foreground/70 leading-relaxed">
-            I'm currently working on tools to make engineering and design workflows more seamless.
-            Join the waitlist to get early access and updates.
+            I&apos;m currently working on tools to make engineering and design workflows more
+            seamless. Join the waitlist to get early access and updates.
           </p>
         </div>
 
