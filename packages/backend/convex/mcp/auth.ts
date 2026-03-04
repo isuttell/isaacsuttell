@@ -68,6 +68,9 @@ export async function hashToken(token: string): Promise<string> {
 
 /**
  * Constant-time string comparison to prevent timing side-channels.
+ * Note: The early return on length mismatch leaks length information.
+ * Safe for PKCE challenges (always 43 chars) but do not reuse for
+ * variable-length secrets without padding to a fixed length first.
  */
 export function timingSafeEqual(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
