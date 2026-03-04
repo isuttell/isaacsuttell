@@ -3,6 +3,10 @@
     "isaacsuttell-dev": {
       "type": "http",
       "url": "https://mellow-caterpillar-488.convex.site/mcp"
+    },
+    "isaacsuttell-prod": {
+      "type": "http",
+      "url": "https://precious-crocodile-541.convex.site/mcp"
     }
   }
 }
