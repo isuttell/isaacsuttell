@@ -24,45 +24,17 @@ export default defineSchema({
     publishedAt: v.optional(v.number()),
     authorId: v.id('users'),
     updatedAt: v.number(),
-    deletedAt: v.optional(v.number()),
-    deletedBy: v.optional(v.id('users')),
-    deleteReason: v.optional(v.string()),
   })
     .index('by_slug', ['slug'])
     .index('by_status_and_publishedAt', ['status', 'publishedAt'])
-    .index('by_authorId', ['authorId'])
-    .index('by_deletedAt', ['deletedAt']),
-
-  articleVersions: defineTable({
-    articleId: v.id('articles'),
-    version: v.number(),
-    snapshot: v.object({
-      title: v.string(),
-      slug: v.string(),
-      content: v.string(),
-      excerpt: v.string(),
-      tags: v.array(v.string()),
-      status: v.union(v.literal('draft'), v.literal('published')),
-      publishedAt: v.optional(v.number()),
-      authorId: v.id('users'),
-      updatedAt: v.number(),
-    }),
-    actorId: v.id('users'),
-    source: v.string(),
-    reason: v.optional(v.string()),
-  })
-    .index('by_articleId', ['articleId'])
-    .index('by_articleId_and_version', ['articleId', 'version']),
+    .index('by_authorId', ['authorId']),
 
   tags: defineTable({
     name: v.string(),
     slug: v.string(),
-    deletedAt: v.optional(v.number()),
-    deletedBy: v.optional(v.id('users')),
   })
     .index('by_slug', ['slug'])
-    .index('by_name', ['name'])
-    .index('by_deletedAt', ['deletedAt']),
+    .index('by_name', ['name']),
 
   mcpOauthPending: defineTable({
     state: v.string(),
@@ -101,8 +73,28 @@ export default defineSchema({
     token: v.string(),
     userId: v.id('users'),
     scope: v.string(),
+    familyId: v.optional(v.string()),
     expiresAt: v.number(),
   })
     .index('by_token', ['token'])
-    .index('by_expiresAt', ['expiresAt']),
+    .index('by_expiresAt', ['expiresAt'])
+    .index('by_familyId', ['familyId']),
+
+  mcpOauthRefreshTokens: defineTable({
+    token: v.string(),
+    clientId: v.string(),
+    userId: v.id('users'),
+    scope: v.string(),
+    familyId: v.string(),
+    parentTokenId: v.optional(v.id('mcpOauthRefreshTokens')),
+    replacedByTokenId: v.optional(v.id('mcpOauthRefreshTokens')),
+    createdAt: v.number(),
+    expiresAt: v.number(),
+    usedAt: v.optional(v.number()),
+    revokedAt: v.optional(v.number()),
+    revokedReason: v.optional(v.string()),
+  })
+    .index('by_token', ['token'])
+    .index('by_expiresAt', ['expiresAt'])
+    .index('by_familyId', ['familyId']),
 });

@@ -1,22 +1,5 @@
 import { v } from 'convex/values';
-import { query, type QueryCtx } from '../_generated/server';
-
-function isActiveArticle<T extends { deletedAt?: number }>(a: T): boolean {
-  return a.deletedAt === undefined;
-}
-
-async function getArchivedTagSlugs(ctx: QueryCtx): Promise<Set<string>> {
-  const archived = await ctx.db
-    .query('tags')
-    .withIndex('by_deletedAt', (q) => q.gte('deletedAt', 0))
-    .collect();
-  return new Set(archived.map((t) => t.slug));
-}
-
-function filterTags(tags: string[], archivedSlugs: Set<string>): string[] {
-  if (archivedSlugs.size === 0) return tags;
-  return tags.filter((t) => !archivedSlugs.has(t));
-}
+import { query } from '../_generated/server';
 
 export const list = query({
   args: {
@@ -26,6 +9,9 @@ export const list = query({
   handler: async (ctx, args) => {
     const limit = args.limit ?? 50;
 
+    // Use index range to filter published articles with publishedAt in the past.
+    // publishedAt is the second field in the compound index, so after eq("status")
+    // we can use lte() for the range query — no Date.now() or post-filter needed.
     let articles = await ctx.db
       .query('articles')
       .withIndex('by_status_and_publishedAt', (q) =>
@@ -34,17 +20,11 @@ export const list = query({
       .order('desc')
       .collect();
 
-    articles = articles.filter(isActiveArticle);
-
     if (args.tag) {
       articles = articles.filter((a) => a.tags.includes(args.tag!));
     }
 
-    const archivedSlugs = await getArchivedTagSlugs(ctx);
-    return articles.slice(0, limit).map(({ content: _, ...rest }) => ({
-      ...rest,
-      tags: filterTags(rest.tags, archivedSlugs),
-    }));
+    return articles.slice(0, limit).map(({ content: _, ...rest }) => rest);
   },
 });
 
@@ -56,7 +36,7 @@ export const getBySlug = query({
       .withIndex('by_slug', (q) => q.eq('slug', args.slug))
       .unique();
 
-    if (!article || !isActiveArticle(article)) return null;
+    if (!article) return null;
 
     if (
       article.status !== 'published' ||
@@ -66,7 +46,6 @@ export const getBySlug = query({
       return null;
     }
 
-    const archivedSlugs = await getArchivedTagSlugs(ctx);
-    return { ...article, tags: filterTags(article.tags, archivedSlugs) };
+    return article;
   },
 });

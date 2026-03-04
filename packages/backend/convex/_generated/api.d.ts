@@ -8,7 +8,6 @@
  * @module
  */
 
-import type * as articles__model from "../articles/_model.js";
 import type * as articles_admin from "../articles/admin.js";
 import type * as articles_internal from "../articles/internal.js";
 import type * as articles_queries from "../articles/queries.js";
@@ -35,7 +34,6 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  "articles/_model": typeof articles__model;
   "articles/admin": typeof articles_admin;
   "articles/internal": typeof articles_internal;
   "articles/queries": typeof articles_queries;
