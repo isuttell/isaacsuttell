@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { fetchQuery } from 'convex/nextjs';
 import { api } from '@isaacsuttell/backend/convex/_generated/api';
+import { formatDate, toISODate } from '../../../lib/format';
 
 type Props = { params: Promise<{ tag: string }> };
 
@@ -10,6 +11,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${tag} | Blog | Isaac Suttell`,
     description: `Articles tagged "${tag}"`,
+    alternates: {
+      canonical: `/blog/tag/${encodeURIComponent(tag)}`,
+    },
+    openGraph: {
+      title: `${tag} | Blog | Isaac Suttell`,
+      description: `Articles tagged "${tag}"`,
+    },
   };
 }
 
@@ -64,14 +72,11 @@ export default async function TagPage({ params }: Props) {
             >
               <Link href={`/blog/${article.slug}`} className="group block">
                 <div className="flex items-center gap-3 mb-2">
-                  <time className="font-mono text-xs tracking-wider text-muted">
-                    {article.publishedAt
-                      ? new Date(article.publishedAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        })
-                      : null}
+                  <time
+                    className="font-mono text-xs tracking-wider text-muted"
+                    dateTime={toISODate(article.publishedAt)}
+                  >
+                    {formatDate(article.publishedAt)}
                   </time>
                   {article.tags.map((t) => (
                     <span

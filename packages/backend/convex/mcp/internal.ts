@@ -103,9 +103,15 @@ export const exchangeCodeForToken = internalMutation({
     redirectUri: v.string(),
     codeVerifier: v.string(),
     accessTokenHash: v.string(),
-    tokenExpiresAt: v.number(),
+    accessTokenExpiresAt: v.number(),
+    refreshTokenHash: v.string(),
+    refreshTokenExpiresAt: v.number(),
+    refreshFamilyId: v.string(),
   },
-  handler: async (ctx, args): Promise<{ error?: string; scope?: string }> => {
+  handler: async (
+    ctx,
+    args
+  ): Promise<{ error?: string; scope?: string; refreshFamilyId?: string }> => {
     const codeRecord = await ctx.db
       .query('mcpOauthCodes')
       .withIndex('by_code', (q) => q.eq('code', args.code))
@@ -129,10 +135,96 @@ export const exchangeCodeForToken = internalMutation({
       token: args.accessTokenHash,
       userId: codeRecord.userId,
       scope: codeRecord.scope,
-      expiresAt: args.tokenExpiresAt,
+      familyId: args.refreshFamilyId,
+      expiresAt: args.accessTokenExpiresAt,
+    });
+    await ctx.db.insert('mcpOauthRefreshTokens', {
+      token: args.refreshTokenHash,
+      clientId: args.clientId,
+      userId: codeRecord.userId,
+      scope: codeRecord.scope,
+      familyId: args.refreshFamilyId,
+      createdAt: Date.now(),
+      expiresAt: args.refreshTokenExpiresAt,
     });
 
-    return { scope: codeRecord.scope };
+    return { scope: codeRecord.scope, refreshFamilyId: args.refreshFamilyId };
+  },
+});
+
+// --- Atomic refresh token rotation with reuse detection ---
+
+export const rotateRefreshToken = internalMutation({
+  args: {
+    refreshTokenHash: v.string(),
+    clientId: v.string(),
+    newAccessTokenHash: v.string(),
+    newAccessTokenExpiresAt: v.number(),
+    newRefreshTokenHash: v.string(),
+    newRefreshTokenExpiresAt: v.number(),
+  },
+  handler: async (ctx, args): Promise<{ error?: string; scope?: string }> => {
+    const now = Date.now();
+    const refreshRecord = await ctx.db
+      .query('mcpOauthRefreshTokens')
+      .withIndex('by_token', (q) => q.eq('token', args.refreshTokenHash))
+      .unique();
+
+    if (!refreshRecord) return { error: 'Invalid refresh token' };
+    if (refreshRecord.clientId !== args.clientId) return { error: 'Client ID mismatch' };
+    if (refreshRecord.expiresAt < now) return { error: 'Refresh token expired' };
+
+    const isTokenReused = Boolean(refreshRecord.usedAt || refreshRecord.replacedByTokenId);
+    if (isTokenReused || refreshRecord.revokedAt) {
+      const familyTokens = await ctx.db
+        .query('mcpOauthRefreshTokens')
+        .withIndex('by_familyId', (q) => q.eq('familyId', refreshRecord.familyId))
+        .collect();
+
+      for (const token of familyTokens) {
+        if (!token.revokedAt) {
+          await ctx.db.patch(token._id, {
+            revokedAt: now,
+            revokedReason: 'reuse_detected',
+          });
+        }
+      }
+
+      // Also revoke any outstanding access tokens in this family
+      const familyAccessTokens = await ctx.db
+        .query('mcpOauthTokens')
+        .withIndex('by_familyId', (q) => q.eq('familyId', refreshRecord.familyId))
+        .collect();
+      for (const accessToken of familyAccessTokens) {
+        await ctx.db.delete(accessToken._id);
+      }
+
+      return { error: 'Refresh token reuse detected' };
+    }
+
+    // Mark old token as used before issuing replacements.
+    await ctx.db.patch(refreshRecord._id, { usedAt: now });
+
+    await ctx.db.insert('mcpOauthTokens', {
+      token: args.newAccessTokenHash,
+      userId: refreshRecord.userId,
+      scope: refreshRecord.scope,
+      familyId: refreshRecord.familyId,
+      expiresAt: args.newAccessTokenExpiresAt,
+    });
+    const newRefreshId = await ctx.db.insert('mcpOauthRefreshTokens', {
+      token: args.newRefreshTokenHash,
+      clientId: refreshRecord.clientId,
+      userId: refreshRecord.userId,
+      scope: refreshRecord.scope,
+      familyId: refreshRecord.familyId,
+      parentTokenId: refreshRecord._id,
+      createdAt: now,
+      expiresAt: args.newRefreshTokenExpiresAt,
+    });
+    await ctx.db.patch(refreshRecord._id, { replacedByTokenId: newRefreshId });
+
+    return { scope: refreshRecord.scope };
   },
 });
 
@@ -166,6 +258,16 @@ export const purgeExpired = internalMutation({
       .withIndex('by_expiresAt', (q) => q.lt('expiresAt', now))
       .take(PURGE_BATCH_SIZE);
     for (const record of tokensExpired) {
+      await ctx.db.delete(record._id);
+    }
+
+    const refreshTokensExpired = await ctx.db
+      .query('mcpOauthRefreshTokens')
+      .withIndex('by_expiresAt', (q) => q.lt('expiresAt', now))
+      .take(PURGE_BATCH_SIZE);
+    for (const record of refreshTokensExpired) {
+      // Preserve tokens revoked due to reuse detection for forensic audit
+      if (record.revokedReason === 'reuse_detected') continue;
       await ctx.db.delete(record._id);
     }
   },

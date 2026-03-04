@@ -2,7 +2,6 @@ import { v, ConvexError } from 'convex/values';
 import { mutation } from '../_generated/server';
 import { requireAdmin } from '../lib/auth';
 import { validateSlug } from '../lib/validators';
-import { internal } from '../_generated/api';
 
 export const create = mutation({
   args: { name: v.string(), slug: v.string() },
@@ -21,13 +20,33 @@ export const create = mutation({
   },
 });
 
+const TAG_REMOVAL_BATCH_SIZE = 100;
+
 export const remove = mutation({
   args: { id: v.id('tags') },
   handler: async (ctx, args) => {
-    const actorId = await requireAdmin(ctx);
-    await ctx.runMutation(internal.tags.internal.archive, {
-      id: args.id,
-      actorId,
-    });
+    await requireAdmin(ctx);
+
+    const tag = await ctx.db.get(args.id);
+    if (!tag) throw new ConvexError('Tag not found');
+
+    let isDone = false;
+    let cursor: string | null = null;
+    while (!isDone) {
+      const batch = await ctx.db
+        .query('articles')
+        .paginate({ numItems: TAG_REMOVAL_BATCH_SIZE, cursor });
+      for (const article of batch.page) {
+        if (article.tags.includes(tag.slug)) {
+          await ctx.db.patch(article._id, {
+            tags: article.tags.filter((t) => t !== tag.slug),
+          });
+        }
+      }
+      isDone = batch.isDone;
+      cursor = batch.continueCursor;
+    }
+
+    await ctx.db.delete(args.id);
   },
 });
