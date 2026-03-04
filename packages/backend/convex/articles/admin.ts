@@ -4,7 +4,7 @@ import { paginationOptsValidator } from 'convex/server';
 import { getAuthUserId } from '@convex-dev/auth/server';
 import { requireAdmin } from '../lib/auth';
 import { validateSlug } from '../lib/validators';
-import { captureAndPrune } from './_model';
+import { captureAndPrune, ARTICLE_CONFLICT } from './model';
 
 function isActiveArticle<T extends { deletedAt?: number }>(a: T): boolean {
   return a.deletedAt === undefined;
@@ -93,17 +93,31 @@ export const update = mutation({
     status: v.optional(v.union(v.literal('draft'), v.literal('published'))),
     publishedAt: v.optional(v.number()),
     expectedUpdatedAt: v.optional(v.number()),
+    force: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const authorId = await requireAdmin(ctx);
-    const { id, expectedUpdatedAt, ...updates } = args;
+    const { id, expectedUpdatedAt, force, ...updates } = args;
 
     const article = await ctx.db.get(id);
     if (!article) throw new ConvexError('Article not found');
     if (!isActiveArticle(article)) throw new ConvexError('Article is archived');
 
-    if (expectedUpdatedAt !== undefined && article.updatedAt !== expectedUpdatedAt) {
-      throw new ConvexError('Article was modified since last read. Refresh and retry.');
+    if (!force && expectedUpdatedAt !== undefined && article.updatedAt !== expectedUpdatedAt) {
+      throw new ConvexError({
+        message: 'Article was modified since last read. Refresh and resolve conflicts.',
+        code: ARTICLE_CONFLICT,
+        serverUpdatedAt: article.updatedAt,
+        serverArticle: {
+          title: article.title,
+          slug: article.slug,
+          content: article.content,
+          excerpt: article.excerpt,
+          tags: article.tags,
+          status: article.status,
+          publishedAt: article.publishedAt,
+        },
+      });
     }
 
     if (updates.slug) {
@@ -117,7 +131,7 @@ export const update = mutation({
       }
     }
 
-    await captureAndPrune(ctx, article, authorId, 'admin', undefined);
+    await captureAndPrune(ctx, article, authorId, 'admin', force ? 'force overwrite' : undefined);
 
     const patch: Record<string, unknown> = { updatedAt: Date.now() };
     for (const [key, value] of Object.entries(updates)) {

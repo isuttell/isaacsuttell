@@ -1,6 +1,8 @@
+import { ConvexError } from 'convex/values';
 import type { ActionCtx } from '../_generated/server';
 import { internal } from '../_generated/api';
 import type { Id } from '../_generated/dataModel';
+import { ARTICLE_CONFLICT } from '../articles/model';
 
 interface ToolDefinition {
   name: string;
@@ -105,7 +107,7 @@ export const TOOLS: ToolDefinition[] = [
   {
     name: 'blog_get_article',
     description:
-      'Get a single article by ID or slug. Returns metadata and content. For large articles, content is auto-truncated — use startLine/endLine to fetch specific sections. Exactly one of id or slug must be provided.',
+      'Get a single article by ID or slug. Returns metadata and content including updatedAt (use as expectedUpdatedAt when updating). For large articles, content is auto-truncated — use startLine/endLine to fetch specific sections. Exactly one of id or slug must be provided.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -168,7 +170,8 @@ export const TOOLS: ToolDefinition[] = [
   },
   {
     name: 'blog_update_article',
-    description: 'Update an existing article. Only provided fields are changed.',
+    description:
+      'Update an existing article. Only provided fields are changed. For conflict safety: call blog_get_article first to obtain updatedAt, then pass expectedUpdatedAt when updating. If the article was modified elsewhere (e.g. by a human editor), the update will fail with conflict details. Use force: true to overwrite anyway when intentional.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -181,6 +184,16 @@ export const TOOLS: ToolDefinition[] = [
           type: 'array',
           items: { type: 'string' },
           description: 'New tags (replaces existing)',
+        },
+        expectedUpdatedAt: {
+          type: 'number',
+          description:
+            'Concurrency token from article.updatedAt. Pass this to avoid overwriting concurrent edits. Get via blog_get_article.',
+        },
+        force: {
+          type: 'boolean',
+          description:
+            'If true, overwrite even when expectedUpdatedAt does not match (use with caution).',
         },
       },
       required: ['id'],
@@ -467,6 +480,20 @@ export async function executeTool(
       content: [{ type: 'text', text: JSON.stringify(result) }],
     };
   } catch (error) {
+    if (error instanceof ConvexError && typeof error.data === 'object' && error.data !== null) {
+      const data = error.data as { code?: string; message?: string; serverArticle?: unknown };
+      if (data.code === ARTICLE_CONFLICT) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Conflict: ${data.message ?? 'Article was modified elsewhere.'}\n\nServer version (updatedAt: ${(data as { serverUpdatedAt?: number }).serverUpdatedAt}):\n${JSON.stringify(data.serverArticle ?? {}, null, 2)}\n\nPass force: true to overwrite, or have the user refresh and merge changes.`,
+            },
+          ],
+          isError: true,
+        };
+      }
+    }
     const message = error instanceof Error ? error.message : 'Unknown error occurred';
     return {
       content: [{ type: 'text', text: `Error: ${message}` }],
@@ -565,6 +592,10 @@ async function dispatchTool(
         ...(args.content !== undefined && { content: args.content as string }),
         ...(args.excerpt !== undefined && { excerpt: args.excerpt as string }),
         ...(args.tags !== undefined && { tags: args.tags as string[] }),
+        ...(args.expectedUpdatedAt !== undefined && {
+          expectedUpdatedAt: args.expectedUpdatedAt as number,
+        }),
+        ...(args.force === true && { force: true }),
       });
       const updated = await ctx.runQuery(internal.articles.internal.getById, {
         id: args.id as Id<'articles'>,

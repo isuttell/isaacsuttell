@@ -1,10 +1,30 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import { useMutation, useQuery } from 'convex/react';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { useConvex, useMutation, useQuery } from 'convex/react';
 import { useRouter } from 'next/navigation';
+import { ConvexError } from 'convex/values';
 import { api } from '@isaacsuttell/backend/convex/_generated/api';
 import type { Doc } from '@isaacsuttell/backend/convex/_generated/dataModel';
+import type { MDXEditorMethods } from '@mdxeditor/editor';
+import { MDXEditorWrapper } from './mdx-editor';
+import { ConflictModal } from './conflict-modal';
+import { ARTICLE_CONFLICT } from '@isaacsuttell/backend/convex/articles/model';
+
+type ConflictData = {
+  code: string;
+  message?: string;
+  serverUpdatedAt?: number;
+  serverArticle?: {
+    title: string;
+    slug: string;
+    content: string;
+    excerpt: string;
+    tags: string[];
+    status: 'draft' | 'published';
+    publishedAt?: number;
+  };
+};
 
 function slugify(text: string) {
   return text
@@ -27,8 +47,10 @@ type ArticleData = {
 
 export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
   const router = useRouter();
+  const convex = useConvex();
   const create = useMutation(api.articles.admin.create);
   const update = useMutation(api.articles.admin.update);
+  const generateUploadUrl = useMutation(api.files.generateUploadUrl);
   const tags = useQuery(api.tags.queries.list) ?? [];
 
   const [data, setData] = useState<ArticleData>({
@@ -43,6 +65,56 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
   const [autoSlug, setAutoSlug] = useState(!article);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [conflict, setConflict] = useState<{
+    myContent: string;
+    serverArticle: NonNullable<ConflictData['serverArticle']>;
+    serverUpdatedAt: number;
+  } | null>(null);
+  const [showUpdatedElsewhere, setShowUpdatedElsewhere] = useState(false);
+  const editorRef = useRef<MDXEditorMethods | null>(null);
+  const baseUpdatedAtRef = useRef<number | undefined>(article?.updatedAt);
+  const pendingPayloadRef = useRef<Parameters<typeof update>[0] | null>(null);
+  const prevArticleIdRef = useRef<string | undefined>(undefined);
+
+  const articleId = article?._id;
+
+  // Sync editor content when switching between articles (not on initial mount)
+  useEffect(() => {
+    if (!article) return;
+    baseUpdatedAtRef.current = article.updatedAt;
+    if (prevArticleIdRef.current !== undefined && prevArticleIdRef.current !== article._id) {
+      editorRef.current?.setMarkdown(article.content);
+      setData((d) => ({ ...d, content: article.content }));
+    }
+    prevArticleIdRef.current = article._id;
+  }, [articleId]);
+
+  // Detect external updates via the reactive subscription
+  useEffect(() => {
+    if (
+      article &&
+      baseUpdatedAtRef.current !== undefined &&
+      article.updatedAt !== baseUpdatedAtRef.current
+    ) {
+      setShowUpdatedElsewhere(true);
+    }
+  }, [article?.updatedAt]);
+
+  const imageUploadHandler = useCallback(
+    async (image: File): Promise<string> => {
+      const postUrl = await generateUploadUrl();
+      const response = await fetch(postUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': image.type },
+        body: image,
+      });
+      const { storageId } = await response.json();
+      const url = await convex.query(api.files.getUrl, { storageId });
+      if (!url) throw new Error('Failed to get image URL');
+      return url;
+    },
+    [generateUploadUrl, convex]
+  );
 
   const handleTitleChange = useCallback(
     (title: string) => {
@@ -62,27 +134,111 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
     }));
   }, []);
 
+  const loadServerVersion = useCallback(
+    (serverArticle: NonNullable<ConflictData['serverArticle']>, serverUpdatedAt?: number) => {
+      setData({
+        title: serverArticle.title,
+        slug: serverArticle.slug,
+        content: serverArticle.content,
+        excerpt: serverArticle.excerpt,
+        tags: serverArticle.tags,
+        status: serverArticle.status,
+        publishedAt: serverArticle.publishedAt,
+      });
+      editorRef.current?.setMarkdown(serverArticle.content);
+      if (serverUpdatedAt !== undefined) baseUpdatedAtRef.current = serverUpdatedAt;
+      setConflict(null);
+      setShowUpdatedElsewhere(false);
+    },
+    []
+  );
+
+  const handleRefreshFromServer = useCallback(() => {
+    if (article) {
+      loadServerVersion(
+        {
+          title: article.title,
+          slug: article.slug,
+          content: article.content,
+          excerpt: article.excerpt,
+          tags: article.tags,
+          status: article.status,
+          publishedAt: article.publishedAt,
+        },
+        article.updatedAt
+      );
+    }
+    setShowUpdatedElsewhere(false);
+  }, [article, loadServerVersion]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const content = editorRef.current?.getMarkdown() ?? data.content;
+    if (!content.trim()) {
+      setError('Content is required');
+      return;
+    }
     setSaving(true);
     setError('');
 
-    try {
-      const payload = {
-        title: data.title,
-        slug: data.slug,
-        content: data.content,
-        excerpt: data.excerpt,
-        tags: data.tags,
-        status: data.status,
-        publishedAt: data.publishedAt,
-      };
+    const payload = {
+      title: data.title,
+      slug: data.slug,
+      content: content.trim(),
+      excerpt: data.excerpt,
+      tags: data.tags,
+      status: data.status,
+      publishedAt: data.publishedAt,
+    };
 
+    try {
       if (article) {
-        await update({ id: article._id, ...payload });
+        await update({
+          id: article._id,
+          ...payload,
+          expectedUpdatedAt: baseUpdatedAtRef.current,
+        });
       } else {
         await create(payload);
       }
+      router.push('/admin/blog');
+    } catch (err) {
+      if (err instanceof ConvexError && typeof err.data === 'object' && err.data !== null) {
+        const errData = err.data as ConflictData;
+        if (
+          errData.code === ARTICLE_CONFLICT &&
+          errData.serverArticle &&
+          errData.serverUpdatedAt !== undefined
+        ) {
+          pendingPayloadRef.current = { id: article!._id, ...payload };
+          setConflict({
+            myContent: payload.content,
+            serverArticle: errData.serverArticle,
+            serverUpdatedAt: errData.serverUpdatedAt,
+          });
+        } else {
+          setError(errData.message ?? 'Failed to save');
+        }
+      } else {
+        setError(err instanceof Error ? err.message : 'Failed to save');
+      }
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleKeepMine() {
+    const pending = pendingPayloadRef.current;
+    if (!pending || !article) {
+      setError('Cannot save: missing context. Please refresh and try again.');
+      return;
+    }
+    setSaving(true);
+    setError('');
+    try {
+      await update({ ...pending, force: true });
+      pendingPayloadRef.current = null;
+      setConflict(null);
       router.push('/admin/blog');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save');
@@ -91,8 +247,41 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
     }
   }
 
+  function handleUseTheirs() {
+    if (conflict) {
+      loadServerVersion(conflict.serverArticle, conflict.serverUpdatedAt);
+      pendingPayloadRef.current = null;
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-12">
+      {conflict && (
+        <ConflictModal
+          myContent={conflict.myContent}
+          theirContent={conflict.serverArticle.content}
+          onKeepMine={handleKeepMine}
+          onUseTheirs={handleUseTheirs}
+          onDismiss={() => {
+            setConflict(null);
+            pendingPayloadRef.current = null;
+          }}
+        />
+      )}
+      {showUpdatedElsewhere && article && (
+        <div className="flex items-center justify-between gap-4 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30">
+          <span className="font-mono text-sm text-amber-200">
+            Article was updated outside this editor. Refresh to load the latest version.
+          </span>
+          <button
+            type="button"
+            onClick={handleRefreshFromServer}
+            className="font-mono text-xs uppercase tracking-wider px-4 py-2 rounded bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 transition-colors"
+          >
+            Refresh
+          </button>
+        </div>
+      )}
       {/* Sticky Header with Actions */}
       <div className="sticky top-0 z-10 flex items-center justify-between py-4 bg-background/80 backdrop-blur-md border-b border-white/5 mb-12">
         <div className="flex items-center gap-4">
@@ -129,7 +318,6 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
           value={data.title}
           onChange={(e) => {
             handleTitleChange(e.target.value);
-            // Auto-resize
             e.target.style.height = 'auto';
             e.target.style.height = e.target.scrollHeight + 'px';
           }}
@@ -139,19 +327,17 @@ export function ArticleForm({ article }: { article?: Doc<'articles'> | null }) {
           className="w-full bg-transparent border-none text-4xl md:text-5xl lg:text-6xl font-sans font-extrabold text-foreground placeholder:text-white/10 focus:outline-none focus:ring-0 resize-none overflow-hidden leading-tight tracking-tight"
         />
 
-        <textarea
-          value={data.content}
-          onChange={(e) => {
-            setData((d) => ({ ...d, content: e.target.value }));
-            // Auto-resize
-            e.target.style.height = 'auto';
-            e.target.style.height = e.target.scrollHeight + 'px';
-          }}
-          placeholder="Write your markdown here..."
-          required
-          rows={12}
-          className="w-full bg-transparent border-none font-mono text-lg text-foreground/80 placeholder:text-white/10 focus:outline-none focus:ring-0 resize-none leading-relaxed"
-        />
+        <div className="min-h-[300px] rounded-lg border border-white/10 overflow-hidden [&_.mdxeditor]:!border-none">
+          <MDXEditorWrapper
+            ref={editorRef}
+            markdown={data.content}
+            onChange={(markdown) => setData((d) => ({ ...d, content: markdown }))}
+            diffMarkdown={article?.content ?? ''}
+            imageUploadHandler={imageUploadHandler}
+            contentEditableClassName="prose prose-invert prose-lg max-w-none font-sans text-foreground/90 min-h-[280px] focus:outline-none prose-a:text-sky prose-a:no-underline prose-code:text-lime prose-code:bg-white/5 prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-[0.9em] before:prose-code:content-none after:prose-code:content-none prose-pre:bg-[#111111] prose-pre:border prose-pre:border-white/10 prose-pre:rounded-xl prose-blockquote:border-l-2 prose-blockquote:border-lime/50 prose-blockquote:bg-lime/5 prose-blockquote:px-6 prose-blockquote:py-2 prose-blockquote:rounded-r-lg prose-blockquote:text-foreground/70 prose-blockquote:not-italic prose-strong:text-foreground prose-hr:border-white/10 prose-li:marker:text-muted"
+            placeholder="Write your markdown here..."
+          />
+        </div>
       </div>
 
       <div className="h-px w-full bg-white/5 my-16" />

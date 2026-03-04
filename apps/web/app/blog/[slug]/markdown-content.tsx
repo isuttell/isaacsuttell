@@ -23,7 +23,8 @@ export function MarkdownContent({ content }: { content: string }) {
         prose-hr:border-white/10 prose-hr:my-10
         prose-table:border-collapse prose-table:w-full
         prose-th:border-b prose-th:border-white/10 prose-th:p-3 prose-th:text-left prose-th:font-semibold
-        prose-td:border-b prose-td:border-white/5 prose-td:p-3 prose-td:text-foreground/80"
+        prose-td:border-b prose-td:border-white/5 prose-td:p-3 prose-td:text-foreground/80
+        prose-del:line-through prose-del:text-muted"
     >
       <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight, rehypeSlug]}>
         {content}
