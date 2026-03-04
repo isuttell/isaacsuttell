@@ -5,6 +5,7 @@ const navLinks = [
   { href: '/projects', label: 'Projects' },
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
+  { href: '/feed.xml', label: 'RSS' },
 ];
 
 export function SiteFooter() {

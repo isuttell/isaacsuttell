@@ -4,6 +4,8 @@ import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server';
 import { ConvexClientProvider } from './convex-client-provider';
 import { Analytics } from '@vercel/analytics/next';
 import { UserMenu } from './components/user-menu';
+import { BASE_URL } from './lib/config';
+import { safeJsonLd } from './lib/format';
 import './globals.css';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -19,8 +21,28 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: 'Isaac Suttell',
   description: 'Personal website of Isaac Suttell',
+  authors: [{ name: 'Isaac Suttell', url: BASE_URL }],
+  creator: 'Isaac Suttell',
+  alternates: {
+    types: {
+      'application/rss+xml': [{ url: '/feed.xml', title: 'Isaac Suttell RSS Feed' }],
+    },
+  },
+};
+
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Isaac Suttell',
+  url: BASE_URL,
+  author: {
+    '@type': 'Person',
+    name: 'Isaac Suttell',
+    url: BASE_URL,
+  },
 };
 
 export default function RootLayout({
@@ -32,6 +54,10 @@ export default function RootLayout({
     <ConvexAuthNextjsServerProvider>
       <html lang="en" className="dark">
         <body className={`${jakarta.variable} ${jetbrains.variable} antialiased`}>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: safeJsonLd(websiteJsonLd) }}
+          />
           <ConvexClientProvider>
             <UserMenu />
             {children}

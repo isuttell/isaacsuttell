@@ -5,7 +5,10 @@ import { cache } from 'react';
 import { fetchQuery } from 'convex/nextjs';
 import { api } from '@isaacsuttell/backend/convex/_generated/api';
 import { MarkdownContent } from './markdown-content';
+import { TableOfContents } from './table-of-contents';
 import { SiteFooter } from '../../components/site-footer';
+import { BASE_URL } from '../../lib/config';
+import { formatDate, toISODate, safeJsonLd } from '../../lib/format';
 
 const getArticle = cache((slug: string) => fetchQuery(api.articles.queries.getBySlug, { slug }));
 
@@ -19,16 +22,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${article.title} | Isaac Suttell`,
     description: article.excerpt,
+    alternates: {
+      canonical: `/blog/${slug}`,
+    },
     openGraph: {
       title: article.title,
       description: article.excerpt,
       type: 'article',
-      publishedTime: article.publishedAt ? new Date(article.publishedAt).toISOString() : undefined,
+      publishedTime: toISODate(article.publishedAt),
+      modifiedTime: toISODate(article.updatedAt),
       authors: ['Isaac Suttell'],
       tags: article.tags,
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: article.title,
       description: article.excerpt,
     },
@@ -38,15 +45,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 function getReadingTime(content: string): number {
   const words = content.trim().split(/\s+/).length;
   return Math.max(1, Math.ceil(words / 200));
-}
-
-function formatDate(timestamp: number | undefined) {
-  if (!timestamp) return null;
-  return new Date(timestamp).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -60,8 +58,48 @@ export default async function ArticlePage({ params }: Props) {
   const readingTime = getReadingTime(article.content);
   const recentArticles = allArticles.filter((a) => a._id !== article._id).slice(0, 3);
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: article.title,
+    description: article.excerpt,
+    url: `${BASE_URL}/blog/${slug}`,
+    datePublished: toISODate(article.publishedAt),
+    dateModified: toISODate(article.updatedAt),
+    author: {
+      '@type': 'Person',
+      name: 'Isaac Suttell',
+      url: BASE_URL,
+    },
+    publisher: {
+      '@type': 'Person',
+      name: 'Isaac Suttell',
+      url: BASE_URL,
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `${BASE_URL}/blog/${slug}`,
+    },
+  };
+
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Blog', item: `${BASE_URL}/blog` },
+      { '@type': 'ListItem', position: 3, name: article.title, item: `${BASE_URL}/blog/${slug}` },
+    ],
+  };
+
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumbLd) }}
+      />
+
       <div
         className="pointer-events-none fixed inset-0 opacity-[0.03]"
         style={{
@@ -82,7 +120,9 @@ export default async function ArticlePage({ params }: Props) {
       <main className="relative min-h-screen pt-24 md:pt-32 pb-32">
         <header className="mb-16 md:mb-20 max-w-3xl mx-auto px-6 md:px-12">
           <div className="flex flex-wrap items-center gap-3 mb-8 font-mono text-xs tracking-widest uppercase">
-            <time className="text-muted">{formatDate(article.publishedAt)}</time>
+            <time className="text-muted" dateTime={toISODate(article.publishedAt)}>
+              {formatDate(article.publishedAt)}
+            </time>
             {article.tags.length > 0 && <span className="text-white/15">·</span>}
             {article.tags.map((tag) => (
               <Link
@@ -105,6 +145,7 @@ export default async function ArticlePage({ params }: Props) {
         </header>
 
         <div className="max-w-3xl mx-auto px-6 md:px-12">
+          <TableOfContents content={article.content} />
           <MarkdownContent content={article.content} />
         </div>
 
@@ -136,7 +177,10 @@ export default async function ArticlePage({ params }: Props) {
                         </span>
                       ))}
                       {a.tags.length > 0 && <span className="text-white/10">·</span>}
-                      <time className="font-mono text-[10px] tracking-wider uppercase text-muted/70">
+                      <time
+                        className="font-mono text-[10px] tracking-wider uppercase text-muted/70"
+                        dateTime={toISODate(a.publishedAt)}
+                      >
                         {formatDate(a.publishedAt)}
                       </time>
                     </div>
