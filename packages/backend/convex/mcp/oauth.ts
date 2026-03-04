@@ -8,7 +8,8 @@ const GOOGLE_USERINFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo';
 
 const CODE_TTL = 5 * 60 * 1000; // 5 minutes
 const PENDING_TTL = 10 * 60 * 1000; // 10 minutes
-const TOKEN_TTL = 60 * 60 * 1000; // 1 hour
+const ACCESS_TOKEN_TTL = 60 * 60 * 1000; // 1 hour
+const REFRESH_TOKEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 const SUPPORTED_SCOPES = ['blog:manage'];
 
@@ -84,7 +85,7 @@ export function handleAuthServerMetadata(): Response {
     authorization_endpoint: `${siteUrl}/oauth/authorize`,
     token_endpoint: `${siteUrl}/oauth/token`,
     response_types_supported: ['code'],
-    grant_types_supported: ['authorization_code'],
+    grant_types_supported: ['authorization_code', 'refresh_token'],
     code_challenge_methods_supported: ['S256'],
     registration_endpoint: `${siteUrl}/oauth/register`,
     token_endpoint_auth_methods_supported: ['none'],
@@ -149,7 +150,7 @@ export async function handleRegister(ctx: ActionCtx, request: Request): Promise<
       redirect_uris: redirectUris,
       ...(typeof clientName === 'string' && { client_name: clientName }),
       token_endpoint_auth_method: 'none',
-      grant_types: ['authorization_code'],
+      grant_types: ['authorization_code', 'refresh_token'],
       response_types: ['code'],
     },
     { status: 201 }
@@ -426,55 +427,110 @@ export async function handleToken(ctx: ActionCtx, request: Request): Promise<Res
   const redirectUri = params.get('redirect_uri');
   const clientId = params.get('client_id');
   const codeVerifier = params.get('code_verifier');
+  const refreshToken = params.get('refresh_token');
 
-  if (grantType !== 'authorization_code') {
-    return Response.json({ error: 'unsupported_grant_type' }, { status: 400 });
-  }
+  if (grantType === 'authorization_code') {
+    if (!code || !codeVerifier || !clientId || !redirectUri) {
+      return Response.json(
+        {
+          error: 'invalid_request',
+          error_description:
+            'Missing required parameters (code, code_verifier, client_id, redirect_uri)',
+        },
+        { status: 400 }
+      );
+    }
 
-  if (!code || !codeVerifier || !clientId || !redirectUri) {
+    // Atomic: lookup code, verify PKCE, mark used, issue access + refresh tokens
+    const accessToken = generateRandomToken();
+    const refresh = generateRandomToken();
+    const refreshFamilyId = generateRandomToken();
+    const accessTokenHash = await hashToken(accessToken);
+    const refreshTokenHash = await hashToken(refresh);
+    const codeHash = await hashToken(code);
+    const result = await ctx.runMutation(internal.mcp.internal.exchangeCodeForToken, {
+      code: codeHash,
+      clientId,
+      redirectUri,
+      codeVerifier,
+      accessTokenHash,
+      accessTokenExpiresAt: Date.now() + ACCESS_TOKEN_TTL,
+      refreshTokenHash,
+      refreshTokenExpiresAt: Date.now() + REFRESH_TOKEN_TTL,
+      refreshFamilyId,
+    });
+
+    if (result.error) {
+      return Response.json(
+        { error: 'invalid_grant', error_description: result.error },
+        { status: 400 }
+      );
+    }
+
     return Response.json(
       {
-        error: 'invalid_request',
-        error_description:
-          'Missing required parameters (code, code_verifier, client_id, redirect_uri)',
+        access_token: accessToken,
+        token_type: 'Bearer',
+        expires_in: ACCESS_TOKEN_TTL / 1000,
+        refresh_token: refresh,
+        scope: result.scope,
       },
-      { status: 400 }
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 'no-store',
+          Pragma: 'no-cache',
+        },
+      }
     );
   }
 
-  // Atomic: lookup code, verify PKCE, mark used, issue token — all in one mutation
-  const accessToken = generateRandomToken();
-  const accessTokenHash = await hashToken(accessToken);
-  const codeHash = await hashToken(code);
-  const result = await ctx.runMutation(internal.mcp.internal.exchangeCodeForToken, {
-    code: codeHash,
-    clientId,
-    redirectUri,
-    codeVerifier,
-    accessTokenHash,
-    tokenExpiresAt: Date.now() + TOKEN_TTL,
-  });
-
-  if (result.error) {
-    return Response.json(
-      { error: 'invalid_grant', error_description: result.error },
-      { status: 400 }
-    );
-  }
-
-  return Response.json(
-    {
-      access_token: accessToken,
-      token_type: 'Bearer',
-      expires_in: TOKEN_TTL / 1000,
-      scope: result.scope,
-    },
-    {
-      status: 200,
-      headers: {
-        'Cache-Control': 'no-store',
-        Pragma: 'no-cache',
-      },
+  if (grantType === 'refresh_token') {
+    if (!refreshToken || !clientId) {
+      return Response.json(
+        {
+          error: 'invalid_request',
+          error_description: 'Missing required parameters (refresh_token, client_id)',
+        },
+        { status: 400 }
+      );
     }
-  );
+
+    const newAccessToken = generateRandomToken();
+    const newRefreshToken = generateRandomToken();
+    const result = await ctx.runMutation(internal.mcp.internal.rotateRefreshToken, {
+      refreshTokenHash: await hashToken(refreshToken),
+      clientId,
+      newAccessTokenHash: await hashToken(newAccessToken),
+      newAccessTokenExpiresAt: Date.now() + ACCESS_TOKEN_TTL,
+      newRefreshTokenHash: await hashToken(newRefreshToken),
+      newRefreshTokenExpiresAt: Date.now() + REFRESH_TOKEN_TTL,
+    });
+
+    if (result.error) {
+      return Response.json(
+        { error: 'invalid_grant', error_description: result.error },
+        { status: 400 }
+      );
+    }
+
+    return Response.json(
+      {
+        access_token: newAccessToken,
+        token_type: 'Bearer',
+        expires_in: ACCESS_TOKEN_TTL / 1000,
+        refresh_token: newRefreshToken,
+        scope: result.scope,
+      },
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 'no-store',
+          Pragma: 'no-cache',
+        },
+      }
+    );
+  }
+
+  return Response.json({ error: 'unsupported_grant_type' }, { status: 400 });
 }

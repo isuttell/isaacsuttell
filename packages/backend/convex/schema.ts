@@ -73,8 +73,28 @@ export default defineSchema({
     token: v.string(),
     userId: v.id('users'),
     scope: v.string(),
+    familyId: v.optional(v.string()),
     expiresAt: v.number(),
   })
     .index('by_token', ['token'])
-    .index('by_expiresAt', ['expiresAt']),
+    .index('by_expiresAt', ['expiresAt'])
+    .index('by_familyId', ['familyId']),
+
+  mcpOauthRefreshTokens: defineTable({
+    token: v.string(),
+    clientId: v.string(),
+    userId: v.id('users'),
+    scope: v.string(),
+    familyId: v.string(),
+    parentTokenId: v.optional(v.id('mcpOauthRefreshTokens')),
+    replacedByTokenId: v.optional(v.id('mcpOauthRefreshTokens')),
+    createdAt: v.number(),
+    expiresAt: v.number(),
+    usedAt: v.optional(v.number()),
+    revokedAt: v.optional(v.number()),
+    revokedReason: v.optional(v.string()),
+  })
+    .index('by_token', ['token'])
+    .index('by_expiresAt', ['expiresAt'])
+    .index('by_familyId', ['familyId']),
 });
