@@ -4,7 +4,8 @@ import { use } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@isaacsuttell/backend/convex/_generated/api';
 import type { Id } from '@isaacsuttell/backend/convex/_generated/dataModel';
-import { ArticleForm } from '../../components/article-form';
+import { ArticleForm } from '../../_components/article-form';
+import { VersionHistory } from '../../_components/version-history';
 
 export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -31,6 +32,9 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
   return (
     <div className="px-6 md:px-12 pt-8 pb-24">
       <h1 className="font-sans text-2xl font-bold text-foreground mb-8">Edit Article</h1>
+      <div className="mb-6">
+        <VersionHistory articleId={article._id} />
+      </div>
       <ArticleForm article={article} />
     </div>
   );
