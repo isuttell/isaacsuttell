@@ -10,7 +10,7 @@ const CODE_TTL = 5 * 60 * 1000; // 5 minutes
 const PENDING_TTL = 10 * 60 * 1000; // 10 minutes
 const TOKEN_TTL = 60 * 60 * 1000; // 1 hour
 
-const SUPPORTED_SCOPES = ['blog:read', 'blog:write', 'blog:delete', 'blog:manage'];
+const SUPPORTED_SCOPES = ['blog:manage'];
 
 // S256 challenge is always 43 chars of base64url (256 bits without padding)
 const CODE_CHALLENGE_RE = /^[A-Za-z0-9_-]{43}$/;
@@ -166,7 +166,7 @@ export async function handleAuthorize(ctx: ActionCtx, request: Request): Promise
   const codeChallenge = url.searchParams.get('code_challenge');
   const codeChallengeMethod = url.searchParams.get('code_challenge_method');
   const mcpState = url.searchParams.get('state') ?? '';
-  const scope = url.searchParams.get('scope') ?? 'blog:read blog:write';
+  const scope = url.searchParams.get('scope') ?? 'blog:manage';
 
   if (!clientId || !redirectUri || !codeChallenge) {
     return Response.json(

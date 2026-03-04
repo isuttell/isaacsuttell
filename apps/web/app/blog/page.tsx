@@ -3,24 +3,19 @@ import Link from 'next/link';
 import { fetchQuery } from 'convex/nextjs';
 import { api } from '@isaacsuttell/backend/convex/_generated/api';
 import { SiteFooter } from '../components/site-footer';
+import { formatDate, toISODate } from '../lib/format';
 
 export const metadata: Metadata = {
   title: 'Blog | Isaac Suttell',
   description: 'Writing about design, engineering, and building things.',
+  alternates: {
+    canonical: '/blog',
+  },
   openGraph: {
     title: 'Blog | Isaac Suttell',
     description: 'Writing about design, engineering, and building things.',
   },
 };
-
-function formatDate(timestamp: number | undefined) {
-  if (!timestamp) return null;
-  return new Date(timestamp).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
-}
 
 export default async function BlogPage() {
   const articles = await fetchQuery(api.articles.queries.list, {});
@@ -66,7 +61,10 @@ export default async function BlogPage() {
           <section className="max-w-5xl mx-auto px-6 md:px-12 lg:px-20 mb-16 md:mb-20">
             <Link href={`/blog/${featured.slug}`} className="group block">
               <div className="flex flex-wrap items-center gap-3 mb-6">
-                <time className="font-mono text-xs tracking-widest uppercase text-muted">
+                <time
+                  className="font-mono text-xs tracking-widest uppercase text-muted"
+                  dateTime={toISODate(featured.publishedAt)}
+                >
                   {formatDate(featured.publishedAt)}
                 </time>
                 {featured.tags.length > 0 && <span className="text-white/15">·</span>}
@@ -127,7 +125,10 @@ export default async function BlogPage() {
                           </span>
                         ))}
                         {article.tags.length > 0 && <span className="text-white/10">·</span>}
-                        <time className="font-mono text-[10px] tracking-wider uppercase text-muted/70">
+                        <time
+                          className="font-mono text-[10px] tracking-wider uppercase text-muted/70"
+                          dateTime={toISODate(article.publishedAt)}
+                        >
                           {formatDate(article.publishedAt)}
                         </time>
                       </div>
