@@ -11,15 +11,15 @@ Designer and Engineer building AI infrastructure, with a focus on creative appli
 
 ## 🛠 Tech Stack
 
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| Next.js | 16.1.1 | React framework with App Router |
-| React | 19.2.3 | UI library |
-| Convex | 1.31.2 | Backend-as-a-Service |
-| Tailwind CSS | 4 | Styling framework |
-| TypeScript | 5 | Type safety |
-| Turborepo | 2 | Monorepo build system |
-| Bun | 1.3.5 | Package manager & runtime |
+| Technology   | Version | Purpose                         |
+| ------------ | ------- | ------------------------------- |
+| Next.js      | 16.1.1  | React framework with App Router |
+| React        | 19.2.3  | UI library                      |
+| Convex       | 1.31.2  | Backend-as-a-Service            |
+| Tailwind CSS | 4       | Styling framework               |
+| TypeScript   | 5       | Type safety                     |
+| Turborepo    | 2       | Monorepo build system           |
+| Bun          | 1.3.5   | Package manager & runtime       |
 
 ## 📁 Project Structure
 
@@ -100,6 +100,7 @@ Shared React component library with reusable UI components:
 ### @isaacsuttell/backend
 
 Convex backend with:
+
 - Queries for data fetching
 - Mutations for data updates
 - Actions for external API integration
@@ -107,12 +108,14 @@ Convex backend with:
 ### @isaacsuttell/config
 
 Shared configuration packages:
+
 - TypeScript configurations
 - ESLint configurations
 
 ## 🌐 Deployment
 
 This project is deployed on:
+
 - **Frontend**: Vercel
 - **Backend**: Convex Cloud
 
@@ -124,17 +127,18 @@ This project is deployed on:
 
 ### Environment Variables
 
-| Variable | Environment | Description |
-|----------|-------------|-------------|
-| `CONVEX_DEPLOY_KEY` | Production | Production deploy key from Convex Dashboard |
-| `CONVEX_DEPLOY_KEY` | Preview | Preview deploy key from Convex Dashboard |
-| `NEXT_PUBLIC_CONVEX_URL` | All | Auto-injected during Vercel build |
+| Variable                 | Environment | Description                                 |
+| ------------------------ | ----------- | ------------------------------------------- |
+| `CONVEX_DEPLOY_KEY`      | Production  | Production deploy key from Convex Dashboard |
+| `CONVEX_DEPLOY_KEY`      | Preview     | Preview deploy key from Convex Dashboard    |
+| `NEXT_PUBLIC_CONVEX_URL` | All         | Auto-injected during Vercel build           |
 
 ## 📖 Development Guidelines
 
 For detailed development guidelines, architecture patterns, and best practices, see [CLAUDE.md](./CLAUDE.md).
 
 Key principles:
+
 - Default to Server Components (use `'use client'` sparingly)
 - Convex is your state manager - no Redux/Zustand needed
 - Organize Convex functions by resource (users, videos, etc.)
