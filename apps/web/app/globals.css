@@ -106,3 +106,82 @@ body {
   width: 0;
   opacity: 0;
 }
+
+/* MDXEditor customizations — dark-theme class on the component enables Radix dark colors.
+   These overrides swap the accent from Radix blue → lime and fine-tune backgrounds to match the app.
+   Doubled class selectors (.mdxeditor.mdxeditor) bump specificity to override MDXEditor's own
+   CSS custom properties without !important. */
+.mdxeditor.mdxeditor,
+.mdxeditor-popup-container.mdxeditor-popup-container {
+  --basePageBg: #0a0a0a;
+  --baseBase: #0a0a0a;
+  --baseBgSubtle: #111111;
+  --baseBg: #1a1a1a;
+  --baseBgHover: #222222;
+  --baseBgActive: #2a2a2a;
+  --baseLine: rgba(255, 255, 255, 0.1);
+  --baseBorder: rgba(255, 255, 255, 0.2);
+  --baseBorderHover: rgba(255, 255, 255, 0.3);
+  --baseSolid: #525252;
+  --baseSolidHover: #636363;
+  --baseText: rgba(250, 250, 250, 0.7);
+  --baseTextContrast: #fafafa;
+
+  --accentBase: rgba(163, 230, 53, 0.05);
+  --accentBgSubtle: rgba(163, 230, 53, 0.08);
+  --accentBg: rgba(163, 230, 53, 0.12);
+  --accentBgHover: rgba(163, 230, 53, 0.18);
+  --accentBgActive: rgba(163, 230, 53, 0.25);
+  --accentLine: rgba(163, 230, 53, 0.3);
+  --accentBorder: rgba(163, 230, 53, 0.4);
+  --accentBorderHover: rgba(163, 230, 53, 0.5);
+  --accentSolid: #a3e635;
+  --accentSolidHover: #bef264;
+  --accentText: #a3e635;
+  --accentTextContrast: #d9f99d;
+
+  --font-body: var(--font-jakarta), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  color: rgba(250, 250, 250, 0.7);
+}
+
+.mdxeditor [class*='_toolbarRoot'] {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mdxeditor .cm-editor {
+  background-color: #111111;
+}
+
+.mdxeditor .cm-gutters {
+  background-color: #111111;
+  color: #525252;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mdxeditor .cm-activeLineGutter {
+  background-color: transparent;
+}
+
+.mdxeditor .cm-cursor,
+.mdxeditor .cm-dropCursor {
+  border-left-color: #a3e635;
+}
+
+.mdxeditor .sp-wrapper {
+  --sp-colors-surface1: #111111;
+  --sp-colors-surface2: #1a1a1a;
+  --sp-colors-surface3: #222222;
+  --sp-colors-clickable: #525252;
+  --sp-colors-base: #fafafa;
+  --sp-colors-disabled: #333333;
+  --sp-colors-hover: rgba(255, 255, 255, 0.1);
+  --sp-colors-accent: #a3e635;
+}
+
+.mdxeditor [class*='_placeholder'] {
+  font-family: var(--font-body);
+  color: rgba(255, 255, 255, 0.15);
+  font-style: italic;
+}

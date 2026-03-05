@@ -4,7 +4,7 @@ import { use } from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@isaacsuttell/backend/convex/_generated/api';
 import type { Id } from '@isaacsuttell/backend/convex/_generated/dataModel';
-import { ArticleForm } from '../../_components/article-form';
+import { ArticleForm } from '../../components/article-form';
 import { VersionHistory } from '../../_components/version-history';
 
 export default function EditArticlePage({ params }: { params: Promise<{ id: string }> }) {

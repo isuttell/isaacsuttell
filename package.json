@@ -40,5 +40,8 @@
   "trustedDependencies": [
     "sharp",
     "unrs-resolver"
-  ]
+  ],
+  "dependencies": {
+    "cm6-theme-basic-dark": "^0.2.0"
+  }
 }
