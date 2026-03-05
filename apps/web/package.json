@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@mdxeditor/editor": "^3.52.4",
     "@convex-dev/auth": "^0.0.91",
     "@isaacsuttell/ui": "workspace:*",
     "@tailwindcss/typography": "^0.5.19",
@@ -21,6 +22,7 @@
     "react-markdown": "^10.1.0",
     "rehype-highlight": "^7.0.2",
     "rehype-slug": "^6.0.0",
+    "react-diff-viewer-continued": "^3.4.0",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {

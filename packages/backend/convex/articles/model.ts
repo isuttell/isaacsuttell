@@ -1,6 +1,8 @@
 import type { MutationCtx } from '../_generated/server';
 import type { Doc, Id } from '../_generated/dataModel';
 
+export const ARTICLE_CONFLICT = 'ARTICLE_CONFLICT';
+
 const MAX_VERSIONS_PER_ARTICLE = 50;
 
 export type ArticleSnapshot = {
@@ -69,7 +71,7 @@ export async function pruneRevisions(
     .take(maxVersions + 1);
 
   if (versions.length > maxVersions) {
-    await ctx.db.delete(versions[versions.length - 1]._id);
+    await ctx.db.delete(versions[versions.length - 1]!._id);
   }
 }
 
