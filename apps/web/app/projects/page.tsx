@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { SiteFooter } from '../components/site-footer';
 
 export const metadata: Metadata = {
-  title: 'Projects | Isaac Suttell',
-  description: 'Side projects and experiments in WebGL, simulations, and creative coding.',
+  title: 'Side Projects | Isaac Suttell',
+  description: 'Creative coding side projects and photography by Isaac Suttell.',
 };
 
 const projects = [
@@ -13,7 +13,6 @@ const projects = [
     id: 'blackhole',
     title: 'Gravitational Lensing',
     href: 'https://blackhole.zaks.io/',
-    external: true,
     image: '/blackhole-simulation.webp',
     description:
       'Real-time ray marching through curved spacetime using Schwarzschild geodesics. Light paths computed per-pixel to simulate gravitational lensing, the photon sphere, and relativistic Doppler effects.',
@@ -23,7 +22,6 @@ const projects = [
     id: 'audio-viz',
     title: 'Audio Visualizer',
     href: 'https://visualizer.zaks.io/',
-    external: true,
     image: '/blackhole-audio-visualizer.webp',
     description:
       'Black spheres orbit each other while a particle system emits to the beat of music frequencies. Particles fall into the black holes according to orbital dynamics.',
@@ -45,15 +43,14 @@ const photography = [
     title: 'Fashion Photography',
     href: '/photography/fashion',
     image: '/photography/fashion/fashion-007.jpg',
-    description: 'Portrait and fashion work from my photography years, 2008–2012.',
+    description: 'Portrait and fashion work from my photography years, 2008-2012.',
     tech: 'Canon 1Ds Mark III',
   },
 ];
 
 export default function Projects() {
   return (
-    <div className="relative min-h-screen bg-background overflow-hidden">
-      {/* Noise texture overlay */}
+    <div className="relative min-h-screen overflow-hidden bg-background">
       <div
         className="pointer-events-none fixed inset-0 opacity-[0.03]"
         style={{
@@ -61,81 +58,111 @@ export default function Projects() {
         }}
       />
 
-      {/* Back link */}
       <Link
         href="/"
-        className="fixed top-6 left-6 md:top-10 md:left-12 font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-foreground transition-colors z-20 animate-fade-up glow-lime"
+        className="fixed top-6 left-6 z-20 font-mono text-sm uppercase tracking-[0.15em] text-muted transition-colors hover:text-foreground glow-lime md:top-10 md:left-12"
         style={{ animationDelay: '0.1s' }}
       >
         ← Home
       </Link>
 
-      {/* Main content */}
-      <main className="relative min-h-screen px-6 md:px-12 lg:px-20 pt-24 md:pt-28 pb-24">
-        {/* Header */}
-        <header className="mb-16 md:mb-20 select-none">
-          <h1 className="font-sans tracking-tighter">
-            <span className="block text-[14vw] md:text-[10vw] lg:text-[8vw] font-extrabold leading-[0.85] text-foreground animate-fade-up">
+      <main className="relative min-h-screen px-6 pt-24 pb-24 md:px-12 md:pt-28 lg:px-20">
+        <header className="mb-16 select-none md:mb-20">
+          <h1 className="font-sans tracking-normal">
+            <span className="block animate-fade-up text-6xl font-extrabold leading-[0.85] text-foreground sm:text-7xl md:text-8xl lg:text-9xl">
               SIDE
             </span>
             <span
-              className="block text-[14vw] md:text-[10vw] lg:text-[8vw] font-extrabold leading-[0.85] text-foreground ml-[10vw] md:ml-[12vw] animate-fade-up"
+              className="ml-[10vw] block animate-fade-up text-6xl font-extrabold leading-[0.85] text-foreground sm:text-7xl md:ml-28 md:text-8xl lg:text-9xl"
               style={{ animationDelay: '0.1s' }}
             >
               PROJECTS
             </span>
           </h1>
 
-          {/* Lime accent line */}
           <div
-            className="mt-6 ml-[10vw] md:ml-[12vw] h-[2px] w-12 bg-lime animate-fade-up"
+            className="ml-[10vw] mt-6 h-[2px] w-12 animate-fade-up bg-lime md:ml-28"
             style={{ animationDelay: '0.15s' }}
           />
+
+          <div
+            className="ml-[10vw] mt-6 max-w-2xl animate-fade-up space-y-4 md:ml-28"
+            style={{ animationDelay: '0.2s' }}
+          >
+            <p className="font-sans leading-relaxed text-foreground/80">
+              These are side projects and older creative studies. The business work lives at
+              Zaks.io: developer tools for AI-agent workflows, privacy-first automation, and the
+              systems around them.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://zaks.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-sm text-lime transition-colors hover:text-sky glow-lime"
+              >
+                zaks.io
+              </a>
+              <a
+                href="https://agent-paste.sh?ref=isaacsuttell.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-sm text-muted transition-colors hover:text-sky glow-sky"
+              >
+                Agent Paste
+              </a>
+              <a
+                href="https://trace-flow.dev?ref=isaacsuttell.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-sm text-muted transition-colors hover:text-sky glow-sky"
+              >
+                Trace Flow
+              </a>
+            </div>
+          </div>
         </header>
 
-        {/* WebGL / Simulations Section */}
         <section className="mb-20 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-          <div className="flex items-center gap-3 mb-8">
-            <span className="font-mono text-xs tracking-[0.2em] uppercase text-lime">
+          <div className="mb-8 flex items-center gap-3">
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-lime">
               WebGL / Simulations
             </span>
-            <div className="flex-1 h-px bg-lime/20" />
+            <div className="h-px flex-1 bg-lime/20" />
           </div>
 
           <div className="space-y-10 md:space-y-12">
             {projects.map((project) => (
               <div key={project.id} className="group">
-                {/* Mobile: Full-width cinematic image */}
                 <a
                   href={project.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative block md:hidden aspect-video w-full overflow-hidden bg-[#141414] border border-muted/20 group-hover:border-lime/50 transition-colors"
+                  className="relative block aspect-video w-full overflow-hidden border border-muted/20 bg-[#141414] transition-colors group-hover:border-lime/50 md:hidden"
                 >
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 120px"
-                    className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                    className="object-cover opacity-90 transition-all duration-700 group-hover:scale-[1.02] group-hover:opacity-100"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-background/60 via-transparent to-transparent" />
                 </a>
 
-                {/* Desktop: Side thumbnail layout */}
-                <div className="hidden md:grid md:grid-cols-[120px_1fr] gap-6 items-start">
+                <div className="hidden items-start gap-6 md:grid md:grid-cols-[120px_1fr]">
                   <a
                     href={project.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative aspect-square w-full overflow-hidden bg-[#141414] border border-muted/20 group-hover:border-lime transition-colors"
+                    className="relative aspect-square w-full overflow-hidden border border-muted/20 bg-[#141414] transition-colors group-hover:border-lime"
                   >
                     <Image
                       src={project.image}
                       alt={project.title}
                       fill
                       sizes="120px"
-                      className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                      className="object-cover opacity-80 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
                     />
                   </a>
 
@@ -144,15 +171,15 @@ export default function Projects() {
                       href={project.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground hover:text-sky transition-colors"
+                      className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground transition-colors hover:text-sky"
                     >
-                      <span className="w-2 h-2 rounded-full bg-lime" />
+                      <span className="h-2 w-2 rounded-full bg-lime" />
                       {project.title}
-                      <span className="text-muted group-hover:translate-x-1 transition-transform">
+                      <span className="text-muted transition-transform group-hover:translate-x-1">
                         →
                       </span>
                     </a>
-                    <p className="mt-2 font-sans text-foreground/80 leading-relaxed max-w-xl">
+                    <p className="mt-2 max-w-xl font-sans leading-relaxed text-foreground/80">
                       {project.description}
                     </p>
                     <p className="mt-2 font-mono text-xs tracking-wide text-muted">
@@ -161,21 +188,20 @@ export default function Projects() {
                   </div>
                 </div>
 
-                {/* Mobile: Content below image */}
-                <div className="md:hidden mt-4">
+                <div className="mt-4 md:hidden">
                   <a
                     href={project.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground hover:text-sky transition-colors"
+                    className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground transition-colors hover:text-sky"
                   >
-                    <span className="w-2 h-2 rounded-full bg-lime" />
+                    <span className="h-2 w-2 rounded-full bg-lime" />
                     {project.title}
-                    <span className="text-muted group-hover:translate-x-1 transition-transform">
+                    <span className="text-muted transition-transform group-hover:translate-x-1">
                       →
                     </span>
                   </a>
-                  <p className="mt-2 font-sans text-sm text-foreground/80 leading-relaxed">
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-foreground/80">
                     {project.description}
                   </p>
                   <p className="mt-2 font-mono text-xs tracking-wide text-muted">{project.tech}</p>
@@ -185,90 +211,80 @@ export default function Projects() {
           </div>
         </section>
 
-        {/* Photography Section */}
         <section className="animate-fade-up" style={{ animationDelay: '0.3s' }}>
-          <div className="flex items-center gap-3 mb-8">
-            <span className="font-mono text-xs tracking-[0.2em] uppercase text-sky">
+          <div className="mb-8 flex items-center gap-3">
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-sky">
               Photography
             </span>
-            <div className="flex-1 h-px bg-sky/20" />
+            <div className="h-px flex-1 bg-sky/20" />
           </div>
 
           <div className="space-y-10 md:space-y-12">
             {photography.map((project) => (
               <div key={project.id} className="group">
-                {/* Mobile: Full-width cinematic image */}
                 <Link
                   href={project.href}
-                  className="relative block md:hidden aspect-video w-full overflow-hidden bg-[#141414] border border-muted/20 group-hover:border-sky/50 transition-colors"
+                  className="relative block aspect-video w-full overflow-hidden border border-muted/20 bg-[#141414] transition-colors group-hover:border-sky/50 md:hidden"
                 >
                   <Image
                     src={project.image}
                     alt={project.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 120px"
-                    className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-[1.02] transition-all duration-700"
+                    className="object-cover opacity-90 transition-all duration-700 group-hover:scale-[1.02] group-hover:opacity-100"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-background/60 via-transparent to-transparent" />
                 </Link>
 
-                {/* Desktop: Side thumbnail layout */}
-                <div className="hidden md:grid md:grid-cols-[120px_1fr] gap-6 items-start">
+                <div className="hidden items-start gap-6 md:grid md:grid-cols-[120px_1fr]">
                   <Link
                     href={project.href}
-                    className="relative aspect-square w-full overflow-hidden bg-[#141414] border border-muted/20 group-hover:border-sky transition-colors"
+                    className="relative aspect-square w-full overflow-hidden border border-muted/20 bg-[#141414] transition-colors group-hover:border-sky"
                   >
                     <Image
                       src={project.image}
                       alt={project.title}
                       fill
                       sizes="120px"
-                      className="object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                      className="object-cover opacity-80 transition-all duration-500 group-hover:scale-105 group-hover:opacity-100"
                     />
                   </Link>
 
                   <div>
                     <Link
                       href={project.href}
-                      className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground hover:text-lime transition-colors"
+                      className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground transition-colors hover:text-lime"
                     >
-                      <span className="w-2 h-2 rounded-full bg-sky" />
+                      <span className="h-2 w-2 rounded-full bg-sky" />
                       {project.title}
-                      <span className="text-muted group-hover:translate-x-1 transition-transform">
+                      <span className="text-muted transition-transform group-hover:translate-x-1">
                         →
                       </span>
                     </Link>
-                    <p className="mt-2 font-sans text-foreground/80 leading-relaxed max-w-xl">
+                    <p className="mt-2 max-w-xl font-sans leading-relaxed text-foreground/80">
                       {project.description}
                     </p>
-                    {project.tech && (
-                      <p className="mt-2 font-mono text-xs tracking-wide text-muted">
-                        {project.tech}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Mobile: Content below image */}
-                <div className="md:hidden mt-4">
-                  <Link
-                    href={project.href}
-                    className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground hover:text-lime transition-colors"
-                  >
-                    <span className="w-2 h-2 rounded-full bg-sky" />
-                    {project.title}
-                    <span className="text-muted group-hover:translate-x-1 transition-transform">
-                      →
-                    </span>
-                  </Link>
-                  <p className="mt-2 font-sans text-sm text-foreground/80 leading-relaxed">
-                    {project.description}
-                  </p>
-                  {project.tech && (
                     <p className="mt-2 font-mono text-xs tracking-wide text-muted">
                       {project.tech}
                     </p>
-                  )}
+                  </div>
+                </div>
+
+                <div className="mt-4 md:hidden">
+                  <Link
+                    href={project.href}
+                    className="inline-flex items-center gap-2 font-sans text-lg font-semibold text-foreground transition-colors hover:text-lime"
+                  >
+                    <span className="h-2 w-2 rounded-full bg-sky" />
+                    {project.title}
+                    <span className="text-muted transition-transform group-hover:translate-x-1">
+                      →
+                    </span>
+                  </Link>
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-foreground/80">
+                    {project.description}
+                  </p>
+                  <p className="mt-2 font-mono text-xs tracking-wide text-muted">{project.tech}</p>
                 </div>
               </div>
             ))}
