@@ -9,7 +9,6 @@ const primaryLinks = [
 const navLinks = [
   { href: '/projects', label: 'Side Projects' },
   { href: '/about', label: 'About' },
-  { href: '/blog', label: 'Blog' },
 ];
 
 export default function Home() {
@@ -51,13 +50,14 @@ export default function Home() {
               Builder behind Zaks.io
             </p>
             <p className="mt-4 font-sans text-xl leading-tight text-foreground md:text-2xl">
-              I build durable systems for messy creative and agent workflows.
+              I build reliable systems for AI agents and the people directing them.
             </p>
             <p className="mt-3 max-w-xl font-sans text-sm leading-relaxed text-foreground/70 md:text-base">
               I have been taking computers apart for as long as I can remember. That curiosity
               turned into years of software development across hardware, infrastructure, backend,
               frontend, and design, including a decade building production systems at PlayStation
-              Studios. Now I am building Zaks.io for people working with AI agents.
+              Studios. Now I am building agent infrastructure, evaluation harnesses, and
+              observability tools at Zaks.io.
             </p>
             <p className="mt-3 max-w-xl font-sans text-xs leading-relaxed text-foreground/60 md:text-sm">
               The current line is simple: publish the work, protect the secrets, see what the agent

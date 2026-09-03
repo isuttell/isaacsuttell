@@ -4,8 +4,6 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/projects', label: 'Side Projects' },
   { href: '/about', label: 'About' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/feed.xml', label: 'RSS' },
 ];
 
 export function SiteFooter() {
@@ -21,6 +19,22 @@ export function SiteFooter() {
             {link.label}
           </Link>
         ))}
+        <a
+          href="https://github.com/isuttell"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-lime transition-colors"
+        >
+          GitHub
+        </a>
+        <a
+          href="https://www.linkedin.com/in/isuttell/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-lime transition-colors"
+        >
+          LinkedIn
+        </a>
       </nav>
       <p className="font-mono text-xs tracking-widest text-muted/40">
         &copy; {new Date().getFullYear()} Isaac Suttell

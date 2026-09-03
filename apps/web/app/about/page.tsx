@@ -5,10 +5,15 @@ import { SiteFooter } from '../components/site-footer';
 export const metadata: Metadata = {
   title: 'About | Isaac Suttell',
   description:
-    'Longtime software engineer, tinkerer, and founder of Zaks.io. Built production systems at PlayStation.',
+    'Software and infrastructure engineer building AI agent systems and evaluation tools. Previously spent ten years at PlayStation Studios.',
 };
 
 const currentWork = [
+  {
+    name: 'Splitch',
+    href: 'https://splitch.dev?ref=isaacsuttell.com',
+    copy: 'Feature flags and experiments for humans and agents, with edge evaluation, event ingestion, statistical analysis, SDKs, a CLI, and an MCP server.',
+  },
   {
     name: 'Agent Paste',
     href: 'https://agent-paste.sh?ref=isaacsuttell.com',
@@ -27,7 +32,7 @@ const currentWork = [
   {
     name: 'Neuron',
     href: 'https://chat.zaks.io?ref=isaacsuttell.com',
-    copy: 'The privacy core. Private AI chat and automation built around zero-retention routing and no provider training on your data.',
+    copy: 'The privacy core. Private AI chat and automation with no provider training and configurable conversation retention.',
   },
 ];
 
@@ -87,9 +92,10 @@ export default function About() {
               workflow, pull it apart, build the missing tool, and make the system easier to trust.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/80">
-              The current line is connected: Agent Paste gives agent work an address, Insecur keeps
-              secrets out of agent-readable files, Trace Flow shows what the work cost and where it
-              failed, and Neuron carries the privacy-first AI automation core.
+              The current line is connected: Splitch controls releases and experiments, Agent Paste
+              gives agent work an address, Insecur keeps secrets out of agent-readable files, Trace
+              Flow shows what the work cost and where it failed, and Neuron carries the
+              privacy-first AI automation core.
             </p>
             <ul className="mt-6 space-y-5 text-foreground/80">
               {currentWork.map((item) => (
@@ -115,6 +121,13 @@ export default function About() {
               distribution, pricing, customer discovery, and being willing to show the work before
               it feels done.
             </p>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/80">
+              I build local evaluation harnesses around these systems so I can tell whether a change
+              actually improved the agent. Fixed fixtures, repeated runs, deterministic checks,
+              model-based scoring, cost and latency tracking, privacy checks, and regression gates
+              make the failures inspectable. A recent 52-run baseline exposed an over-strict check
+              and a runner defect before I trusted the final cost result.
+            </p>
           </section>
 
           <div
@@ -139,9 +152,9 @@ export default function About() {
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               So I built SHIPwatch. What started as a solution to one studio&apos;s problem became
-              critical infrastructure for every PlayStation Studios title. I evolved it through
-              multiple generations, from VMs to Docker to Docker Swarm, always redesigning to keep
-              it scalable, reliable, and modern.
+              release-critical infrastructure used by more than 15 first-party studios. I evolved it
+              through multiple generations, from VMs to Docker to Docker Swarm, always redesigning
+              to keep it scalable, reliable, and modern.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               Built the team, ran operations, talked regularly with studio heads, technical
@@ -166,9 +179,9 @@ export default function About() {
               LA, San Francisco, now San Diego.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              Cal Poly, BFA in Art and Design with a concentration in Photography. Everyone assumed
-              I&apos;d become a computer scientist. Instead, photography gave me a visual language
-              and a sharper sense of composition, constraints, and taste.
+              Cal Poly, BFA in Art and Design with a concentration in Photography and Digital
+              Imagery. Everyone assumed I&apos;d become a computer scientist. Instead, photography
+              gave me a visual language and a sharper sense of composition, constraints, and taste.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               That led to a &quot;web guy&quot; position at MC Squared, a luxury real estate
@@ -189,10 +202,10 @@ export default function About() {
 
           <section className="animate-fade-up" style={{ animationDelay: '0.55s' }}>
             <a
-              href="mailto:isaac@isaacsuttell.com"
+              href="mailto:isaac@zaks.io"
               className="font-mono text-sm tracking-wider text-muted transition-colors hover:text-sky glow-sky"
             >
-              isaac@isaacsuttell.com
+              isaac@zaks.io
             </a>
           </section>
         </div>

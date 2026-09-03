@@ -1,6 +1,6 @@
 # Isaac Suttell
 
-Designer and Engineer building AI infrastructure, with a focus on creative applications of technology.
+Personal site for Isaac Suttell, a software and infrastructure engineer building AI agent systems and evaluation tools after ten years at PlayStation Studios.
 
 ## ✨ Features
 
