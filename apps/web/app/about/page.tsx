@@ -202,10 +202,10 @@ export default function About() {
 
           <section className="animate-fade-up" style={{ animationDelay: '0.55s' }}>
             <a
-              href="mailto:isaac@isaacsuttell.com"
+              href="mailto:isaac@zaks.io"
               className="font-mono text-sm tracking-wider text-muted transition-colors hover:text-sky glow-sky"
             >
-              isaac@isaacsuttell.com
+              isaac@zaks.io
             </a>
           </section>
         </div>
