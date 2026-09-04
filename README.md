@@ -1,149 +1,47 @@
 # Isaac Suttell
 
-Personal site for Isaac Suttell, a software and infrastructure engineer building AI agent systems and evaluation tools after ten years at PlayStation Studios.
+Software and infrastructure engineer building open-source AI-agent systems at [Zaks.io](https://zaks.io).
 
-## ✨ Features
+I spent ten years at PlayStation Studios, where I built and operated SHIPwatch from its initial implementation into release-critical video infrastructure used by more than 15 first-party studios. It processed more than 10,000 videos a month with 99.9% availability, and I grew from its sole developer into technical lead for a seven-person team.
 
-- **Interactive Simulations**: WebGL-powered visualizations including Gravitational Lensing and Audio Visualizers
-- **Photography Galleries**: Curated collections of Astrophotography and Fashion photography
-- **Modern Architecture**: Next.js 16 App Router with React 19, Convex backend, and shared component library
-- **Optimized Performance**: Server-side rendering, image optimization, and responsive design
+Now I am working on the evidence and control layers for increasingly autonomous software development. I want to know what agents are doing at scale, where they fail, and whether a change actually improves the system.
 
-## 🛠 Tech Stack
+## Current work
 
-| Technology   | Version | Purpose                         |
-| ------------ | ------- | ------------------------------- |
-| Next.js      | 16.1.1  | React framework with App Router |
-| React        | 19.2.3  | UI library                      |
-| Convex       | 1.31.2  | Backend-as-a-Service            |
-| Tailwind CSS | 4       | Styling framework               |
-| TypeScript   | 5       | Type safety                     |
-| Turborepo    | 2       | Monorepo build system           |
-| Bun          | 1.3.5   | Package manager & runtime       |
+- [Trace Flow](https://trace-flow.dev) ingests coding-agent transcripts and makes tool use, cost, latency, and workflow behavior inspectable.
+- [Splitch](https://github.com/zaks-io/splitch) provides feature flags and A/B experimentation for humans and agents.
+- [Agent Paste](https://github.com/zaks-io/agent-paste) publishes agent-built output to stable human-readable URLs and machine-readable manifests.
+- [Insecur](https://github.com/zaks-io/insecur) lets agents and CI use credentials at runtime without exposing them to prompts, logs, or files.
 
-## 📁 Project Structure
+The common thread is observability and reliability. The same instrumentation also supports classifiers, analysis agents, and local evaluation harnesses for comparing behavior and catching regressions.
 
-```
-├── apps/
-│   └── web/                  # Next.js frontend application
-├── packages/
-│   ├── backend/              # Convex backend
-│   │   └── convex/           # Convex functions (queries, mutations, actions)
-│   ├── ui/                   # Shared React component library (@isaacsuttell/ui)
-│   └── config/               # Shared configurations (tsconfig, eslint)
-├── convex.json               # Convex project configuration
-├── turbo.json                # Turborepo build pipeline
-├── vercel.json               # Vercel deployment configuration
-└── package.json              # Root workspace configuration
-```
+## This repository
 
-## 🚀 Getting Started
+This is the source for [isaacsuttell.com](https://isaacsuttell.com), including older WebGL experiments and photography work alongside my current professional profile. It is a TypeScript monorepo built with Next.js, React, Convex, Tailwind CSS, Turborepo, and Bun.
 
-### Prerequisites
-
-- **Bun 1.3.5+** - [Install Bun](https://bun.sh)
-
-### Installation
+## Development
 
 ```bash
 bun install
-```
-
-### Development
-
-Start all development servers (Next.js + Convex):
-
-```bash
 bun run dev
 ```
 
-The web app will be available at [http://localhost:3000](http://localhost:3000)
-
-### Available Scripts
+The standard checks are:
 
 ```bash
-bun run dev            # Start dev servers (web + convex)
-bun run build          # Production build all packages
-bun run lint           # Lint all packages with ESLint
-bun run typecheck      # Type check all packages with TypeScript
-bun run format         # Format code with Prettier
-bun run format:check   # Check code formatting
+bun run format:check
+bun run lint
+bun run typecheck
+bun run build
 ```
 
-### Convex Commands
+## Links
 
-Run from the root directory:
+- [Personal site](https://isaacsuttell.com)
+- [Zaks.io](https://zaks.io)
+- [Zaks.io on GitHub](https://github.com/zaks-io)
+- [LinkedIn](https://www.linkedin.com/in/isuttell/)
 
-```bash
-bun convex dev --once  # Sync Convex schema once
-```
-
-### Package-Specific Commands
-
-Target individual packages with Turbo filters:
-
-```bash
-bun run dev --filter=web        # Run only web app
-bun run build --filter=web      # Build only web app
-```
-
-## 📦 Packages
-
-### @isaacsuttell/ui
-
-Shared React component library with reusable UI components:
-
-- **`Button`** - Customizable button component with multiple variants (primary, secondary, ghost)
-- **`PhotoGallery`** - Interactive photo gallery with lightbox and navigation
-- **`Starfield`** - Animated starfield background using Canvas API
-
-### @isaacsuttell/backend
-
-Convex backend with:
-
-- Queries for data fetching
-- Mutations for data updates
-- Actions for external API integration
-
-### @isaacsuttell/config
-
-Shared configuration packages:
-
-- TypeScript configurations
-- ESLint configurations
-
-## 🌐 Deployment
-
-This project is deployed on:
-
-- **Frontend**: Vercel
-- **Backend**: Convex Cloud
-
-### Deployment Workflow
-
-- Merges to `main` trigger automatic production deployments
-- Pull requests receive preview deployments with unique URLs
-- Convex functions deploy before Next.js build (configured in `vercel.json`)
-
-### Environment Variables
-
-| Variable                 | Environment | Description                                 |
-| ------------------------ | ----------- | ------------------------------------------- |
-| `CONVEX_DEPLOY_KEY`      | Production  | Production deploy key from Convex Dashboard |
-| `CONVEX_DEPLOY_KEY`      | Preview     | Preview deploy key from Convex Dashboard    |
-| `NEXT_PUBLIC_CONVEX_URL` | All         | Auto-injected during Vercel build           |
-
-## 📖 Development Guidelines
-
-For detailed development guidelines, architecture patterns, and best practices, see [CLAUDE.md](./CLAUDE.md).
-
-Key principles:
-
-- Default to Server Components (use `'use client'` sparingly)
-- Convex is your state manager - no Redux/Zustand needed
-- Organize Convex functions by resource (users, videos, etc.)
-- Keep client components small and push state down
-
-## 📄 License
+## License
 
 MIT
