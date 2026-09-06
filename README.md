@@ -13,7 +13,7 @@ Now I am working on the evidence and control layers for increasingly autonomous 
 - [Agent Paste](https://github.com/zaks-io/agent-paste) publishes agent-built output to stable human-readable URLs and machine-readable manifests.
 - [Insecur](https://github.com/zaks-io/insecur) lets agents and CI use credentials at runtime without exposing them to prompts, logs, or files.
 
-The common thread is observability and reliability. The same instrumentation also supports classifiers, analysis agents, and local evaluation harnesses for comparing behavior and catching regressions.
+The common thread is observability and reliability. The same instrumentation also supports classifiers and analysis agents.
 
 ## This repository
 
