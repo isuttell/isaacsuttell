@@ -22,7 +22,7 @@ const currentWork = [
   {
     name: 'Insecur',
     href: 'https://zaks.io',
-    copy: 'Secrets agents can use without reading. The current proof is diskless runtime injection for development secrets.',
+    copy: 'Encrypted development secrets, injected into a command without a plaintext .env file. The child process, or an agent controlling it, can still read the injected values.',
   },
   {
     name: 'Trace Flow',
@@ -93,7 +93,7 @@ export default function About() {
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/80">
               The current line is connected: Splitch controls releases and experiments, Agent Paste
-              gives agent work an address, Insecur keeps secrets out of agent-readable files, Trace
+              gives agent work an address, Insecur runs apps without plaintext .env files, Trace
               Flow shows what the work cost and where it failed, and Neuron carries the
               privacy-first AI automation core.
             </p>
