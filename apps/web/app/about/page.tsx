@@ -121,13 +121,6 @@ export default function About() {
               distribution, pricing, customer discovery, and being willing to show the work before
               it feels done.
             </p>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/80">
-              I build local evaluation harnesses around these systems so I can tell whether a change
-              actually improved the agent. Fixed fixtures, repeated runs, deterministic checks,
-              model-based scoring, cost and latency tracking, privacy checks, and regression gates
-              make the failures inspectable. A recent 52-run baseline exposed an over-strict check
-              and a runner defect before I trusted the final cost result.
-            </p>
           </section>
 
           <div
