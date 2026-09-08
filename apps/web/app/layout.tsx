@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: 'Isaac Suttell',
   description:
-    'Software and infrastructure engineer building reliable AI agent systems and evaluation tools. Previously spent ten years at PlayStation Studios.',
+    'Software and infrastructure engineer designing serverless systems and directing AI agents through implementation. Previously spent ten years at PlayStation Studios.',
   authors: [{ name: 'Isaac Suttell', url: BASE_URL }],
   creator: 'Isaac Suttell',
   alternates: {
