@@ -2,9 +2,9 @@
 
 Software and infrastructure engineer building open-source AI-agent systems at [Zaks.io](https://zaks.io).
 
-I spent ten years at PlayStation Studios, where I built and operated SHIPwatch from its initial implementation into release-critical video infrastructure used by more than 15 first-party studios. It processed more than 10,000 videos a month with 99.9% availability, and I grew from its sole developer into technical lead for a seven-person team.
+I spent ten years at PlayStation Studios, where I built and operated SHIPwatch from its initial implementation into release-critical video infrastructure used by more than 15 first-party studios. I grew from its sole developer into technical lead for a seven-person team and worked directly with AAA studios worldwide.
 
-Now I am working on the evidence and control layers for increasingly autonomous software development. I want to know what agents are doing at scale, where they fail, and whether a change actually improves the system.
+Now I design serverless systems on Cloudflare and direct AI agents through implementation and review. Trace Flow came out of wanting to know what those agents are doing at scale, where they fail, and what they cost.
 
 ## Current work
 
@@ -13,7 +13,7 @@ Now I am working on the evidence and control layers for increasingly autonomous 
 - [Agent Paste](https://github.com/zaks-io/agent-paste) publishes agent-built output to stable human-readable URLs and machine-readable manifests.
 - [Insecur](https://github.com/zaks-io/insecur) lets agents and CI use credentials at runtime without exposing them to prompts, logs, or files.
 
-The common thread is observability and reliability. The same instrumentation also supports classifiers and analysis agents.
+The common thread is observability and reliability.
 
 ## This repository
 

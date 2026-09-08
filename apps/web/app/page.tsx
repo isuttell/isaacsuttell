@@ -56,8 +56,8 @@ export default function Home() {
               I have been taking computers apart for as long as I can remember. That curiosity
               turned into years of software development across hardware, infrastructure, backend,
               frontend, and design, including a decade building production systems at PlayStation
-              Studios. Now I am building agent infrastructure, evaluation harnesses, and
-              observability tools at Zaks.io.
+              Studios. Now I design serverless systems at Zaks.io and direct AI agents through the
+              implementation.
             </p>
             <p className="mt-3 max-w-xl font-sans text-xs leading-relaxed text-foreground/60 md:text-sm">
               The current line is simple: publish the work, protect the secrets, see what the agent
