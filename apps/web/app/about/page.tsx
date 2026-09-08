@@ -5,14 +5,14 @@ import { SiteFooter } from '../components/site-footer';
 export const metadata: Metadata = {
   title: 'About | Isaac Suttell',
   description:
-    'Software and infrastructure engineer building AI agent systems and evaluation tools. Previously spent ten years at PlayStation Studios.',
+    'Software and infrastructure engineer designing serverless systems and directing AI agents through implementation. Previously spent ten years at PlayStation Studios.',
 };
 
 const currentWork = [
   {
     name: 'Splitch',
     href: 'https://splitch.dev?ref=isaacsuttell.com',
-    copy: 'Feature flags and experiments for humans and agents, with edge evaluation, event ingestion, statistical analysis, SDKs, a CLI, and an MCP server.',
+    copy: 'Feature flags and experiments for humans and agents, served at the edge, with event ingestion, statistical analysis, SDKs, a CLI, and an MCP server.',
   },
   {
     name: 'Agent Paste',
@@ -150,9 +150,10 @@ export default function About() {
               to keep it scalable, reliable, and modern.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              Built the team, ran operations, talked regularly with studio heads, technical
-              directors, and producers. It was the kind of tool where downtime meant delayed AAA
-              releases. They trusted me to keep it running.
+              Grew it from a solo project into a seven-person engineering team, ran operations, and
+              talked regularly with studio heads, technical directors, and producers. It was the
+              kind of tool where downtime meant delayed AAA releases. They trusted me to keep it
+              running.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/70">
               That job taught me the standard I still care about: software is real when people
