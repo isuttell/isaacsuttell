@@ -17,6 +17,11 @@ const SUPPORTED_SCOPES = ['blog:read', 'blog:write', 'blog:delete', 'blog:manage
 const CODE_CHALLENGE_RE = /^[A-Za-z0-9_-]{43}$/;
 const MAX_STATE_LENGTH = 1024;
 const MAX_CLIENT_ID_LENGTH = 256;
+const MAX_REGISTRATION_BODY_BYTES = 16 * 1024;
+const MAX_REDIRECT_URIS = 10;
+const MAX_REDIRECT_URI_LENGTH = 2048;
+const MAX_CLIENT_NAME_LENGTH = 200;
+const MAX_CONSENT_BODY_BYTES = 4096;
 
 // Valid Google OAuth error codes per spec
 const VALID_OAUTH_ERRORS = [
@@ -66,6 +71,110 @@ function isAllowedRedirectUri(uri: string): boolean {
   }
 }
 
+async function readBoundedBody(request: Request, maxBytes: number): Promise<string | null> {
+  const declaredLength = request.headers.get('Content-Length');
+  if (declaredLength !== null) {
+    const bytes = Number(declaredLength);
+    if (!Number.isFinite(bytes) || bytes < 0 || bytes > maxBytes) return null;
+  }
+
+  if (!request.body) return '';
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    totalBytes += value.byteLength;
+    if (totalBytes > maxBytes) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  try {
+    return new TextDecoder('utf-8', { fatal: true }).decode(body);
+  } catch {
+    return null;
+  }
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function redirectToClient(
+  redirectUri: string,
+  params: Record<string, string | undefined>
+): Response {
+  const location = new URL(redirectUri);
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== '') location.searchParams.set(key, value);
+  }
+  return new Response(null, { status: 302, headers: { Location: location.toString() } });
+}
+
+function consentPage(args: {
+  siteUrl: string;
+  state: string;
+  consentToken: string;
+  clientName: string;
+  redirectUri: string;
+  scope: string;
+}): Response {
+  const scopes = args.scope
+    .split(' ')
+    .map((scope) => `<li><code>${escapeHtml(scope)}</code></li>`)
+    .join('');
+  const body = `<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Authorize MCP client</title></head>
+<body>
+  <main>
+    <h1>Authorize MCP client</h1>
+    <p><strong>${escapeHtml(args.clientName)}</strong> is requesting access to this site.</p>
+    <p>Redirect URI: <code>${escapeHtml(args.redirectUri)}</code></p>
+    <p>Requested scopes:</p>
+    <ul>${scopes}</ul>
+    <form method="post" action="${escapeHtml(args.siteUrl)}/oauth/consent">
+      <input type="hidden" name="state" value="${escapeHtml(args.state)}">
+      <input type="hidden" name="consent_token" value="${escapeHtml(args.consentToken)}">
+      <button type="submit" name="decision" value="approve">Authorize</button>
+      <button type="submit" name="decision" value="deny">Deny</button>
+    </form>
+  </main>
+</body>
+</html>`;
+
+  return new Response(body, {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store',
+      'Content-Security-Policy': "default-src 'none'; base-uri 'none'; frame-ancestors 'none'",
+      'Referrer-Policy': 'no-referrer',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+    },
+  });
+}
+
 // --- Metadata endpoints ---
 
 export function handleProtectedResourceMetadata(): Response {
@@ -96,9 +205,17 @@ export function handleAuthServerMetadata(): Response {
 // --- Dynamic Client Registration (RFC 7591) ---
 
 export async function handleRegister(ctx: ActionCtx, request: Request): Promise<Response> {
+  const rawBody = await readBoundedBody(request, MAX_REGISTRATION_BODY_BYTES);
+  if (rawBody === null) {
+    return Response.json(
+      { error: 'invalid_client_metadata', error_description: 'Registration body is too large' },
+      { status: 413 }
+    );
+  }
+
   let body: unknown;
   try {
-    body = await request.json();
+    body = JSON.parse(rawBody);
   } catch {
     return Response.json(
       { error: 'invalid_client_metadata', error_description: 'Invalid JSON body' },
@@ -127,8 +244,22 @@ export async function handleRegister(ctx: ActionCtx, request: Request): Promise<
     );
   }
 
+  if (redirectUris.length > MAX_REDIRECT_URIS) {
+    return Response.json(
+      {
+        error: 'invalid_redirect_uri',
+        error_description: `At most ${MAX_REDIRECT_URIS} redirect URIs are allowed`,
+      },
+      { status: 400 }
+    );
+  }
+
   for (const uri of redirectUris) {
-    if (typeof uri !== 'string' || !isAllowedRedirectUri(uri)) {
+    if (
+      typeof uri !== 'string' ||
+      uri.length > MAX_REDIRECT_URI_LENGTH ||
+      !isAllowedRedirectUri(uri)
+    ) {
       return Response.json(
         { error: 'invalid_redirect_uri', error_description: `Redirect URI not allowed: ${uri}` },
         { status: 400 }
@@ -136,13 +267,43 @@ export async function handleRegister(ctx: ActionCtx, request: Request): Promise<
     }
   }
 
+  if (new Set(redirectUris).size !== redirectUris.length) {
+    return Response.json(
+      {
+        error: 'invalid_redirect_uri',
+        error_description: 'redirect_uris must not contain duplicates',
+      },
+      { status: 400 }
+    );
+  }
+
+  if (
+    clientName !== undefined &&
+    (typeof clientName !== 'string' ||
+      clientName.trim().length === 0 ||
+      clientName.length > MAX_CLIENT_NAME_LENGTH)
+  ) {
+    return Response.json(
+      {
+        error: 'invalid_client_metadata',
+        error_description: `client_name must be a non-empty string of at most ${MAX_CLIENT_NAME_LENGTH} characters`,
+      },
+      { status: 400 }
+    );
+  }
+
   const clientId = generateRandomToken();
-  await ctx.runMutation(internal.mcp.internal.createClient, {
+  const registration = await ctx.runMutation(internal.mcp.internal.createClient, {
     clientId,
     redirectUris: redirectUris as string[],
     clientName: typeof clientName === 'string' ? clientName : undefined,
-    createdAt: Date.now(),
   });
+  if (registration.error) {
+    return Response.json(
+      { error: 'temporarily_unavailable', error_description: 'Registration limit exceeded' },
+      { status: 429, headers: { 'Retry-After': '3600' } }
+    );
+  }
 
   return Response.json(
     {
@@ -167,7 +328,7 @@ export async function handleAuthorize(ctx: ActionCtx, request: Request): Promise
   const codeChallenge = url.searchParams.get('code_challenge');
   const codeChallengeMethod = url.searchParams.get('code_challenge_method');
   const mcpState = url.searchParams.get('state') ?? '';
-  const scope = url.searchParams.get('scope') ?? 'blog:manage';
+  const scope = url.searchParams.get('scope') ?? 'blog:read';
 
   if (!clientId || !redirectUri || !codeChallenge) {
     return Response.json(
@@ -232,9 +393,11 @@ export async function handleAuthorize(ctx: ActionCtx, request: Request): Promise
     );
   }
 
-  // Validate scope — reject if no requested scopes are supported
-  const requestedScopes = scope.split(' ').filter((s) => SUPPORTED_SCOPES.includes(s));
-  if (requestedScopes.length === 0) {
+  const requestedScopes = scope.split(/\s+/).filter(Boolean);
+  if (
+    requestedScopes.length === 0 ||
+    requestedScopes.some((requestedScope) => !SUPPORTED_SCOPES.includes(requestedScope))
+  ) {
     return Response.json(
       {
         error: 'invalid_scope',
@@ -243,13 +406,13 @@ export async function handleAuthorize(ctx: ActionCtx, request: Request): Promise
       { status: 400 }
     );
   }
-  const validatedScope = requestedScopes.join(' ');
+  const validatedScope = [...new Set(requestedScopes)].join(' ');
 
   const googleClientId = process.env.GOOGLE_CLIENT_ID;
   if (!googleClientId) throw new Error('GOOGLE_CLIENT_ID not set');
 
   const googleState = generateRandomToken();
-  await ctx.runMutation(internal.mcp.internal.createPending, {
+  const pending = await ctx.runMutation(internal.mcp.internal.createPending, {
     state: googleState,
     clientId,
     redirectUri,
@@ -259,6 +422,12 @@ export async function handleAuthorize(ctx: ActionCtx, request: Request): Promise
     mcpState,
     expiresAt: Date.now() + PENDING_TTL,
   });
+  if (pending.error) {
+    return Response.json(
+      { error: 'temporarily_unavailable', error_description: 'Too many pending authorizations' },
+      { status: 429, headers: { 'Retry-After': '600' } }
+    );
+  }
 
   const siteUrl = getSiteUrl();
   const googleParams = new URLSearchParams({
@@ -384,36 +553,70 @@ export async function handleCallback(ctx: ActionCtx, request: Request): Promise<
     });
   }
 
-  // Generate authorization code for the MCP client (store hashed)
-  const code = generateRandomToken();
-  const codeHash = await hashToken(code);
-  await ctx.runMutation(internal.mcp.internal.createCode, {
-    code: codeHash,
-    clientId: pending.clientId,
-    redirectUri: pending.redirectUri,
-    codeChallenge: pending.codeChallenge,
-    userId: user._id,
-    scope: pending.scope,
-    expiresAt: Date.now() + CODE_TTL,
-  });
-
-  // Clean up pending request
-  await ctx.runMutation(internal.mcp.internal.deletePending, {
+  const consentToken = generateRandomToken();
+  const authenticated = await ctx.runMutation(internal.mcp.internal.authenticatePending, {
     id: pending._id,
+    userId: user._id,
+    consentToken: await hashToken(consentToken),
   });
-
-  // Redirect back to the MCP client
-  const redirectParams = new URLSearchParams({ code });
-  if (pending.mcpState) {
-    redirectParams.set('state', pending.mcpState);
+  if (authenticated.error) {
+    return new Response('Invalid authorization request', {
+      status: 400,
+      headers: { 'Content-Type': 'text/plain' },
+    });
   }
 
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: `${pending.redirectUri}?${redirectParams}`,
-    },
+  const client = await ctx.runQuery(internal.mcp.internal.getClient, {
+    clientId: pending.clientId,
   });
+  if (!client) {
+    return new Response('OAuth client expired', {
+      status: 400,
+      headers: { 'Content-Type': 'text/plain' },
+    });
+  }
+
+  return consentPage({
+    siteUrl,
+    state: googleState,
+    consentToken,
+    clientName: client.clientName ?? client.clientId,
+    redirectUri: pending.redirectUri,
+    scope: pending.scope,
+  });
+}
+
+// --- Site consent endpoint ---
+
+export async function handleConsent(ctx: ActionCtx, request: Request): Promise<Response> {
+  const body = await readBoundedBody(request, MAX_CONSENT_BODY_BYTES);
+  if (body === null) return new Response('Consent request is too large', { status: 413 });
+
+  const params = new URLSearchParams(body);
+  const state = params.get('state');
+  const consentToken = params.get('consent_token');
+  const decision = params.get('decision');
+  if (!state || !consentToken || (decision !== 'approve' && decision !== 'deny')) {
+    return new Response('Invalid consent request', { status: 400 });
+  }
+
+  const approved = decision === 'approve';
+  const code = generateRandomToken();
+  const result = await ctx.runMutation(internal.mcp.internal.completeConsent, {
+    state,
+    consentToken: await hashToken(consentToken),
+    approved,
+    ...(approved && {
+      code: await hashToken(code),
+      codeExpiresAt: Date.now() + CODE_TTL,
+    }),
+  });
+  if (result.error) return new Response('Invalid or expired consent request', { status: 400 });
+
+  return redirectToClient(
+    result.redirectUri,
+    approved ? { code, state: result.mcpState } : { error: 'access_denied', state: result.mcpState }
+  );
 }
 
 // --- Token endpoint ---
