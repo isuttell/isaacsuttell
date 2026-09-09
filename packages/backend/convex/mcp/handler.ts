@@ -63,6 +63,9 @@ export async function handleMcpRequest(
   body: unknown,
   auth: McpAuthContext
 ): Promise<JsonRpcResponse | null> {
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+    return jsonRpcError(null, -32600, 'Invalid JSON-RPC request');
+  }
   const req = body as JsonRpcRequest;
 
   if (req.jsonrpc !== '2.0' || !req.method) {
@@ -98,13 +101,21 @@ export async function handleMcpRequest(
       return jsonRpcResult(req.id, { tools: TOOLS });
 
     case 'tools/call': {
-      const params = req.params ?? {};
-      const toolName = params.name as string;
-      const toolArgs = (params.arguments ?? {}) as Record<string, unknown>;
+      if (typeof req.params !== 'object' || req.params === null || Array.isArray(req.params)) {
+        return jsonRpcError(req.id, -32602, 'Tool params must be an object');
+      }
+      const params = req.params;
+      const toolName = params.name;
 
-      if (!toolName) {
+      if (typeof toolName !== 'string' || toolName.length === 0) {
         return jsonRpcError(req.id, -32602, 'Missing tool name');
       }
+
+      const rawToolArgs = params.arguments ?? {};
+      if (typeof rawToolArgs !== 'object' || rawToolArgs === null || Array.isArray(rawToolArgs)) {
+        return jsonRpcError(req.id, -32602, 'Tool arguments must be an object');
+      }
+      const toolArgs = rawToolArgs as Record<string, unknown>;
 
       const tool = TOOLS.find((t) => t.name === toolName);
       if (!tool) {

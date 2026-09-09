@@ -86,6 +86,72 @@ describe('articles.queries', () => {
     expect(articles[0].slug).toBe('js-post');
   });
 
+  it('list_validatesLimitBounds', async () => {
+    const t = convexTest(schema, modules);
+
+    for (const limit of [0, 1.5, 101]) {
+      await expect(t.query(api.articles.queries.list, { limit })).rejects.toThrow(
+        'limit must be an integer between 1 and 100'
+      );
+    }
+  });
+
+  it('list_returnsUpToTheRequestedLimit', async () => {
+    const t = convexTest(schema, modules);
+    await seedArticle(t, { slug: 'oldest', publishedAt: 1 });
+    await seedArticle(t, { slug: 'middle', publishedAt: 2 });
+    await seedArticle(t, { slug: 'newest', publishedAt: 3 });
+
+    const articles = await t.query(api.articles.queries.list, { limit: 2 });
+
+    expect(articles.map((article) => article.slug)).toEqual(['newest', 'middle']);
+  });
+
+  it('list_excludesArchivedArticlesBeforeApplyingLimit', async () => {
+    const t = convexTest(schema, modules);
+    const archivedId = await seedArticle(t, {
+      slug: 'archived',
+      publishedAt: 3,
+    });
+    await seedArticle(t, { slug: 'active', publishedAt: 2 });
+    await t.run(async (ctx) => {
+      await ctx.db.patch(archivedId, { deletedAt: Date.now() });
+    });
+
+    const articles = await t.query(api.articles.queries.list, { limit: 1 });
+
+    expect(articles).toHaveLength(1);
+    expect(articles[0].slug).toBe('active');
+  });
+
+  it('list_failsWhenTagFilterCannotProveACompletePage', async () => {
+    const t = convexTest(schema, modules);
+    await t.run(async (ctx) => {
+      const authorId = await ctx.db.insert('users', {
+        name: 'Test Author',
+        role: 'admin',
+      });
+
+      for (let publishedAt = 1; publishedAt <= 501; publishedAt += 1) {
+        await ctx.db.insert('articles', {
+          title: `Article ${publishedAt}`,
+          slug: `article-${publishedAt}`,
+          content: 'content',
+          excerpt: 'excerpt',
+          tags: ['other'],
+          status: 'published',
+          publishedAt,
+          authorId,
+          updatedAt: publishedAt,
+        });
+      }
+    });
+
+    await expect(t.query(api.articles.queries.list, { tag: 'target', limit: 1 })).rejects.toThrow(
+      'Cannot complete tag filter within 500 articles'
+    );
+  });
+
   it('list_omitsContentField', async () => {
     const t = convexTest(schema, modules);
     await seedArticle(t);

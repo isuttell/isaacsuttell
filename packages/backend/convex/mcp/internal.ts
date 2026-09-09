@@ -4,25 +4,48 @@ import { computePkceChallenge, timingSafeEqual } from './auth';
 
 // --- OAuth clients (dynamic registration) ---
 
+const CLIENT_TTL = 30 * 24 * 60 * 60 * 1000;
+const REGISTRATION_WINDOW = 60 * 60 * 1000;
+const REGISTRATIONS_PER_WINDOW = 20;
+const MAX_ACTIVE_PENDING = 100;
+
 export const createClient = internalMutation({
   args: {
     clientId: v.string(),
     redirectUris: v.array(v.string()),
     clientName: v.optional(v.string()),
-    createdAt: v.number(),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert('mcpOauthClients', args);
+    const now = Date.now();
+    const recent = await ctx.db
+      .query('mcpOauthClients')
+      .withIndex('by_createdAt', (q) => q.gt('createdAt', now - REGISTRATION_WINDOW))
+      .take(REGISTRATIONS_PER_WINDOW);
+
+    if (recent.length >= REGISTRATIONS_PER_WINDOW) {
+      return { error: 'rate_limited' as const };
+    }
+
+    await ctx.db.insert('mcpOauthClients', {
+      ...args,
+      createdAt: now,
+      expiresAt: now + CLIENT_TTL,
+    });
+    return { clientId: args.clientId };
   },
 });
 
 export const getClient = internalQuery({
   args: { clientId: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const client = await ctx.db
       .query('mcpOauthClients')
       .withIndex('by_clientId', (q) => q.eq('clientId', args.clientId))
       .unique();
+    if (!client) return null;
+
+    const expiresAt = client.expiresAt ?? client.createdAt + CLIENT_TTL;
+    return expiresAt > Date.now() ? client : null;
   },
 });
 
@@ -40,7 +63,16 @@ export const createPending = internalMutation({
     expiresAt: v.number(),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert('mcpOauthPending', args);
+    const active = await ctx.db
+      .query('mcpOauthPending')
+      .withIndex('by_expiresAt', (q) => q.gt('expiresAt', Date.now()))
+      .take(MAX_ACTIVE_PENDING);
+    if (active.length >= MAX_ACTIVE_PENDING) {
+      return { error: 'too_many_pending' as const };
+    }
+
+    const id = await ctx.db.insert('mcpOauthPending', args);
+    return { id };
   },
 });
 
@@ -58,6 +90,75 @@ export const deletePending = internalMutation({
   args: { id: v.id('mcpOauthPending') },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
+  },
+});
+
+export const authenticatePending = internalMutation({
+  args: {
+    id: v.id('mcpOauthPending'),
+    userId: v.id('users'),
+    consentToken: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const pending = await ctx.db.get(args.id);
+    if (!pending || pending.expiresAt < Date.now()) return { error: 'invalid_request' as const };
+    if (pending.userId || pending.consentToken) return { error: 'already_authenticated' as const };
+
+    await ctx.db.patch(args.id, {
+      userId: args.userId,
+      consentToken: args.consentToken,
+    });
+    return { ok: true as const };
+  },
+});
+
+export const completeConsent = internalMutation({
+  args: {
+    state: v.string(),
+    consentToken: v.string(),
+    approved: v.boolean(),
+    code: v.optional(v.string()),
+    codeExpiresAt: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const pending = await ctx.db
+      .query('mcpOauthPending')
+      .withIndex('by_state', (q) => q.eq('state', args.state))
+      .unique();
+
+    if (!pending || pending.expiresAt < Date.now()) {
+      if (pending) await ctx.db.delete(pending._id);
+      return { error: 'invalid_request' as const };
+    }
+    if (!pending.userId || !pending.consentToken) {
+      return { error: 'not_authenticated' as const };
+    }
+    if (!timingSafeEqual(args.consentToken, pending.consentToken)) {
+      return { error: 'invalid_request' as const };
+    }
+    if (args.approved && (!args.code || !args.codeExpiresAt)) {
+      throw new Error('Approved consent requires an authorization code');
+    }
+
+    if (args.approved) {
+      await ctx.db.insert('mcpOauthCodes', {
+        code: args.code!,
+        clientId: pending.clientId,
+        redirectUri: pending.redirectUri,
+        codeChallenge: pending.codeChallenge,
+        userId: pending.userId,
+        scope: pending.scope,
+        expiresAt: args.codeExpiresAt!,
+        used: false,
+      });
+    }
+
+    await ctx.db.delete(pending._id);
+    return {
+      redirectUri: pending.redirectUri,
+      mcpState: pending.mcpState,
+      approved: args.approved,
+    };
   },
 });
 
@@ -268,6 +369,14 @@ export const purgeExpired = internalMutation({
     for (const record of refreshTokensExpired) {
       // Preserve tokens revoked due to reuse detection for forensic audit
       if (record.revokedReason === 'reuse_detected') continue;
+      await ctx.db.delete(record._id);
+    }
+
+    const clientsExpired = await ctx.db
+      .query('mcpOauthClients')
+      .withIndex('by_createdAt', (q) => q.lt('createdAt', now - CLIENT_TTL))
+      .take(PURGE_BATCH_SIZE);
+    for (const record of clientsExpired) {
       await ctx.db.delete(record._id);
     }
   },
