@@ -1,0 +1,8 @@
+{
+  "imageSha256": "6526eba7dd88b24cb56aa2f0df2a263e7f4ddd13f14aab5a8b34d7e3fb64e4ed",
+  "wcsSha256": "890dfcc906efd291c98c0f521c609a954b58a921723dbba482b932f10cd70b93",
+  "matchedStars": 52,
+  "medianResidualPixels": 0.08841355069144236,
+  "p95ResidualPixels": 0.31448209862087045,
+  "maxResidualPixels": 0.6611851146715397
+}
