@@ -1,0 +1,3 @@
+export const ACCESS_TOKEN_TTL = 60 * 60 * 1000;
+export const REFRESH_FAMILY_TTL = 30 * 24 * 60 * 60 * 1000;
+export const MAX_REFRESH_ROTATIONS = Math.ceil(REFRESH_FAMILY_TTL / ACCESS_TOKEN_TTL) * 2;

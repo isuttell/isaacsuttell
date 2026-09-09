@@ -73,12 +73,14 @@ export default defineSchema({
     codeChallengeMethod: v.string(),
     scope: v.string(),
     mcpState: v.string(),
+    requesterKey: v.optional(v.string()),
     userId: v.optional(v.id('users')),
     consentToken: v.optional(v.string()),
     expiresAt: v.number(),
   })
     .index('by_state', ['state'])
-    .index('by_expiresAt', ['expiresAt']),
+    .index('by_expiresAt', ['expiresAt'])
+    .index('by_requesterKey_and_expiresAt', ['requesterKey', 'expiresAt']),
 
   mcpOauthCodes: defineTable({
     code: v.string(),
@@ -97,11 +99,13 @@ export default defineSchema({
     clientId: v.string(),
     redirectUris: v.array(v.string()),
     clientName: v.optional(v.string()),
+    requesterKey: v.optional(v.string()),
     createdAt: v.number(),
     expiresAt: v.optional(v.number()),
   })
     .index('by_clientId', ['clientId'])
-    .index('by_createdAt', ['createdAt']),
+    .index('by_createdAt', ['createdAt'])
+    .index('by_requesterKey_and_createdAt', ['requesterKey', 'createdAt']),
 
   mcpOauthTokens: defineTable({
     token: v.string(),
@@ -113,6 +117,20 @@ export default defineSchema({
     .index('by_token', ['token'])
     .index('by_expiresAt', ['expiresAt'])
     .index('by_familyId', ['familyId']),
+
+  mcpOauthTokenFamilies: defineTable({
+    familyId: v.string(),
+    clientId: v.string(),
+    userId: v.id('users'),
+    createdAt: v.number(),
+    validUntil: v.number(),
+    purgeAt: v.number(),
+    rotationCount: v.number(),
+    revokedAt: v.optional(v.number()),
+    revokedReason: v.optional(v.string()),
+  })
+    .index('by_familyId', ['familyId'])
+    .index('by_purgeAt', ['purgeAt']),
 
   mcpOauthRefreshTokens: defineTable({
     token: v.string(),
