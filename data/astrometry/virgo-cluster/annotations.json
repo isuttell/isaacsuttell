@@ -1,0 +1,93 @@
+{
+  "status": "solved",
+  "git-revision": 0.97,
+  "git-date": "Mon_Dec_2_14:50:59_2024_-0500",
+  "annotations": [
+    {
+      "type": "ngc",
+      "names": ["IC 3303"],
+      "pixelx": 910.958,
+      "pixely": 211.161,
+      "radius": 9.17191
+    },
+    { "type": "ngc", "names": ["IC 3333"], "pixelx": 380.879, "pixely": 343.445, "radius": 0 },
+    { "type": "ngc", "names": ["IC 3349"], "pixelx": 1102.59, "pixely": 703.39, "radius": 8.68918 },
+    {
+      "type": "ngc",
+      "names": ["IC 3355"],
+      "pixelx": 286.006,
+      "pixely": 524.864,
+      "radius": 10.5236
+    },
+    {
+      "type": "ngc",
+      "names": ["IC 3363"],
+      "pixelx": 964.556,
+      "pixely": 747.892,
+      "radius": 9.36501
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4374", "M 84"],
+      "pixelx": 729.325,
+      "pixely": 112.725,
+      "radius": 71.5409
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4387"],
+      "pixelx": 773.641,
+      "pixely": 307.103,
+      "radius": 15.2543
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4388"],
+      "pixelx": 935.094,
+      "pixely": 370.569,
+      "radius": 51.942
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4402"],
+      "pixelx": 404.261,
+      "pixely": 343.291,
+      "radius": 33.9844
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4406", "M 86"],
+      "pixelx": 587.791,
+      "pixely": 407.479,
+      "radius": 111.318
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4407"],
+      "pixelx": 942.415,
+      "pixely": 592.314,
+      "radius": 20.0817
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4425"],
+      "pixelx": 757.423,
+      "pixely": 747.576,
+      "radius": 29.7363
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4435"],
+      "pixelx": 340.048,
+      "pixely": 777.378,
+      "radius": 29.2536
+    },
+    {
+      "type": "ngc",
+      "names": ["NGC 4438"],
+      "pixelx": 413.304,
+      "pixely": 819.643,
+      "radius": 88.4365
+    }
+  ]
+}
