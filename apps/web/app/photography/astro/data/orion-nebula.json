@@ -15,11 +15,39 @@
   "integrationSeconds": null,
   "sessions": [],
   "equipment": [],
-  "objects": [],
+  "objects": [
+    "Hatysa",
+    "ι Ori / 44 Ori",
+    "Trapezium",
+    "θ1 Ori A / 41 Ori A",
+    "Mizan Batil II",
+    "θ2 Ori / 43 Ori",
+    "θ1 Ori C / 41 Ori C",
+    "θ1 Ori D / 41 Ori D",
+    "NGC 1976",
+    "Orion Nebula",
+    "Great Orion Nebula",
+    "M 42",
+    "NGC 1980",
+    "Lower Sword",
+    "NGC 1982",
+    "Mairan's Nebula",
+    "M 43"
+  ],
   "constellation": null,
   "bortle": null,
   "moonIllumination": null,
-  "coordinates": null,
-  "overlays": null,
+  "coordinates": {
+    "ra": 83.7408197083,
+    "dec": -5.46322344719,
+    "pixelScale": 3.30228445634,
+    "orientation": 272.058394,
+    "fieldWidth": 1.1007614854466665,
+    "fieldHeight": 0.8310749215122333
+  },
+  "overlays": {
+    "labels": "/photography/astro/solved/orion-nebula/labels.svg",
+    "grid": "/photography/astro/solved/orion-nebula/grid.svg"
+  },
   "descriptionLinks": []
 }

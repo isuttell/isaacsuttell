@@ -6,6 +6,7 @@ Imported from [Isaac Suttell's public AstroBin gallery](https://app.astrobin.com
 - `assets.json` records the full-resolution display URL, source dimensions, page URL, corresponding PixInsight SVG URL, and downloaded SHA-256 hashes for each image. Display URLs came from AstroBin's `/HASH/0/thumb/real/` endpoint, also used by its frontend image service. These are full-resolution display JPEGs, not camera RAW/FITS files or guaranteed byte-identical original uploads.
 - All ten downloaded JPEG dimensions match the API's original width and height. Nine records have PixInsight SVG annotations. The starless Orion upload has no successful solution and no overlay.
 - The older local Orion image and M86 field are retained separately. Capture metadata is not copied onto them from different images, and dates in local filenames are not treated as verified acquisition dates.
+- The local Orion image now has a separate Astrometry.net solution, bringing the gallery to ten solved images. Its WCS, catalog matches, validation, and reproduction steps are in [the Orion solution](../astrometry/orion-nebula/README.md). The M86 field and starless Orion remain without overlays.
 
 To restore recorded assets, run `python3 scripts/astrobin/download.py`. It uses curl and never overwrites an existing download. Then run `python3 scripts/astrobin/prepare.py` with Pillow installed to validate dimensions, split source SVGs, and regenerate the ten display records. The two local-only records are maintained separately.
 
