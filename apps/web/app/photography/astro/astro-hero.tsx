@@ -52,7 +52,10 @@ export function AstroHero({ photo }: { photo: AstroGalleryPhoto }) {
               images with object labels and capture notes.
             </p>
             <p className="mt-3 font-sans text-sm leading-relaxed text-foreground/60">
-              These images were created without the help of AI.
+              I captured and processed every image here myself. I built the telescope setup,
+              assembled the gear, and automated capture with Voyager, then spent hours processing
+              the data across multiple tools. All of this work predates the rise of generative AI.
+              No AI tools were used to create these images.
             </p>
             <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2 font-mono text-xs tracking-[0.15em] uppercase">
               <Link
