@@ -6,23 +6,40 @@ import { computePkceChallenge, timingSafeEqual } from './auth';
 
 const CLIENT_TTL = 30 * 24 * 60 * 60 * 1000;
 const REGISTRATION_WINDOW = 60 * 60 * 1000;
-const REGISTRATIONS_PER_WINDOW = 20;
+const REGISTRATIONS_PER_REQUESTER = 20;
+const GLOBAL_REGISTRATIONS_PER_WINDOW = 100;
+const MAX_ACTIVE_PENDING_PER_REQUESTER = 10;
 const MAX_ACTIVE_PENDING = 100;
+const REFRESH_FAMILY_TTL = 30 * 24 * 60 * 60 * 1000;
+const REFRESH_FAMILY_RETENTION = 30 * 24 * 60 * 60 * 1000;
+const MAX_REFRESH_ROTATIONS = 100;
 
 export const createClient = internalMutation({
   args: {
     clientId: v.string(),
     redirectUris: v.array(v.string()),
     clientName: v.optional(v.string()),
+    requesterKey: v.string(),
   },
   handler: async (ctx, args) => {
     const now = Date.now();
-    const recent = await ctx.db
+    const requesterRecent = await ctx.db
+      .query('mcpOauthClients')
+      .withIndex('by_requesterKey_and_createdAt', (q) =>
+        q.eq('requesterKey', args.requesterKey).gt('createdAt', now - REGISTRATION_WINDOW)
+      )
+      .take(REGISTRATIONS_PER_REQUESTER);
+
+    if (requesterRecent.length >= REGISTRATIONS_PER_REQUESTER) {
+      return { error: 'rate_limited' as const };
+    }
+
+    const globalRecent = await ctx.db
       .query('mcpOauthClients')
       .withIndex('by_createdAt', (q) => q.gt('createdAt', now - REGISTRATION_WINDOW))
-      .take(REGISTRATIONS_PER_WINDOW);
+      .take(GLOBAL_REGISTRATIONS_PER_WINDOW);
 
-    if (recent.length >= REGISTRATIONS_PER_WINDOW) {
+    if (globalRecent.length >= GLOBAL_REGISTRATIONS_PER_WINDOW) {
       return { error: 'rate_limited' as const };
     }
 
@@ -61,11 +78,23 @@ export const createPending = internalMutation({
     scope: v.string(),
     mcpState: v.string(),
     expiresAt: v.number(),
+    requesterKey: v.string(),
   },
   handler: async (ctx, args) => {
+    const now = Date.now();
+    const requesterActive = await ctx.db
+      .query('mcpOauthPending')
+      .withIndex('by_requesterKey_and_expiresAt', (q) =>
+        q.eq('requesterKey', args.requesterKey).gt('expiresAt', now)
+      )
+      .take(MAX_ACTIVE_PENDING_PER_REQUESTER);
+    if (requesterActive.length >= MAX_ACTIVE_PENDING_PER_REQUESTER) {
+      return { error: 'too_many_pending' as const };
+    }
+
     const active = await ctx.db
       .query('mcpOauthPending')
-      .withIndex('by_expiresAt', (q) => q.gt('expiresAt', Date.now()))
+      .withIndex('by_expiresAt', (q) => q.gt('expiresAt', now))
       .take(MAX_ACTIVE_PENDING);
     if (active.length >= MAX_ACTIVE_PENDING) {
       return { error: 'too_many_pending' as const };
@@ -188,10 +217,18 @@ export const getToken = internalQuery({
   args: { token: v.string() },
   handler: async (ctx, args) => {
     // `token` arg is already the hash — caller hashes before calling
-    return await ctx.db
+    const token = await ctx.db
       .query('mcpOauthTokens')
       .withIndex('by_token', (q) => q.eq('token', args.token))
       .unique();
+    if (!token?.familyId) return token;
+
+    const family = await ctx.db
+      .query('mcpOauthTokenFamilies')
+      .withIndex('by_familyId', (q) => q.eq('familyId', token.familyId!))
+      .unique();
+    if (family && (family.revokedAt || family.validUntil < Date.now())) return null;
+    return token;
   },
 });
 
@@ -230,8 +267,20 @@ export const exchangeCodeForToken = internalMutation({
       return { error: 'PKCE verification failed' };
     }
 
+    const now = Date.now();
+    const familyValidUntil = Math.min(args.refreshTokenExpiresAt, now + REFRESH_FAMILY_TTL);
+
     // Atomically mark code used and create token in same transaction
     await ctx.db.patch(codeRecord._id, { used: true });
+    await ctx.db.insert('mcpOauthTokenFamilies', {
+      familyId: args.refreshFamilyId,
+      clientId: args.clientId,
+      userId: codeRecord.userId,
+      createdAt: now,
+      validUntil: familyValidUntil,
+      purgeAt: familyValidUntil + REFRESH_FAMILY_RETENTION,
+      rotationCount: 0,
+    });
     await ctx.db.insert('mcpOauthTokens', {
       token: args.accessTokenHash,
       userId: codeRecord.userId,
@@ -245,8 +294,8 @@ export const exchangeCodeForToken = internalMutation({
       userId: codeRecord.userId,
       scope: codeRecord.scope,
       familyId: args.refreshFamilyId,
-      createdAt: Date.now(),
-      expiresAt: args.refreshTokenExpiresAt,
+      createdAt: now,
+      expiresAt: familyValidUntil,
     });
 
     return { scope: codeRecord.scope, refreshFamilyId: args.refreshFamilyId };
@@ -273,34 +322,47 @@ export const rotateRefreshToken = internalMutation({
 
     if (!refreshRecord) return { error: 'Invalid refresh token' };
     if (refreshRecord.clientId !== args.clientId) return { error: 'Client ID mismatch' };
-    if (refreshRecord.expiresAt < now) return { error: 'Refresh token expired' };
 
     const isTokenReused = Boolean(refreshRecord.usedAt || refreshRecord.replacedByTokenId);
-    if (isTokenReused || refreshRecord.revokedAt) {
-      const familyTokens = await ctx.db
-        .query('mcpOauthRefreshTokens')
-        .withIndex('by_familyId', (q) => q.eq('familyId', refreshRecord.familyId))
-        .collect();
+    if (refreshRecord.expiresAt < now && !isTokenReused && !refreshRecord.revokedAt) {
+      return { error: 'Refresh token expired' };
+    }
 
-      for (const token of familyTokens) {
-        if (!token.revokedAt) {
-          await ctx.db.patch(token._id, {
-            revokedAt: now,
-            revokedReason: 'reuse_detected',
-          });
-        }
+    let family = await ctx.db
+      .query('mcpOauthTokenFamilies')
+      .withIndex('by_familyId', (q) => q.eq('familyId', refreshRecord.familyId))
+      .unique();
+    if (!family) {
+      const validUntil = Math.min(
+        refreshRecord.expiresAt,
+        refreshRecord.createdAt + REFRESH_FAMILY_TTL
+      );
+      const familyDocumentId = await ctx.db.insert('mcpOauthTokenFamilies', {
+        familyId: refreshRecord.familyId,
+        clientId: refreshRecord.clientId,
+        userId: refreshRecord.userId,
+        createdAt: refreshRecord.createdAt,
+        validUntil,
+        purgeAt: validUntil + REFRESH_FAMILY_RETENTION,
+        rotationCount: 0,
+      });
+      family = await ctx.db.get(familyDocumentId);
+      if (!family) throw new Error('Failed to create refresh token family');
+    }
+
+    if (isTokenReused || refreshRecord.revokedAt || family.revokedAt) {
+      if (!family.revokedAt) {
+        await ctx.db.patch(family._id, {
+          revokedAt: now,
+          revokedReason: 'reuse_detected',
+          purgeAt: Math.max(family.purgeAt, now + REFRESH_FAMILY_RETENTION),
+        });
       }
-
-      // Also revoke any outstanding access tokens in this family
-      const familyAccessTokens = await ctx.db
-        .query('mcpOauthTokens')
-        .withIndex('by_familyId', (q) => q.eq('familyId', refreshRecord.familyId))
-        .collect();
-      for (const accessToken of familyAccessTokens) {
-        await ctx.db.delete(accessToken._id);
-      }
-
       return { error: 'Refresh token reuse detected' };
+    }
+    if (family.validUntil < now) return { error: 'Refresh token family expired' };
+    if (family.rotationCount >= MAX_REFRESH_ROTATIONS) {
+      return { error: 'Refresh token rotation limit exceeded' };
     }
 
     // Mark old token as used before issuing replacements.
@@ -321,9 +383,10 @@ export const rotateRefreshToken = internalMutation({
       familyId: refreshRecord.familyId,
       parentTokenId: refreshRecord._id,
       createdAt: now,
-      expiresAt: args.newRefreshTokenExpiresAt,
+      expiresAt: Math.min(args.newRefreshTokenExpiresAt, family.validUntil),
     });
     await ctx.db.patch(refreshRecord._id, { replacedByTokenId: newRefreshId });
+    await ctx.db.patch(family._id, { rotationCount: family.rotationCount + 1 });
 
     return { scope: refreshRecord.scope };
   },
@@ -367,8 +430,14 @@ export const purgeExpired = internalMutation({
       .withIndex('by_expiresAt', (q) => q.lt('expiresAt', now))
       .take(PURGE_BATCH_SIZE);
     for (const record of refreshTokensExpired) {
-      // Preserve tokens revoked due to reuse detection for forensic audit
-      if (record.revokedReason === 'reuse_detected') continue;
+      await ctx.db.delete(record._id);
+    }
+
+    const tokenFamiliesExpired = await ctx.db
+      .query('mcpOauthTokenFamilies')
+      .withIndex('by_purgeAt', (q) => q.lt('purgeAt', now))
+      .take(PURGE_BATCH_SIZE);
+    for (const record of tokenFamiliesExpired) {
       await ctx.db.delete(record._id);
     }
 

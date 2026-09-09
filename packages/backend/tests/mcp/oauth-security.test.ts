@@ -73,6 +73,32 @@ describe('mcp oauth security', () => {
     expect(runMutation).not.toHaveBeenCalled();
   });
 
+  it('handleRegister_partitionsTheLimitByRequestMetadata', async () => {
+    const runMutation = vi.fn(async (_reference, args: { clientId: string }) => ({
+      clientId: args.clientId,
+    }));
+    const ctx = {
+      runMutation,
+      meta: {
+        getRequestMetadata: vi.fn(async () => ({ ip: '203.0.113.1' })),
+      },
+    } as unknown as ActionCtx;
+
+    const response = await handleRegister(
+      ctx,
+      new Request('https://example.convex.site/oauth/register', {
+        method: 'POST',
+        body: JSON.stringify({ redirect_uris: [callbackUri] }),
+      })
+    );
+
+    expect(response.status).toBe(201);
+    expect(runMutation).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({ requesterKey: expect.stringMatching(/^[a-f0-9]{64}$/) })
+    );
+  });
+
   it('createClient_limitsRegistrationsTransactionallyAndSetsExpiry', async () => {
     const t = convexTest(schema, modules);
 
@@ -80,6 +106,7 @@ describe('mcp oauth security', () => {
       const result = await t.mutation(internal.mcp.internal.createClient, {
         clientId: `client-${i}`,
         redirectUris: [callbackUri],
+        requesterKey: 'requester-a',
       });
       expect(result.error).toBeUndefined();
     }
@@ -87,12 +114,20 @@ describe('mcp oauth security', () => {
     const limited = await t.mutation(internal.mcp.internal.createClient, {
       clientId: 'client-over-limit',
       redirectUris: [callbackUri],
+      requesterKey: 'requester-a',
     });
     expect(limited.error).toBe('rate_limited');
 
+    const isolated = await t.mutation(internal.mcp.internal.createClient, {
+      clientId: 'client-other-requester',
+      redirectUris: [callbackUri],
+      requesterKey: 'requester-b',
+    });
+    expect(isolated.error).toBeUndefined();
+
     await t.run(async (ctx) => {
       const clients = await ctx.db.query('mcpOauthClients').collect();
-      expect(clients).toHaveLength(20);
+      expect(clients).toHaveLength(21);
       expect(clients.every((client) => client.expiresAt! > client.createdAt)).toBe(true);
     });
   });
@@ -148,8 +183,55 @@ describe('mcp oauth security', () => {
       scope: 'blog:read',
       mcpState: '',
       expiresAt: Date.now() + 60_000,
+      requesterKey: 'requester-a',
     });
     expect(result.error).toBe('too_many_pending');
+  });
+
+  it('createPending_isolatesActiveLimitsByRequester', async () => {
+    const t = convexTest(schema, modules);
+    const expiresAt = Date.now() + 60_000;
+    await t.run(async (ctx) => {
+      for (let i = 0; i < 10; i++) {
+        await ctx.db.insert('mcpOauthPending', {
+          state: `requester-a-${i}`,
+          clientId: 'client-id',
+          redirectUri: callbackUri,
+          codeChallenge,
+          codeChallengeMethod: 'S256',
+          scope: 'blog:read',
+          mcpState: '',
+          expiresAt,
+          requesterKey: 'requester-a',
+        });
+      }
+    });
+
+    const sameRequester = await t.mutation(internal.mcp.internal.createPending, {
+      state: 'requester-a-limited',
+      clientId: 'client-id',
+      redirectUri: callbackUri,
+      codeChallenge,
+      codeChallengeMethod: 'S256',
+      scope: 'blog:read',
+      mcpState: '',
+      expiresAt,
+      requesterKey: 'requester-a',
+    });
+    const otherRequester = await t.mutation(internal.mcp.internal.createPending, {
+      state: 'requester-b-allowed',
+      clientId: 'client-id',
+      redirectUri: callbackUri,
+      codeChallenge,
+      codeChallengeMethod: 'S256',
+      scope: 'blog:read',
+      mcpState: '',
+      expiresAt,
+      requesterKey: 'requester-b',
+    });
+
+    expect(sameRequester.error).toBe('too_many_pending');
+    expect(otherRequester.error).toBeUndefined();
   });
 
   it('handleAuthorize_defaultsMissingScopeToRead', async () => {
@@ -159,6 +241,9 @@ describe('mcp oauth security', () => {
     const ctx = {
       runQuery: vi.fn(async () => ({ redirectUris: [callbackUri] })),
       runMutation,
+      meta: {
+        getRequestMetadata: vi.fn(async () => ({ ip: '203.0.113.1' })),
+      },
     } as unknown as ActionCtx;
     const url = new URL('https://example.convex.site/oauth/authorize');
     url.searchParams.set('client_id', 'client-1');
@@ -172,7 +257,10 @@ describe('mcp oauth security', () => {
     expect(response.status).toBe(302);
     expect(runMutation).toHaveBeenCalledWith(
       expect.anything(),
-      expect.objectContaining({ scope: 'blog:read' })
+      expect.objectContaining({
+        scope: 'blog:read',
+        requesterKey: expect.stringMatching(/^[a-f0-9]{64}$/),
+      })
     );
   });
 
