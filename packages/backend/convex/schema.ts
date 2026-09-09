@@ -30,6 +30,7 @@ export default defineSchema({
   })
     .index('by_slug', ['slug'])
     .index('by_status_and_publishedAt', ['status', 'publishedAt'])
+    .index('by_status_and_deletedAt_and_publishedAt', ['status', 'deletedAt', 'publishedAt'])
     .index('by_authorId', ['authorId'])
     .index('by_deletedAt', ['deletedAt']),
 
@@ -72,6 +73,8 @@ export default defineSchema({
     codeChallengeMethod: v.string(),
     scope: v.string(),
     mcpState: v.string(),
+    userId: v.optional(v.id('users')),
+    consentToken: v.optional(v.string()),
     expiresAt: v.number(),
   })
     .index('by_state', ['state'])
@@ -95,7 +98,10 @@ export default defineSchema({
     redirectUris: v.array(v.string()),
     clientName: v.optional(v.string()),
     createdAt: v.number(),
-  }).index('by_clientId', ['clientId']),
+    expiresAt: v.optional(v.number()),
+  })
+    .index('by_clientId', ['clientId'])
+    .index('by_createdAt', ['createdAt']),
 
   mcpOauthTokens: defineTable({
     token: v.string(),

@@ -9,6 +9,7 @@ import {
   handleRegister,
   handleAuthorize,
   handleCallback,
+  handleConsent,
   handleToken,
 } from './mcp/oauth';
 
@@ -59,6 +60,12 @@ http.route({
   path: '/oauth/callback',
   method: 'GET',
   handler: httpAction(handleCallback),
+});
+
+http.route({
+  path: '/oauth/consent',
+  method: 'POST',
+  handler: httpAction(handleConsent),
 });
 
 http.route({

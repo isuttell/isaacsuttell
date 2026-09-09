@@ -21,7 +21,7 @@ export function escapeXml(str: string): string {
     .replace(/'/g, '&apos;');
 }
 
-/** Safely serialize JSON for embedding in a <script> tag, preventing XSS via </script> injection. */
+/** Escape HTML tag starts before embedding JSON in a script element. */
 export function safeJsonLd(obj: unknown): string {
-  return JSON.stringify(obj).replace(/<\/script>/gi, '<\\/script>');
+  return JSON.stringify(obj).replace(/</g, '\\u003c');
 }
