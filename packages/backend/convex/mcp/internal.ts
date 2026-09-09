@@ -1,6 +1,7 @@
 import { v } from 'convex/values';
 import { internalMutation, internalQuery } from '../_generated/server';
 import { computePkceChallenge, timingSafeEqual } from './auth';
+import { MAX_REFRESH_ROTATIONS, REFRESH_FAMILY_TTL } from './token-policy';
 
 // --- OAuth clients (dynamic registration) ---
 
@@ -10,9 +11,7 @@ const REGISTRATIONS_PER_REQUESTER = 20;
 const GLOBAL_REGISTRATIONS_PER_WINDOW = 100;
 const MAX_ACTIVE_PENDING_PER_REQUESTER = 10;
 const MAX_ACTIVE_PENDING = 100;
-const REFRESH_FAMILY_TTL = 30 * 24 * 60 * 60 * 1000;
 const REFRESH_FAMILY_RETENTION = 30 * 24 * 60 * 60 * 1000;
-const MAX_REFRESH_ROTATIONS = 100;
 
 export const createClient = internalMutation({
   args: {

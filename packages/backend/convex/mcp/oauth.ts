@@ -2,6 +2,7 @@ import type { ActionCtx } from '../_generated/server';
 import { internal } from '../_generated/api';
 import { generateRandomToken, hashToken } from './auth';
 import { readBoundedBody } from './request-body';
+import { ACCESS_TOKEN_TTL, REFRESH_FAMILY_TTL } from './token-policy';
 
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
@@ -9,8 +10,7 @@ const GOOGLE_USERINFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo';
 
 const CODE_TTL = 5 * 60 * 1000; // 5 minutes
 const PENDING_TTL = 10 * 60 * 1000; // 10 minutes
-const ACCESS_TOKEN_TTL = 60 * 60 * 1000; // 1 hour
-const REFRESH_TOKEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days
+const REFRESH_TOKEN_TTL = REFRESH_FAMILY_TTL;
 
 const SUPPORTED_SCOPES = ['blog:read', 'blog:write', 'blog:delete', 'blog:manage'];
 
