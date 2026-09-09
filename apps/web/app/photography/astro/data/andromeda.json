@@ -1,0 +1,123 @@
+{
+  "slug": "andromeda",
+  "title": "Andromeda Galaxy",
+  "catalog": "M 31",
+  "category": "Galaxies",
+  "src": "/photography/astro/astrobin/kt1jen/image.jpg",
+  "width": 4563,
+  "height": 3042,
+  "sourceUrl": "https://app.astrobin.com/i/kt1jen",
+  "sourceWidth": 4563,
+  "sourceHeight": 3042,
+  "description": null,
+  "descriptionLinks": [],
+  "capturedFrom": "2020-10-11",
+  "capturedTo": "2020-10-11",
+  "integrationSeconds": 12650.0,
+  "sessions": [
+    {
+      "date": "2020-10-11",
+      "filter": "ZWO Blue 1.25\"",
+      "frames": 127,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3461825252684222
+    },
+    {
+      "date": "2020-10-11",
+      "filter": "ZWO Green 1.25\"",
+      "frames": 126,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3461825252684222
+    },
+    {
+      "date": "2020-10-11",
+      "filter": "ZWO Luminance 1.25\"",
+      "frames": 128,
+      "seconds": 10.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3461825252684222
+    },
+    {
+      "date": "2020-10-11",
+      "filter": "ZWO Red 1.25\"",
+      "frames": 126,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3461825252684222
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": ["ZWO Red 1.25\"", "ZWO Blue 1.25\"", "ZWO Green 1.25\"", "ZWO Luminance 1.25\""]
+    },
+    {
+      "label": "Focal reducer",
+      "items": ["Orion .8x Focal  Reducer/Flattener"]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Denoise AI", "Photoshop", "StarNet++", "Astro Pixel Processor"]
+    }
+  ],
+  "objects": [
+    "M 31",
+    "Andromeda Galaxy",
+    "NGC 224",
+    "M 32",
+    "NGC 221",
+    "M32",
+    "M31",
+    "Andromeda galaxy",
+    "NGC206"
+  ],
+  "constellation": "And",
+  "bortle": 6,
+  "moonIllumination": 0.3461825252684222,
+  "coordinates": {
+    "ra": 10.6849905,
+    "dec": 41.2598538,
+    "pixelScale": 1.103,
+    "orientation": 247.765,
+    "fieldWidth": 1.3980525,
+    "fieldHeight": 0.9320350000000001
+  },
+  "overlays": {
+    "labels": "/photography/astro/astrobin/kt1jen/labels.svg",
+    "grid": "/photography/astro/astrobin/kt1jen/grid.svg"
+  }
+}

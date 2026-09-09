@@ -1,0 +1,164 @@
+{
+  "slug": "eastern-veil",
+  "title": "Eastern Veil",
+  "catalog": "IC 1340",
+  "category": "Nebulae",
+  "src": "/photography/astro/astrobin/164rlv/image.jpg",
+  "width": 4963,
+  "height": 3309,
+  "sourceUrl": "https://app.astrobin.com/i/164rlv",
+  "sourceWidth": 4963,
+  "sourceHeight": 3309,
+  "description": null,
+  "descriptionLinks": [],
+  "capturedFrom": "2020-10-21",
+  "capturedTo": "2020-10-23",
+  "integrationSeconds": 24480.0,
+  "sessions": [
+    {
+      "date": "2020-10-21",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 29,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.28449811985837203
+    },
+    {
+      "date": "2020-10-21",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 29,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.28449811985837203
+    },
+    {
+      "date": "2020-10-21",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 29,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.28449811985837203
+    },
+    {
+      "date": "2020-10-22",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 19,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3883935237856103
+    },
+    {
+      "date": "2020-10-22",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 19,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3883935237856103
+    },
+    {
+      "date": "2020-10-22",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 19,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3883935237856103
+    },
+    {
+      "date": "2020-10-23",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 20,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.493886933867751
+    },
+    {
+      "date": "2020-10-23",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 20,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.493886933867751
+    },
+    {
+      "date": "2020-10-23",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 20,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.493886933867751
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": ["ZWO Ha 1.25\" 7nm", "ZWO OIII 1.25\" 7nm", "ZWO SII 1.25\" 7nm"]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Denoise AI", "Photoshop", "Astro Pixel Processor"]
+    }
+  ],
+  "objects": ["NGC 6995", "NGC 6992", "IC 1340", "IC1340", "NGC6995", "Veil nebula", "NGC6992"],
+  "constellation": "Cyg",
+  "bortle": 6,
+  "moonIllumination": 0.3889261925039111,
+  "coordinates": {
+    "ra": 314.03537389,
+    "dec": 31.43576505,
+    "pixelScale": 0.886,
+    "orientation": 264.055,
+    "fieldWidth": 1.2214494444444444,
+    "fieldHeight": 0.8143816666666667
+  },
+  "overlays": {
+    "labels": "/photography/astro/astrobin/164rlv/labels.svg",
+    "grid": "/photography/astro/astrobin/164rlv/grid.svg"
+  }
+}

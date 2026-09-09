@@ -1,0 +1,130 @@
+{
+  "slug": "triangulum-i",
+  "title": "Triangulum I",
+  "catalog": "M 33",
+  "category": "Galaxies",
+  "src": "/photography/astro/astrobin/vmolat/image.jpg",
+  "width": 7579,
+  "height": 5053,
+  "sourceUrl": "https://app.astrobin.com/i/vmolat",
+  "sourceWidth": 7579,
+  "sourceHeight": 5053,
+  "description": null,
+  "descriptionLinks": [],
+  "capturedFrom": "2020-10-17",
+  "capturedTo": "2020-10-17",
+  "integrationSeconds": 19530.0,
+  "sessions": [
+    {
+      "date": null,
+      "filter": "ZWO Red 1.25\"",
+      "frames": 93,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": null
+    },
+    {
+      "date": "2020-10-17",
+      "filter": "ZWO Blue 1.25\"",
+      "frames": 93,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.007097443094065792
+    },
+    {
+      "date": "2020-10-17",
+      "filter": "ZWO Green 1.25\"",
+      "frames": 93,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.007097443094065792
+    },
+    {
+      "date": "2020-10-17",
+      "filter": "ZWO Luminance 1.25\"",
+      "frames": 93,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.007097443094065792
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": ["ZWO Red 1.25\"", "ZWO Blue 1.25\"", "ZWO Green 1.25\"", "ZWO Luminance 1.25\""]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Denoise AI", "Photoshop", "Astro Pixel Processor"]
+    }
+  ],
+  "objects": [
+    "NGC 604",
+    "M 33",
+    "Triangulum Pinwheel",
+    "Triangulum Galaxy",
+    "NGC 598",
+    "NGC 595",
+    "M33",
+    "Triangulum galaxy",
+    "IC137",
+    "IC136",
+    "IC135",
+    "NGC592",
+    "NGC588",
+    "NGC595",
+    "IC131",
+    "IC142",
+    "IC143",
+    "NGC604",
+    "IC133",
+    "IC132"
+  ],
+  "constellation": "Tri",
+  "bortle": 6,
+  "moonIllumination": 0.007097443094065792,
+  "coordinates": {
+    "ra": 23.45620322,
+    "dec": 30.65769516,
+    "pixelScale": 0.443,
+    "orientation": 248.522,
+    "fieldWidth": 0.9326380555555556,
+    "fieldHeight": 0.6217997222222221
+  },
+  "overlays": {
+    "labels": "/photography/astro/astrobin/vmolat/labels.svg",
+    "grid": "/photography/astro/astrobin/vmolat/grid.svg"
+  }
+}
