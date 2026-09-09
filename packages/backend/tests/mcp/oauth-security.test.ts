@@ -219,7 +219,12 @@ describe('mcp oauth security', () => {
     expect(html).not.toContain('<script>bad()</script>');
     expect(html).toContain('<code>blog:read</code>');
     expect(html).toContain('<code>blog:write</code>');
-    expect(html).toContain('method="post"');
+    expect(html).toContain(
+      '<form method="post" action="https://example.convex.site/oauth/consent">'
+    );
+    expect(response.headers.get('Content-Security-Policy')).toBe(
+      "default-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+    );
     expect(runMutation).toHaveBeenCalledTimes(1);
   });
 
