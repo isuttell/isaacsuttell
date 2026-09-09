@@ -9,6 +9,7 @@ import {
   type KeyboardEvent,
   type PointerEvent,
 } from 'react';
+import { gridOpacity, labelOpacity, overlayTransition } from '../astro-overlay';
 import type { AstroPhoto } from '../astro-photo';
 
 const MIN_SCALE = 1;
@@ -21,6 +22,9 @@ export function AstroImageViewer({ photo }: { photo: AstroPhoto }) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [showLabels, setShowLabels] = useState(false);
   const [showGrid, setShowGrid] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const revealed = hovered || focused;
   const [imageFailed, setImageFailed] = useState(false);
   const [labelFailed, setLabelFailed] = useState(false);
   const [gridFailed, setGridFailed] = useState(false);
@@ -86,6 +90,12 @@ export function AstroImageViewer({ photo }: { photo: AstroPhoto }) {
     event.preventDefault();
   }
 
+  function trackMouse(next: boolean) {
+    return (event: PointerEvent<HTMLDivElement>) => {
+      if (event.pointerType === 'mouse') setHovered(next);
+    };
+  }
+
   function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
     if (scale === MIN_SCALE) return;
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -115,13 +125,17 @@ export function AstroImageViewer({ photo }: { photo: AstroPhoto }) {
       <div
         ref={viewport}
         role="group"
-        aria-label="Zoomable astrophotograph. Use plus and minus to zoom, zero to reset, and arrow keys to pan."
+        aria-label="Zoomable astrophotograph. Plate-solve annotations show while it is focused. Use plus and minus to zoom, zero to reset, and arrow keys to pan."
         tabIndex={0}
         onKeyDown={handleKeyDown}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerEnd}
         onPointerCancel={handlePointerEnd}
+        onPointerEnter={trackMouse(true)}
+        onPointerLeave={trackMouse(false)}
+        onFocus={(event) => setFocused(event.currentTarget.matches(':focus-visible'))}
+        onBlur={() => setFocused(false)}
         className={`relative mx-auto w-full overflow-hidden border border-white/10 bg-[#050505] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime ${scale > MIN_SCALE ? 'cursor-grab active:cursor-grabbing' : ''}`}
         style={{
           aspectRatio: `${photo.width} / ${photo.height}`,
@@ -163,7 +177,7 @@ export function AstroImageViewer({ photo }: { photo: AstroPhoto }) {
                     setLabelFailed(true);
                     setShowLabels(false);
                   }}
-                  className={`pointer-events-none object-fill select-none ${showLabels && !labelFailed ? 'opacity-100' : 'opacity-0'}`}
+                  className={`pointer-events-none object-fill select-none ${overlayTransition} ${labelFailed ? 'opacity-0' : labelOpacity(showLabels, revealed)}`}
                   draggable={false}
                 />
                 <Image
@@ -177,7 +191,7 @@ export function AstroImageViewer({ photo }: { photo: AstroPhoto }) {
                     setGridFailed(true);
                     setShowGrid(false);
                   }}
-                  className={`pointer-events-none object-fill select-none ${showGrid && !gridFailed ? 'opacity-100' : 'opacity-0'}`}
+                  className={`pointer-events-none object-fill select-none ${overlayTransition} ${gridFailed ? 'opacity-0' : gridOpacity(showGrid, revealed)}`}
                   draggable={false}
                 />
               </>
