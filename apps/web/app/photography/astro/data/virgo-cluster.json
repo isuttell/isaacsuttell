@@ -15,11 +15,38 @@
   "integrationSeconds": null,
   "sessions": [],
   "equipment": [],
-  "objects": [],
+  "objects": [
+    "IC 3303",
+    "IC 3333",
+    "IC 3349",
+    "IC 3355",
+    "IC 3363",
+    "NGC 4374",
+    "M 84",
+    "NGC 4387",
+    "NGC 4388",
+    "NGC 4402",
+    "NGC 4406",
+    "M 86",
+    "NGC 4407",
+    "NGC 4425",
+    "NGC 4435",
+    "NGC 4438"
+  ],
   "constellation": null,
   "bortle": null,
   "moonIllumination": null,
-  "coordinates": null,
-  "overlays": null,
+  "coordinates": {
+    "ra": 186.597873946,
+    "dec": 12.9229335244,
+    "pixelScale": 3.10731257868,
+    "orientation": 103.60837,
+    "fieldWidth": 1.0366340019429667,
+    "fieldHeight": 0.8061749856908667
+  },
+  "overlays": {
+    "labels": "/photography/astro/solved/virgo-cluster/labels.svg",
+    "grid": "/photography/astro/solved/virgo-cluster/grid.svg"
+  },
   "descriptionLinks": []
 }
