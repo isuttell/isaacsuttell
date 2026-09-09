@@ -95,6 +95,39 @@ describe('tag archive (non-destructive)', () => {
     expect(tags.some((t) => t.slug === 'python')).toBe(false);
   });
 
+  it('publicList_appliesBoundOnlyToActiveTags', async () => {
+    const t = convexTest(schema, modules);
+    await t.run(async (ctx) => {
+      await ctx.db.insert('tags', {
+        name: 'Archived',
+        slug: 'archived',
+        deletedAt: Date.now(),
+      });
+      await ctx.db.insert('tags', { name: 'Active', slug: 'active' });
+    });
+
+    const tags = await t.query(api.tags.queries.list, {});
+
+    expect(tags).toHaveLength(1);
+    expect(tags[0].slug).toBe('active');
+  });
+
+  it('publicList_failsInsteadOfSilentlyTruncatingTheDefaultList', async () => {
+    const t = convexTest(schema, modules);
+    await t.run(async (ctx) => {
+      for (let index = 1; index <= 101; index += 1) {
+        await ctx.db.insert('tags', {
+          name: `Tag ${index}`,
+          slug: `tag-${index}`,
+        });
+      }
+    });
+
+    await expect(t.query(api.tags.queries.list, {})).rejects.toThrow(
+      'Cannot list all active tags: more than 100 exist'
+    );
+  });
+
   it('restore_makesTagVisibleAgain', async () => {
     const t = convexTest(schema, modules);
     const adminId = await seedAdminUser(t);
@@ -164,6 +197,39 @@ describe('tag archive (non-destructive)', () => {
     expect(article).not.toBeNull();
     expect(article!.tags).toEqual(['typescript']);
     expect(article!.tags).not.toContain('go');
+  });
+
+  it('articleQuery_failsWhenArchivedTagLookupExceedsItsBound', async () => {
+    const t = convexTest(schema, modules);
+    await t.run(async (ctx) => {
+      const authorId = await ctx.db.insert('users', {
+        name: 'Test Author',
+        role: 'admin',
+      });
+      await ctx.db.insert('articles', {
+        title: 'Published',
+        slug: 'published',
+        content: 'content',
+        excerpt: 'excerpt',
+        tags: [],
+        status: 'published',
+        publishedAt: 1,
+        authorId,
+        updatedAt: 1,
+      });
+
+      for (let index = 1; index <= 501; index += 1) {
+        await ctx.db.insert('tags', {
+          name: `Archived ${index}`,
+          slug: `archived-${index}`,
+          deletedAt: index,
+        });
+      }
+    });
+
+    await expect(t.query(api.articles.queries.list, { limit: 1 })).rejects.toThrow(
+      'Cannot filter archived tags: more than 500 are archived'
+    );
   });
 
   it('listArchived_returnsOnlyArchivedTags', async () => {

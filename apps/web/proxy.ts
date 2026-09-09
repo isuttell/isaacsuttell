@@ -9,7 +9,7 @@ const isLoginPage = createRouteMatcher(['/login']);
 
 // Authentication gate only. Role-based authorization (admin check) is enforced
 // at the Convex layer via requireAdmin(). Querying Convex for role here would
-// add latency to every middleware invocation.
+// add latency to every proxy invocation.
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
   const authenticated = await convexAuth.isAuthenticated();
 
@@ -22,5 +22,5 @@ export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
 });
 
 export const config = {
-  matcher: ['/((?!.*\\..*|_next).*)'],
+  matcher: ['/admin/:path*', '/((?!.*\\..*|_next).*)'],
 };
