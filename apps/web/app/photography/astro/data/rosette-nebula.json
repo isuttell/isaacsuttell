@@ -1,0 +1,384 @@
+{
+  "slug": "rosette-nebula",
+  "title": "Rosette Nebula",
+  "catalog": "NGC 2244",
+  "category": "Nebulae",
+  "src": "/photography/astro/astrobin/29kr8z/image.jpg",
+  "width": 4931,
+  "height": 4931,
+  "sourceUrl": "https://app.astrobin.com/i/29kr8z",
+  "sourceWidth": 4931,
+  "sourceHeight": 4931,
+  "description": "\"The Rosette Nebula (also known as Caldwell 49) is an H II region located near one end of a giant molecular cloud in the Monoceros region of the Milky Way Galaxy. The open cluster NGC 2244 (Caldwell 50) is closely associated with the nebulosity, the stars of the cluster having been formed from the nebula's matter.\" Wikipedia\r\n\r\nMy plan when I first started this project was to create an image that would be suitable for large 2'x'2' prints. To help get me there I ended up capturing the nebula in four different panels and then stitched those together for the final image.\r\n\r\nThe nebula color is based on the Hubble palette. So Hydrogen-alpha maps to green, Oxygen III to blue, and Sulpher II to red. \r\n\r\nEventually I'll add some more exposure time as it's still noisier than I would like but for this project I'm happy with the current result.",
+  "descriptionLinks": [
+    {
+      "label": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Rosette_Nebula"
+    }
+  ],
+  "capturedFrom": "2020-10-31",
+  "capturedTo": "2020-11-26",
+  "integrationSeconds": 82800.0,
+  "sessions": [
+    {
+      "date": "2020-10-31",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9998432778621829
+    },
+    {
+      "date": "2020-10-31",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9998432778621829
+    },
+    {
+      "date": "2020-10-31",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9998432778621829
+    },
+    {
+      "date": "2020-11-01",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9932135461560869
+    },
+    {
+      "date": "2020-11-01",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9932135461560869
+    },
+    {
+      "date": "2020-11-01",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9932135461560869
+    },
+    {
+      "date": "2020-11-03",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.926706014821271
+    },
+    {
+      "date": "2020-11-03",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.926706014821271
+    },
+    {
+      "date": "2020-11-03",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.926706014821271
+    },
+    {
+      "date": "2020-11-14",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.008023294404353454
+    },
+    {
+      "date": "2020-11-14",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.008023294404353454
+    },
+    {
+      "date": "2020-11-14",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.008023294404353454
+    },
+    {
+      "date": "2020-11-15",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.0011655628407008511
+    },
+    {
+      "date": "2020-11-15",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.0011655628407008511
+    },
+    {
+      "date": "2020-11-15",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.0011655628407008511
+    },
+    {
+      "date": "2020-11-20",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 42,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3291013309355105
+    },
+    {
+      "date": "2020-11-20",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3291013309355105
+    },
+    {
+      "date": "2020-11-20",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 31,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3291013309355105
+    },
+    {
+      "date": "2020-11-23",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 29,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.6260081285978523
+    },
+    {
+      "date": "2020-11-23",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.6260081285978523
+    },
+    {
+      "date": "2020-11-23",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 29,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.6260081285978523
+    },
+    {
+      "date": "2020-11-25",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 18,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.7973694862330016
+    },
+    {
+      "date": "2020-11-25",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 15,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.7973694862330016
+    },
+    {
+      "date": "2020-11-25",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 1,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.7973694862330016
+    },
+    {
+      "date": "2020-11-26",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 5,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.8675884289097601
+    },
+    {
+      "date": "2020-11-26",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 5,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.8675884289097601
+    },
+    {
+      "date": "2020-11-26",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 5,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.8675884289097601
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": ["ZWO Ha 1.25\" 7nm", "ZWO OIII 1.25\" 7nm", "ZWO SII 1.25\" 7nm"]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Denoise AI", "Photoshop", "Astro Pixel Processor"]
+    }
+  ],
+  "objects": [
+    "NGC 2237",
+    "NGC 2238",
+    "NGC 2239",
+    "NGC 2246",
+    "Rosette A",
+    "Rosette B",
+    "Rosette Nebula",
+    "The star 12Mon",
+    "12 Mon",
+    "NGC2239",
+    "Rosette nebula",
+    "NGC2244",
+    "NGC2238",
+    "NGC2237",
+    "NGC2246",
+    "Sh2-275"
+  ],
+  "constellation": "Mon",
+  "bortle": 6,
+  "moonIllumination": 0.6165576745289688,
+  "coordinates": {
+    "ra": 97.88045022,
+    "dec": 4.99809235,
+    "pixelScale": 0.886,
+    "orientation": 173.77199999999993,
+    "fieldWidth": 1.213573888888889,
+    "fieldHeight": 1.213573888888889
+  },
+  "overlays": {
+    "labels": "/photography/astro/astrobin/29kr8z/labels.svg",
+    "grid": "/photography/astro/astrobin/29kr8z/grid.svg"
+  }
+}
