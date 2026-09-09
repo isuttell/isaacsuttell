@@ -1,0 +1,235 @@
+{
+  "slug": "crescent-nebula",
+  "title": "Crescent Nebula",
+  "catalog": "NGC 6888",
+  "category": "Nebulae",
+  "src": "/photography/astro/astrobin/oq1l2r/image.jpg",
+  "width": 3727,
+  "height": 2693,
+  "sourceUrl": "https://app.astrobin.com/i/oq1l2r",
+  "sourceWidth": 3727,
+  "sourceHeight": 2693,
+  "description": "The Crescent Nebula \"is formed by the fast stellar wind from the Wolf-Rayet star WR 136 (HD 192163) colliding with and energizing the slower moving wind ejected by the star when it became a red giant around 250,000 to 400,000 years ago. The result of the collision is a shell and two shock waves, one moving outward and one moving inward. The inward moving shock wave heats the stellar wind to X-ray-emitting temperatures. \" ~Wikipedia",
+  "descriptionLinks": [
+    {
+      "label": "~Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Crescent_Nebula"
+    }
+  ],
+  "capturedFrom": "2021-05-27",
+  "capturedTo": "2021-06-04",
+  "integrationSeconds": 32280.0,
+  "sessions": [
+    {
+      "date": "2021-05-27",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 25,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9836972941829276
+    },
+    {
+      "date": "2021-05-27",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9836972941829276
+    },
+    {
+      "date": "2021-05-27",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 30,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9836972941829276
+    },
+    {
+      "date": "2021-05-30",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 10,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.7834028416240217
+    },
+    {
+      "date": "2021-05-30",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 14,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.7834028416240217
+    },
+    {
+      "date": "2021-05-30",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 18,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.7834028416240217
+    },
+    {
+      "date": "2021-05-31",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 17,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.6861187712177843
+    },
+    {
+      "date": "2021-05-31",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 15,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.6861187712177843
+    },
+    {
+      "date": "2021-05-31",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 15,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.6861187712177843
+    },
+    {
+      "date": "2021-06-03",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 16,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3821679066740892
+    },
+    {
+      "date": "2021-06-03",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 15,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3821679066740892
+    },
+    {
+      "date": "2021-06-03",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 15,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.3821679066740892
+    },
+    {
+      "date": "2021-06-04",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 20,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.289853474185531
+    },
+    {
+      "date": "2021-06-04",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 19,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.289853474185531
+    },
+    {
+      "date": "2021-06-04",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 10,
+      "seconds": 120.0,
+      "gain": 139.0,
+      "sensorTemperature": -20,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.289853474185531
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": ["ZWO Ha 1.25\" 7nm", "ZWO OIII 1.25\" 7nm", "ZWO SII 1.25\" 7nm"]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Denoise AI", "Photoshop", "Astro Pixel Processor"]
+    }
+  ],
+  "objects": ["NGC 6888", "Crescent Nebula", "NGC6888", "Crescent nebula", "Sh2-105"],
+  "constellation": "Cyg",
+  "bortle": 6,
+  "moonIllumination": 0.6250480575768709,
+  "coordinates": {
+    "ra": 302.99798304,
+    "dec": 38.23642459,
+    "pixelScale": 0.886,
+    "orientation": 207.774,
+    "fieldWidth": 0.917256111111111,
+    "fieldHeight": 0.6627772222222222
+  },
+  "overlays": {
+    "labels": "/photography/astro/astrobin/oq1l2r/labels.svg",
+    "grid": "/photography/astro/astrobin/oq1l2r/grid.svg"
+  }
+}

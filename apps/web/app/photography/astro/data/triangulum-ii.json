@@ -1,0 +1,196 @@
+{
+  "slug": "triangulum-ii",
+  "title": "Triangulum II",
+  "catalog": "M 33",
+  "category": "Galaxies",
+  "src": "/photography/astro/astrobin/e54z7e/image.jpg",
+  "width": 3937,
+  "height": 2690,
+  "sourceUrl": "https://app.astrobin.com/i/e54z7e",
+  "sourceWidth": 3937,
+  "sourceHeight": 2690,
+  "description": "I keep shooting Triangulum as I get better at capturing and processing images. So it's become a good way for me to track my progress. Here's my latest and longest capture of M33.",
+  "descriptionLinks": [],
+  "capturedFrom": "2020-11-01",
+  "capturedTo": "2020-11-05",
+  "integrationSeconds": 42960.0,
+  "sessions": [
+    {
+      "date": "2020-11-01",
+      "filter": "ZWO Blue 1.25\"",
+      "frames": 60,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9932135461560869
+    },
+    {
+      "date": "2020-11-01",
+      "filter": "ZWO Green 1.25\"",
+      "frames": 60,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9932135461560869
+    },
+    {
+      "date": "2020-11-01",
+      "filter": "ZWO Luminance 1.25\"",
+      "frames": 97,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9932135461560869
+    },
+    {
+      "date": "2020-11-01",
+      "filter": "ZWO Red 1.25\"",
+      "frames": 60,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9932135461560869
+    },
+    {
+      "date": "2020-11-02",
+      "filter": "ZWO Blue 1.25\"",
+      "frames": 52,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9686695230791096
+    },
+    {
+      "date": "2020-11-02",
+      "filter": "ZWO Green 1.25\"",
+      "frames": 60,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9686695230791096
+    },
+    {
+      "date": "2020-11-02",
+      "filter": "ZWO Luminance 1.25\"",
+      "frames": 60,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9686695230791096
+    },
+    {
+      "date": "2020-11-02",
+      "filter": "ZWO Red 1.25\"",
+      "frames": 60,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9686695230791096
+    },
+    {
+      "date": "2020-11-03",
+      "filter": "ZWO Luminance 1.25\"",
+      "frames": 260,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.926706014821271
+    },
+    {
+      "date": "2020-11-05",
+      "filter": "ZWO Luminance 1.25\"",
+      "frames": 311,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.7948561787270982
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": ["ZWO Red 1.25\"", "ZWO Blue 1.25\"", "ZWO Green 1.25\"", "ZWO Luminance 1.25\""]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Denoise AI", "Photoshop", "StarNet++", "Astro Pixel Processor"]
+    }
+  ],
+  "objects": [
+    "NGC 604",
+    "M 33",
+    "Triangulum Pinwheel",
+    "Triangulum Galaxy",
+    "NGC 598",
+    "NGC 595",
+    "M33",
+    "Triangulum galaxy",
+    "IC137",
+    "IC136",
+    "IC135",
+    "NGC592",
+    "NGC588",
+    "NGC595",
+    "IC131",
+    "IC142",
+    "IC143",
+    "NGC604",
+    "IC133",
+    "IC132"
+  ],
+  "constellation": "Tri",
+  "bortle": 6,
+  "moonIllumination": 0.9569094470489153,
+  "coordinates": {
+    "ra": 23.46911997,
+    "dec": 30.65366575,
+    "pixelScale": 0.886,
+    "orientation": 263.501,
+    "fieldWidth": 0.9689394444444445,
+    "fieldHeight": 0.662038888888889
+  },
+  "overlays": {
+    "labels": "/photography/astro/astrobin/e54z7e/labels.svg",
+    "grid": "/photography/astro/astrobin/e54z7e/grid.svg"
+  }
+}

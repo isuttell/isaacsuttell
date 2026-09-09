@@ -1,0 +1,109 @@
+{
+  "slug": "m3",
+  "title": "M3 Globular Cluster",
+  "catalog": "M 3",
+  "category": "Star clusters",
+  "src": "/photography/astro/astrobin/7trdd4/image.jpg",
+  "width": 3730,
+  "height": 2906,
+  "sourceUrl": "https://app.astrobin.com/i/7trdd4",
+  "sourceWidth": 3730,
+  "sourceHeight": 2906,
+  "description": null,
+  "descriptionLinks": [],
+  "capturedFrom": "2021-02-25",
+  "capturedTo": "2021-02-25",
+  "integrationSeconds": 12000.0,
+  "sessions": [
+    {
+      "date": "2021-02-25",
+      "filter": "ZWO Blue 1.25\"",
+      "frames": 50,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -30,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9569966967286367
+    },
+    {
+      "date": "2021-02-25",
+      "filter": "ZWO Green 1.25\"",
+      "frames": 50,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -30,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9569966967286367
+    },
+    {
+      "date": "2021-02-25",
+      "filter": "ZWO Luminance 1.25\"",
+      "frames": 50,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -30,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9569966967286367
+    },
+    {
+      "date": "2021-02-25",
+      "filter": "ZWO Red 1.25\"",
+      "frames": 50,
+      "seconds": 60.0,
+      "gain": 139.0,
+      "sensorTemperature": -30,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.9569966967286367
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": ["ZWO Red 1.25\"", "ZWO Blue 1.25\"", "ZWO Green 1.25\"", "ZWO Luminance 1.25\""]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Astro Pixel Processor"]
+    }
+  ],
+  "objects": ["M 3", "NGC 5272", "M3"],
+  "constellation": "CVn",
+  "bortle": 6,
+  "moonIllumination": 0.9569966967286367,
+  "coordinates": {
+    "ra": 205.54368041,
+    "dec": 28.37946182,
+    "pixelScale": 0.887,
+    "orientation": 253.469,
+    "fieldWidth": 0.9190305555555556,
+    "fieldHeight": 0.7160061111111111
+  },
+  "overlays": {
+    "labels": "/photography/astro/astrobin/7trdd4/labels.svg",
+    "grid": "/photography/astro/astrobin/7trdd4/grid.svg"
+  }
+}

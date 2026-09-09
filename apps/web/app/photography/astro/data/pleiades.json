@@ -1,0 +1,151 @@
+{
+  "slug": "pleiades",
+  "title": "Pleiades",
+  "catalog": "M 45",
+  "category": "Star clusters",
+  "src": "/photography/astro/astrobin/538yxa/image.jpg",
+  "width": 4953,
+  "height": 3302,
+  "sourceUrl": "https://app.astrobin.com/i/538yxa",
+  "sourceWidth": 4953,
+  "sourceHeight": 3302,
+  "description": null,
+  "descriptionLinks": [],
+  "capturedFrom": "2020-10-18",
+  "capturedTo": "2020-10-18",
+  "integrationSeconds": 12610.0,
+  "sessions": [
+    {
+      "date": "2020-10-18",
+      "filter": "ZWO Blue 1.25\"",
+      "frames": 126,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.04277437090144587
+    },
+    {
+      "date": "2020-10-18",
+      "filter": "ZWO Green 1.25\"",
+      "frames": 126,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.04277437090144587
+    },
+    {
+      "date": "2020-10-18",
+      "filter": "ZWO Luminance 1.25\"",
+      "frames": 127,
+      "seconds": 10.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.04277437090144587
+    },
+    {
+      "date": "2020-10-18",
+      "filter": "ZWO Red 1.25\"",
+      "frames": 126,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.04277437090144587
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": [
+        "ZWO Red 1.25\"",
+        "ZWO Ha 1.25\" 7nm",
+        "ZWO OIII 1.25\" 7nm",
+        "ZWO Blue 1.25\"",
+        "ZWO Green 1.25\"",
+        "ZWO Luminance 1.25\""
+      ]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Denoise AI", "Photoshop", "Astro Pixel Processor"]
+    }
+  ],
+  "objects": [
+    "Merope Nebula",
+    "NGC 1435",
+    "Maia Nebula",
+    "NGC 1432",
+    "Barnard's Merope Nebula",
+    "IC 349",
+    "The star ηTau",
+    "The star Merope (23Tau)",
+    "The star Sterope I (21Tau)",
+    "The star Taygeta (19Tau)",
+    "The star Electra (17Tau)",
+    "The star Celaeno (16Tau)",
+    "23 Tau",
+    "Merope",
+    "25 eta Tau",
+    "Alcyone",
+    "17 Tau",
+    "Electra",
+    "24 Tau",
+    "16 Tau",
+    "Celaeno",
+    "20 Tau",
+    "Maia",
+    "19 q Tau",
+    "Taygeta",
+    "22 Tau",
+    "Sterope II",
+    "21 Tau",
+    "Asterope",
+    "M45",
+    "Pleiades",
+    "NGC1435",
+    "Merope nebula",
+    "IC349"
+  ],
+  "constellation": "Tau",
+  "bortle": 6,
+  "moonIllumination": 0.04277437090144587,
+  "coordinates": {
+    "ra": 56.54124835,
+    "dec": 24.10517875,
+    "pixelScale": 0.886,
+    "orientation": 81.87400000000002,
+    "fieldWidth": 1.2189883333333333,
+    "fieldHeight": 0.8126588888888889
+  },
+  "overlays": {
+    "labels": "/photography/astro/astrobin/538yxa/labels.svg",
+    "grid": "/photography/astro/astrobin/538yxa/grid.svg"
+  }
+}

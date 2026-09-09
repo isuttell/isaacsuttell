@@ -1,0 +1,88 @@
+{
+  "slug": "orion-starless",
+  "title": "Orion Nebula, starless",
+  "catalog": "M 42",
+  "category": "Nebulae",
+  "src": "/photography/astro/astrobin/8t8os3/image.jpg",
+  "width": 3280,
+  "height": 3280,
+  "sourceUrl": "https://app.astrobin.com/i/8t8os3",
+  "sourceWidth": 3280,
+  "sourceHeight": 3280,
+  "description": null,
+  "descriptionLinks": [],
+  "capturedFrom": "2020-10-15",
+  "capturedTo": "2020-10-15",
+  "integrationSeconds": 3330.0,
+  "sessions": [
+    {
+      "date": "2020-10-15",
+      "filter": "ZWO Ha 1.25\" 7nm",
+      "frames": 37,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.026823980944085335
+    },
+    {
+      "date": "2020-10-15",
+      "filter": "ZWO OIII 1.25\" 7nm",
+      "frames": 37,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.026823980944085335
+    },
+    {
+      "date": "2020-10-15",
+      "filter": "ZWO SII 1.25\" 7nm",
+      "frames": 37,
+      "seconds": 30.0,
+      "gain": 139.0,
+      "sensorTemperature": -10,
+      "binning": 1,
+      "bortle": 6,
+      "moonIllumination": 0.026823980944085335
+    }
+  ],
+  "equipment": [
+    {
+      "label": "Telescope",
+      "items": ["Sky-Watcher Evostar 120ED DS-PRO APO"]
+    },
+    {
+      "label": "Camera",
+      "items": ["ASI ZWO 1600 MM - Cooled"]
+    },
+    {
+      "label": "Mount",
+      "items": ["Sky-Watcher EQ6-R Pro"]
+    },
+    {
+      "label": "Filters",
+      "items": ["ZWO Ha 1.25\" 7nm", "ZWO OIII 1.25\" 7nm", "ZWO SII 1.25\" 7nm"]
+    },
+    {
+      "label": "Guide scope",
+      "items": ["Orion 60mm Guide Scope"]
+    },
+    {
+      "label": "Guide camera",
+      "items": ["ZWO ASI120MM Mini"]
+    },
+    {
+      "label": "Processing software",
+      "items": ["Denoise AI", "Photoshop", "StarNet++", "Astro Pixel Processor"]
+    }
+  ],
+  "objects": [],
+  "constellation": null,
+  "bortle": 6,
+  "moonIllumination": 0.026823980944085335,
+  "coordinates": null,
+  "overlays": null
+}
