@@ -5,6 +5,7 @@ import { modules } from '../test_setup';
 import { internal } from '../../convex/_generated/api';
 import { handleAuthServerMetadata, handleToken } from '../../convex/mcp/oauth';
 import { computePkceChallenge, hashToken } from '../../convex/mcp/auth';
+import { MAX_REFRESH_ROTATIONS } from '../../convex/mcp/token_policy';
 import type { ActionCtx } from '../../convex/_generated/server';
 
 describe('mcp oauth refresh tokens', () => {
@@ -65,9 +66,15 @@ describe('mcp oauth refresh tokens', () => {
         .query('mcpOauthRefreshTokens')
         .withIndex('by_token', (q) => q.eq('token', 'refresh-hash-1'))
         .unique();
+      const family = await ctx.db
+        .query('mcpOauthTokenFamilies')
+        .withIndex('by_familyId', (q) => q.eq('familyId', 'family-1'))
+        .unique();
 
       expect(access).not.toBeNull();
       expect(refresh).not.toBeNull();
+      expect(family).not.toBeNull();
+      expect(family!.rotationCount).toBe(0);
       expect(refresh!.familyId).toBe('family-1');
       expect(refresh!.clientId).toBe('client-123');
       expect(refresh!.scope).toBe('blog:manage');
@@ -120,6 +127,36 @@ describe('mcp oauth refresh tokens', () => {
     expect(response.status).toBe(200);
     expect(body.access_token).toBeTypeOf('string');
     expect(body.refresh_token).toBeTypeOf('string');
+  });
+
+  it('handleToken_rejectsOversizedBodiesBeforeWriting', async () => {
+    let mutationCalls = 0;
+    const ctx = {
+      runMutation: async () => {
+        mutationCalls += 1;
+        return { scope: 'blog:manage' };
+      },
+    } as unknown as ActionCtx;
+
+    const declared = await handleToken(
+      ctx,
+      new Request('https://example.convex.site/oauth/token', {
+        method: 'POST',
+        headers: { 'Content-Length': String(16 * 1024 + 1) },
+        body: 'grant_type=refresh_token',
+      })
+    );
+    const streamed = await handleToken(
+      ctx,
+      new Request('https://example.convex.site/oauth/token', {
+        method: 'POST',
+        body: 'x'.repeat(16 * 1024 + 1),
+      })
+    );
+
+    expect(declared.status).toBe(413);
+    expect(streamed.status).toBe(413);
+    expect(mutationCalls).toBe(0);
   });
 
   it('rotateRefreshToken_rotatesAndRejectsReuse', async () => {
@@ -181,11 +218,65 @@ describe('mcp oauth refresh tokens', () => {
 
     await t.run(async (ctx) => {
       const family = await ctx.db
+        .query('mcpOauthTokenFamilies')
+        .withIndex('by_familyId', (q) => q.eq('familyId', 'family-rotate'))
+        .unique();
+      const refreshTokens = await ctx.db
         .query('mcpOauthRefreshTokens')
         .withIndex('by_familyId', (q) => q.eq('familyId', 'family-rotate'))
         .collect();
-      expect(family.length).toBe(2);
-      expect(family.every((token) => Boolean(token.revokedAt))).toBe(true);
+      expect(refreshTokens).toHaveLength(2);
+      expect(family!.rotationCount).toBe(1);
+      expect(family!.revokedReason).toBe('reuse_detected');
+    });
+  });
+
+  it('rotateRefreshToken_rejectsExpiredAncestorReuseAndRevokesLegacyFamily', async () => {
+    const t = convexTest(schema, modules);
+    const now = Date.now();
+    const userId = await t.run(async (ctx) => {
+      return await ctx.db.insert('users', { email: 'admin@test.com', role: 'admin' });
+    });
+
+    await t.run(async (ctx) => {
+      await ctx.db.insert('mcpOauthRefreshTokens', {
+        token: 'refresh-expired-ancestor',
+        clientId: 'client-123',
+        userId,
+        scope: 'blog:manage',
+        familyId: 'family-expired-ancestor',
+        createdAt: now - 120_000,
+        expiresAt: now - 1,
+        usedAt: now - 60_000,
+      });
+      await ctx.db.insert('mcpOauthTokens', {
+        token: 'access-live-descendant',
+        userId,
+        scope: 'blog:manage',
+        familyId: 'family-expired-ancestor',
+        expiresAt: now + 60_000,
+      });
+    });
+
+    const result = await t.mutation(internal.mcp.internal.rotateRefreshToken, {
+      refreshTokenHash: 'refresh-expired-ancestor',
+      clientId: 'client-123',
+      newAccessTokenHash: 'access-never-created',
+      newAccessTokenExpiresAt: now + 60_000,
+      newRefreshTokenHash: 'refresh-never-created',
+      newRefreshTokenExpiresAt: now + 60_000,
+    });
+
+    expect(result.error).toBe('Refresh token reuse detected');
+    expect(
+      await t.query(internal.mcp.internal.getToken, { token: 'access-live-descendant' })
+    ).toBeNull();
+    await t.run(async (ctx) => {
+      const family = await ctx.db
+        .query('mcpOauthTokenFamilies')
+        .withIndex('by_familyId', (q) => q.eq('familyId', 'family-expired-ancestor'))
+        .unique();
+      expect(family!.revokedReason).toBe('reuse_detected');
     });
   });
 
@@ -240,7 +331,7 @@ describe('mcp oauth refresh tokens', () => {
     expect(result.error).toBe('Client ID mismatch');
   });
 
-  it('rotateRefreshToken_revokesAccessTokensOnReuse', async () => {
+  it('rotateRefreshToken_invalidatesAccessTokensOnReuse', async () => {
     const t = convexTest(schema, modules);
     const userId = await t.run(async (ctx) => {
       return await ctx.db.insert('users', { email: 'admin@test.com', role: 'admin' });
@@ -288,17 +379,10 @@ describe('mcp oauth refresh tokens', () => {
       newRefreshTokenExpiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
     });
 
-    // Access tokens in the family should be deleted
-    await t.run(async (ctx) => {
-      const access = await ctx.db
-        .query('mcpOauthTokens')
-        .withIndex('by_familyId', (q) => q.eq('familyId', 'family-access-revoke'))
-        .collect();
-      expect(access.length).toBe(0);
-    });
+    expect(await t.query(internal.mcp.internal.getToken, { token: 'access-family-1' })).toBeNull();
   });
 
-  it('purgeExpired_deletesExpiredButPreservesReuseDetectedRecords', async () => {
+  it('purgeExpired_deletesExpiredRefreshTokensIncludingReuseRecords', async () => {
     const t = convexTest(schema, modules);
     const userId = await t.run(async (ctx) => {
       return await ctx.db.insert('users', { email: 'admin@test.com', role: 'admin' });
@@ -316,7 +400,7 @@ describe('mcp oauth refresh tokens', () => {
         expiresAt: Date.now() - 1,
       });
 
-      // Expired token revoked due to reuse — should be preserved
+      // Expired token revoked due to reuse should also be purged.
       await ctx.db.insert('mcpOauthRefreshTokens', {
         token: 'refresh-purge-reuse',
         clientId: 'client-123',
@@ -358,9 +442,91 @@ describe('mcp oauth refresh tokens', () => {
         .unique();
 
       expect(normal).toBeNull();
-      expect(reuse).not.toBeNull();
+      expect(reuse).toBeNull();
       expect(valid).not.toBeNull();
     });
+  });
+
+  it('rotateRefreshToken_enforcesFamilyRotationLimit', async () => {
+    const t = convexTest(schema, modules);
+    const now = Date.now();
+    await t.run(async (ctx) => {
+      const id = await ctx.db.insert('users', { email: 'admin@test.com', role: 'admin' });
+      await ctx.db.insert('mcpOauthTokenFamilies', {
+        familyId: 'family-at-limit',
+        clientId: 'client-123',
+        userId: id,
+        createdAt: now,
+        validUntil: now + 60_000,
+        purgeAt: now + 120_000,
+        rotationCount: MAX_REFRESH_ROTATIONS,
+      });
+      await ctx.db.insert('mcpOauthRefreshTokens', {
+        token: 'refresh-at-limit',
+        clientId: 'client-123',
+        userId: id,
+        scope: 'blog:manage',
+        familyId: 'family-at-limit',
+        createdAt: now,
+        expiresAt: now + 60_000,
+      });
+    });
+
+    const result = await t.mutation(internal.mcp.internal.rotateRefreshToken, {
+      refreshTokenHash: 'refresh-at-limit',
+      clientId: 'client-123',
+      newAccessTokenHash: 'access-over-limit',
+      newAccessTokenExpiresAt: now + 60_000,
+      newRefreshTokenHash: 'refresh-over-limit',
+      newRefreshTokenExpiresAt: now + 60_000,
+    });
+
+    expect(result.error).toBe('Refresh token rotation limit exceeded');
+    await t.run(async (ctx) => {
+      expect(
+        await ctx.db
+          .query('mcpOauthRefreshTokens')
+          .withIndex('by_token', (q) => q.eq('token', 'refresh-over-limit'))
+          .unique()
+      ).toBeNull();
+    });
+  });
+
+  it('rotateRefreshToken_enforcesAbsoluteFamilyExpiry', async () => {
+    const t = convexTest(schema, modules);
+    const now = Date.now();
+    await t.run(async (ctx) => {
+      const userId = await ctx.db.insert('users', { email: 'admin@test.com', role: 'admin' });
+      await ctx.db.insert('mcpOauthTokenFamilies', {
+        familyId: 'family-expired-absolute',
+        clientId: 'client-123',
+        userId,
+        createdAt: now - 120_000,
+        validUntil: now - 1,
+        purgeAt: now + 60_000,
+        rotationCount: 1,
+      });
+      await ctx.db.insert('mcpOauthRefreshTokens', {
+        token: 'refresh-family-expired',
+        clientId: 'client-123',
+        userId,
+        scope: 'blog:manage',
+        familyId: 'family-expired-absolute',
+        createdAt: now - 60_000,
+        expiresAt: now + 60_000,
+      });
+    });
+
+    const result = await t.mutation(internal.mcp.internal.rotateRefreshToken, {
+      refreshTokenHash: 'refresh-family-expired',
+      clientId: 'client-123',
+      newAccessTokenHash: 'access-family-expired',
+      newAccessTokenExpiresAt: now + 60_000,
+      newRefreshTokenHash: 'refresh-family-expired-new',
+      newRefreshTokenExpiresAt: now + 60_000,
+    });
+
+    expect(result.error).toBe('Refresh token family expired');
   });
 
   it('exchangeCodeForToken_storesFamilyIdOnAccessToken', async () => {
@@ -436,5 +602,14 @@ describe('mcp oauth refresh tokens', () => {
       newRefreshTokenExpiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
     });
     expect(result.error).toBe('Refresh token expired');
+
+    await t.run(async (ctx) => {
+      expect(
+        await ctx.db
+          .query('mcpOauthTokenFamilies')
+          .withIndex('by_familyId', (q) => q.eq('familyId', 'family-expired'))
+          .unique()
+      ).toBeNull();
+    });
   });
 });
