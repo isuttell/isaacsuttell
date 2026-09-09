@@ -1,8 +1,8 @@
 import type { ActionCtx } from '../_generated/server';
 import { internal } from '../_generated/api';
 import { generateRandomToken, hashToken } from './auth';
-import { readBoundedBody } from './request-body';
-import { ACCESS_TOKEN_TTL, REFRESH_FAMILY_TTL } from './token-policy';
+import { readBoundedBody } from './request_body';
+import { ACCESS_TOKEN_TTL, REFRESH_FAMILY_TTL } from './token_policy';
 
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';

@@ -5,7 +5,7 @@ import { modules } from '../test_setup';
 import { internal } from '../../convex/_generated/api';
 import { handleAuthServerMetadata, handleToken } from '../../convex/mcp/oauth';
 import { computePkceChallenge, hashToken } from '../../convex/mcp/auth';
-import { MAX_REFRESH_ROTATIONS } from '../../convex/mcp/token-policy';
+import { MAX_REFRESH_ROTATIONS } from '../../convex/mcp/token_policy';
 import type { ActionCtx } from '../../convex/_generated/server';
 
 describe('mcp oauth refresh tokens', () => {

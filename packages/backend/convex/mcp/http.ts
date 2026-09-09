@@ -1,7 +1,7 @@
 import type { ActionCtx } from '../_generated/server';
 import { McpAuthError, validateBearerToken } from './auth';
 import { handleMcpRequest } from './handler';
-import { readBoundedBody } from './request-body';
+import { readBoundedBody } from './request_body';
 
 // Allows worst-case JSON escaping of the 750,000-byte article-content contract.
 const MAX_MCP_BODY_BYTES = 5 * 1024 * 1024;

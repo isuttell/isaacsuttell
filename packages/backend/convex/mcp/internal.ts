@@ -1,7 +1,7 @@
 import { v } from 'convex/values';
 import { internalMutation, internalQuery } from '../_generated/server';
 import { computePkceChallenge, timingSafeEqual } from './auth';
-import { MAX_REFRESH_ROTATIONS, REFRESH_FAMILY_TTL } from './token-policy';
+import { MAX_REFRESH_ROTATIONS, REFRESH_FAMILY_TTL } from './token_policy';
 
 // --- OAuth clients (dynamic registration) ---
 
