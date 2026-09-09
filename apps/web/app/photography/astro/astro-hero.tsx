@@ -51,6 +51,9 @@ export function AstroHero({ photo }: { photo: AstroGalleryPhoto }) {
               Galaxies, nebulae, and star clusters, photographed from my backyard. Explore the
               images with object labels and capture notes.
             </p>
+            <p className="mt-3 font-sans text-sm leading-relaxed text-foreground/60">
+              These images were created without the help of AI.
+            </p>
             <div className="mt-4 flex flex-wrap gap-x-7 gap-y-2 font-mono text-xs tracking-[0.15em] uppercase">
               <Link
                 href={`/photography/astro/${photo.slug}`}
