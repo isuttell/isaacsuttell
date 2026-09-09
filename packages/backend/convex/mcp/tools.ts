@@ -20,6 +20,11 @@ interface ToolResult {
 
 const CONTENT_CHAR_THRESHOLD = 5000;
 const PREVIEW_LINES = 50;
+const MAX_REPLACEMENTS = 50;
+const MAX_REPLACEMENT_STRING_LENGTH = 10_000;
+const MAX_REPLACEMENT_OCCURRENCES = 10_000;
+// Convex documents are capped at 1 MiB. Keep article content below 750 KB so metadata fits too.
+const MAX_ARTICLE_CONTENT_BYTES = 750_000;
 
 interface ContentOpts {
   startLine?: number;
@@ -369,18 +374,31 @@ export const TOOLS: ToolDefinition[] = [
         id: { type: 'string', description: 'Convex document ID of the article' },
         replacements: {
           type: 'array',
+          minItems: 1,
+          maxItems: MAX_REPLACEMENTS,
           items: {
             type: 'object',
             properties: {
-              find: { type: 'string', description: 'Exact string to find' },
-              replace: { type: 'string', description: 'String to replace with' },
+              find: {
+                type: 'string',
+                minLength: 1,
+                maxLength: MAX_REPLACEMENT_STRING_LENGTH,
+                description: 'Non-empty exact string to find',
+              },
+              replace: {
+                type: 'string',
+                maxLength: MAX_REPLACEMENT_STRING_LENGTH,
+                description: 'String to replace with',
+              },
             },
             required: ['find', 'replace'],
+            additionalProperties: false,
           },
           description: 'Array of find/replace pairs applied in order',
         },
       },
       required: ['id', 'replacements'],
+      additionalProperties: false,
     },
     annotations: {
       readOnlyHint: false,
@@ -728,22 +746,81 @@ async function dispatchTool(
     }
 
     case 'blog_find_replace_article': {
+      if (typeof args.id !== 'string' || args.id.length === 0) {
+        throw new Error('id must be a non-empty string');
+      }
+      if (
+        !Array.isArray(args.replacements) ||
+        args.replacements.length === 0 ||
+        args.replacements.length > MAX_REPLACEMENTS
+      ) {
+        throw new Error(`replacements must contain between 1 and ${MAX_REPLACEMENTS} items`);
+      }
+      const replacements = args.replacements.map((replacement, index) => {
+        if (typeof replacement !== 'object' || replacement === null || Array.isArray(replacement)) {
+          throw new Error(`replacements[${index}] must be an object`);
+        }
+        const values = replacement as Record<string, unknown>;
+        if (
+          typeof values.find !== 'string' ||
+          values.find.length === 0 ||
+          values.find.length > MAX_REPLACEMENT_STRING_LENGTH
+        ) {
+          throw new Error(
+            `replacements[${index}].find must be a non-empty string of at most ${MAX_REPLACEMENT_STRING_LENGTH} characters`
+          );
+        }
+        if (
+          typeof values.replace !== 'string' ||
+          values.replace.length > MAX_REPLACEMENT_STRING_LENGTH
+        ) {
+          throw new Error(
+            `replacements[${index}].replace must be a string of at most ${MAX_REPLACEMENT_STRING_LENGTH} characters`
+          );
+        }
+        return { find: values.find, replace: values.replace };
+      });
+
       const article = await ctx.runQuery(internal.articles.internal.getById, {
         id: args.id as Id<'articles'>,
       });
       if (!article) throw new Error('Article not found');
 
-      const replacements = args.replacements as Array<{ find: string; replace: string }>;
       let content = article.content;
       let totalReplaced = 0;
 
       for (const { find, replace } of replacements) {
         let count = 0;
-        let idx = content.indexOf(find);
-        while (idx !== -1) {
-          content = content.slice(0, idx) + replace + content.slice(idx + find.length);
+        let searchFrom = 0;
+        while (true) {
+          const matchAt = content.indexOf(find, searchFrom);
+          if (matchAt === -1) break;
           count++;
-          idx = content.indexOf(find, idx + replace.length);
+          if (totalReplaced + count > MAX_REPLACEMENT_OCCURRENCES) {
+            throw new Error(
+              `replacement matches must not exceed ${MAX_REPLACEMENT_OCCURRENCES} occurrences`
+            );
+          }
+          searchFrom = matchAt + find.length;
+        }
+
+        if (count > 0) {
+          const encoder = new TextEncoder();
+          const predictedBytes =
+            encoder.encode(content).length +
+            count * (encoder.encode(replace).length - encoder.encode(find).length);
+          if (predictedBytes > MAX_ARTICLE_CONTENT_BYTES) {
+            throw new Error(
+              `replacement result must not exceed ${MAX_ARTICLE_CONTENT_BYTES} UTF-8 bytes`
+            );
+          }
+          const replacedContent = content.split(find).join(replace);
+          if (encoder.encode(replacedContent).length > MAX_ARTICLE_CONTENT_BYTES) {
+            throw new Error(
+              `replacement result must not exceed ${MAX_ARTICLE_CONTENT_BYTES} UTF-8 bytes`
+            );
+          }
+          content = replacedContent;
         }
         totalReplaced += count;
       }
