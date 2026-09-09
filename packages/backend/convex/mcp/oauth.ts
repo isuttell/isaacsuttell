@@ -1,6 +1,8 @@
 import type { ActionCtx } from '../_generated/server';
 import { internal } from '../_generated/api';
 import { generateRandomToken, hashToken } from './auth';
+import { readBoundedBody } from './request_body';
+import { ACCESS_TOKEN_TTL, REFRESH_FAMILY_TTL } from './token_policy';
 
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
 const GOOGLE_TOKEN_URL = 'https://oauth2.googleapis.com/token';
@@ -8,8 +10,7 @@ const GOOGLE_USERINFO_URL = 'https://www.googleapis.com/oauth2/v3/userinfo';
 
 const CODE_TTL = 5 * 60 * 1000; // 5 minutes
 const PENDING_TTL = 10 * 60 * 1000; // 10 minutes
-const ACCESS_TOKEN_TTL = 60 * 60 * 1000; // 1 hour
-const REFRESH_TOKEN_TTL = 30 * 24 * 60 * 60 * 1000; // 30 days
+const REFRESH_TOKEN_TTL = REFRESH_FAMILY_TTL;
 
 const SUPPORTED_SCOPES = ['blog:read', 'blog:write', 'blog:delete', 'blog:manage'];
 
@@ -22,6 +23,7 @@ const MAX_REDIRECT_URIS = 10;
 const MAX_REDIRECT_URI_LENGTH = 2048;
 const MAX_CLIENT_NAME_LENGTH = 200;
 const MAX_CONSENT_BODY_BYTES = 4096;
+const MAX_TOKEN_BODY_BYTES = 16 * 1024;
 
 // Valid Google OAuth error codes per spec
 const VALID_OAUTH_ERRORS = [
@@ -71,43 +73,10 @@ function isAllowedRedirectUri(uri: string): boolean {
   }
 }
 
-async function readBoundedBody(request: Request, maxBytes: number): Promise<string | null> {
-  const declaredLength = request.headers.get('Content-Length');
-  if (declaredLength !== null) {
-    const bytes = Number(declaredLength);
-    if (!Number.isFinite(bytes) || bytes < 0 || bytes > maxBytes) return null;
-  }
-
-  if (!request.body) return '';
-
-  const reader = request.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let totalBytes = 0;
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-
-    totalBytes += value.byteLength;
-    if (totalBytes > maxBytes) {
-      await reader.cancel();
-      return null;
-    }
-    chunks.push(value);
-  }
-
-  const body = new Uint8Array(totalBytes);
-  let offset = 0;
-  for (const chunk of chunks) {
-    body.set(chunk, offset);
-    offset += chunk.byteLength;
-  }
-
-  try {
-    return new TextDecoder('utf-8', { fatal: true }).decode(body);
-  } catch {
-    return null;
-  }
+async function getRequesterKey(ctx: ActionCtx): Promise<string> {
+  const { ip } = await ctx.meta.getRequestMetadata();
+  if (!ip) throw new Error('HTTP request metadata is missing the client IP');
+  return await hashToken(`oauth-rate-limit:${ip}`);
 }
 
 function escapeHtml(value: string): string {
@@ -293,10 +262,12 @@ export async function handleRegister(ctx: ActionCtx, request: Request): Promise<
   }
 
   const clientId = generateRandomToken();
+  const requesterKey = await getRequesterKey(ctx);
   const registration = await ctx.runMutation(internal.mcp.internal.createClient, {
     clientId,
     redirectUris: redirectUris as string[],
     clientName: typeof clientName === 'string' ? clientName : undefined,
+    requesterKey,
   });
   if (registration.error) {
     return Response.json(
@@ -412,6 +383,7 @@ export async function handleAuthorize(ctx: ActionCtx, request: Request): Promise
   if (!googleClientId) throw new Error('GOOGLE_CLIENT_ID not set');
 
   const googleState = generateRandomToken();
+  const requesterKey = await getRequesterKey(ctx);
   const pending = await ctx.runMutation(internal.mcp.internal.createPending, {
     state: googleState,
     clientId,
@@ -421,6 +393,7 @@ export async function handleAuthorize(ctx: ActionCtx, request: Request): Promise
     scope: validatedScope,
     mcpState,
     expiresAt: Date.now() + PENDING_TTL,
+    requesterKey,
   });
   if (pending.error) {
     return Response.json(
@@ -622,7 +595,13 @@ export async function handleConsent(ctx: ActionCtx, request: Request): Promise<R
 // --- Token endpoint ---
 
 export async function handleToken(ctx: ActionCtx, request: Request): Promise<Response> {
-  const body = await request.text();
+  const body = await readBoundedBody(request, MAX_TOKEN_BODY_BYTES);
+  if (body === null) {
+    return Response.json(
+      { error: 'invalid_request', error_description: 'Token request body is too large' },
+      { status: 413 }
+    );
+  }
   const params = new URLSearchParams(body);
 
   const grantType = params.get('grant_type');
