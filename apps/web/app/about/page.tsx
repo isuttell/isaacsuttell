@@ -65,7 +65,7 @@ export default function About() {
             style={{ animationDelay: '0.25s' }}
           >
             <span className="font-mono text-xs tracking-[0.2em] text-lime uppercase">
-              PlayStation Studios, 2015-2025
+              PlayStation Studios, 2015–2025
             </span>
             <h2 className="mt-4 font-sans text-2xl font-bold text-foreground md:text-3xl">
               Senior Staff Software Engineer
@@ -77,18 +77,17 @@ export default function About() {
               breaking the teams&apos; existing work.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              Regular studio visits showed what the tool needed to become. Teams asked for comments
-              tied to exact moments in a video, drawn annotations, and folders with permissions for
-              libraries containing thousands of files. When QA needed a faster way to reproduce a
-              bug with an engineer, we added live streaming from PlayStation development kits. One
-              studio used only the API and built its own tool on the video platform.
+              I visited studios regularly, and the teams told me what they needed: comments tied to
+              exact moments in a video, drawn annotations, and folders with permissions for
+              libraries of thousands of files. When QA needed a faster way to reproduce a bug with
+              an engineer, we added live streaming from PlayStation development kits. One studio
+              used only the API and built its own tool on the video platform.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               I designed and built the React interface and its shared component library, then set
               the usability standard as more engineers joined. I also specified the hardware,
               configured the systems, ran the Docker Swarm deployment, and owned production
-              operations. The work covered the whole path between a studio&apos;s problem and the
-              software they relied on.
+              operations.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               SHIPwatch grew from my solo build into a platform used by more than 15 first-party
@@ -122,8 +121,8 @@ export default function About() {
               The process starts with detailed specs and acceptance criteria. I turn them into small
               dependency-ordered tickets, then agents implement and review each piece. Returned work
               gets checked against the original behavior, sent back when it misses, and followed
-              through tests and preview deployments. The point is to find where this way of building
-              succeeds, where it fails, and what it actually costs.
+              through tests and preview deployments. I want to know where this way of building holds
+              up, where it breaks, and what it costs.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/80">
               <a href="https://trace-flow.dev?ref=isaacsuttell.com" className={linkStyles}>
@@ -153,9 +152,8 @@ export default function About() {
             <span className="font-mono text-xs tracking-[0.2em] text-lime uppercase">Earlier</span>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               I earned a BFA in Art and Design from Cal Poly San Luis Obispo in 2008, with a
-              concentration in Photography and Digital Imagery. Photography trained the same
-              curiosity that drew me to computers. It taught me to study light, structure, and the
-              small choices that change what someone sees.
+              concentration in Photography and Digital Imagery. Photography taught me to study
+              light, structure, and the small choices that change what someone sees.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               A Craigslist ad for a &quot;web guy&quot; brought me to MC Squared, a luxury real
