@@ -1,0 +1,103 @@
+.home-starfield {
+  opacity: 0.45;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 35%, #0009 75%, #0006 100%);
+}
+
+.portfolio-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--sky) 40%, transparent);
+  color: var(--sky);
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  transition: border-color 180ms ease;
+}
+
+.portfolio-link:hover,
+.portfolio-link:focus-visible {
+  border-bottom-color: var(--sky);
+}
+
+.portfolio-link:focus-visible {
+  outline: 2px solid var(--sky);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portfolio-link > span[aria-hidden],
+  .creative-project-link h3 > span[aria-hidden] {
+    transition: transform 180ms ease;
+  }
+
+  .portfolio-link:is(:hover, :focus-visible) > span[aria-hidden],
+  .creative-project-link:is(:hover, :focus-visible) h3 > span[aria-hidden] {
+    transform: translateX(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-starfield path {
+    animation: none !important;
+  }
+}
+
+.home-depth-section {
+  position: relative;
+  isolation: isolate;
+  margin-top: 4.5rem;
+  padding-top: 1.5rem;
+}
+
+.home-quiet-background {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: -2rem;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  overflow: hidden;
+  pointer-events: none;
+  background: #000;
+}
+
+.home-quiet-stars {
+  position: absolute;
+  opacity: 0.8;
+  inset: calc(-1 * var(--star-travel, 0px)) 0 0;
+  transform: translateY(calc(var(--star-offset, 0px) * var(--star-depth)));
+}
+
+.home-quiet-stars-far {
+  --star-depth: 0.25;
+  background-image: url('/quiet-stars-far.svg');
+  background-size: 1200px 1200px;
+}
+
+.home-quiet-stars-middle {
+  --star-depth: 0.55;
+  background-image: url('/quiet-stars-middle.svg');
+  background-size: 1200px 1200px;
+}
+
+.home-quiet-stars-near {
+  --star-depth: 1;
+  background-image: url('/quiet-stars-near.svg');
+  background-size: 1200px 1200px;
+}
+
+@media (min-width: 1024px) {
+  .home-depth-section {
+    margin-top: 7rem;
+    padding-top: 2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-quiet-stars {
+    transform: none;
+  }
+}

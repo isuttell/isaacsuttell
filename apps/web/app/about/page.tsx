@@ -5,36 +5,11 @@ import { SiteFooter } from '../components/site-footer';
 export const metadata: Metadata = {
   title: 'About | Isaac Suttell',
   description:
-    'Software and infrastructure engineer designing serverless systems and directing AI agents through implementation. Previously spent ten years at PlayStation Studios.',
+    'The story behind SHIPwatch, my work with coding agents at Zaks.io, and the art and photography background that shapes how I build.',
 };
 
-const currentWork = [
-  {
-    name: 'Splitch',
-    href: 'https://splitch.dev?ref=isaacsuttell.com',
-    copy: 'Feature flags and experiments for humans and agents, served at the edge, with event ingestion, statistical analysis, SDKs, a CLI, and an MCP server.',
-  },
-  {
-    name: 'Agent Paste',
-    href: 'https://agent-paste.sh?ref=isaacsuttell.com',
-    copy: 'Where agents publish. It turns agent-generated folders into durable human URLs and agent-readable manifests.',
-  },
-  {
-    name: 'Insecur',
-    href: 'https://zaks.io',
-    copy: 'Encrypted development secrets, injected into a command without a plaintext .env file. The child process, or an agent controlling it, can still read the injected values.',
-  },
-  {
-    name: 'Trace Flow',
-    href: 'https://trace-flow.dev?ref=isaacsuttell.com',
-    copy: 'Agent workflow visibility. It shows what an agent run cost, where it got stuck, and what actually happened.',
-  },
-  {
-    name: 'Neuron',
-    href: 'https://chat.zaks.io?ref=isaacsuttell.com',
-    copy: 'The privacy core. Private AI chat and automation with no provider training and configurable conversation retention.',
-  },
-];
+const linkStyles =
+  'text-sky transition-colors hover:text-lime focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime glow-sky';
 
 export default function About() {
   return (
@@ -48,8 +23,7 @@ export default function About() {
 
       <Link
         href="/"
-        className="fixed top-6 left-6 z-20 font-mono text-sm uppercase tracking-[0.15em] text-muted transition-colors hover:text-foreground glow-lime md:top-10 md:left-12"
-        style={{ animationDelay: '0.1s' }}
+        className="fixed top-6 left-6 z-20 font-mono text-sm uppercase tracking-[0.15em] text-muted transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-lime glow-lime md:top-10 md:left-12"
       >
         ← Home
       </Link>
@@ -57,11 +31,11 @@ export default function About() {
       <main className="relative min-h-screen px-6 pt-24 pb-24 md:px-12 md:pt-28 lg:px-20">
         <header className="mb-12 select-none md:mb-16">
           <h1 className="font-sans tracking-normal">
-            <span className="block animate-fade-up text-6xl font-extrabold leading-[0.85] text-foreground sm:text-7xl md:text-8xl lg:text-9xl">
+            <span className="block animate-fade-up text-6xl leading-[0.85] font-extrabold text-foreground motion-reduce:animate-none sm:text-7xl md:text-8xl lg:text-9xl">
               ISAAC
             </span>
             <span
-              className="ml-[10vw] block animate-fade-up text-6xl font-extrabold leading-[0.85] text-foreground sm:text-7xl md:ml-28 md:text-8xl lg:text-9xl"
+              className="ml-[10vw] block animate-fade-up text-6xl leading-[0.85] font-extrabold text-foreground motion-reduce:animate-none sm:text-7xl md:ml-28 md:text-8xl lg:text-9xl"
               style={{ animationDelay: '0.1s' }}
             >
               SUTTELL
@@ -69,135 +43,140 @@ export default function About() {
           </h1>
 
           <div
-            className="ml-[10vw] mt-6 h-[2px] w-12 animate-fade-up bg-lime md:ml-28"
+            className="ml-[10vw] mt-6 h-[2px] w-12 animate-fade-up bg-lime motion-reduce:animate-none md:ml-28"
             style={{ animationDelay: '0.15s' }}
           />
 
           <p
-            className="ml-[10vw] mt-6 max-w-2xl animate-fade-up font-sans text-lg leading-relaxed text-foreground/75 md:ml-28 md:text-xl"
+            className="ml-[10vw] mt-6 max-w-2xl animate-fade-up font-sans text-lg leading-relaxed text-foreground/75 motion-reduce:animate-none md:ml-28 md:text-xl"
             style={{ animationDelay: '0.2s' }}
           >
-            Some of the first photos of me are of me taking apart computers. That is still the
-            through-line: I am curious about how things work, and I keep pulling systems apart until
-            I can make them better. Art and photography were the useful detour.
+            Some of the first photos of me show me taking apart computers. I still follow that
+            curiosity, pulling systems apart until I understand how to make them better. Art and
+            photography are part of the same instinct. They taught me to look closely and care how
+            the result feels to the person using it.
           </p>
         </header>
 
         <div className="ml-[10vw] max-w-3xl space-y-12 md:ml-28">
-          <section className="animate-fade-up" style={{ animationDelay: '0.25s' }}>
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-lime">Now</span>
+          <section
+            id="shipwatch"
+            className="scroll-mt-24 animate-fade-up motion-reduce:animate-none"
+            style={{ animationDelay: '0.25s' }}
+          >
+            <span className="font-mono text-xs tracking-[0.2em] text-lime uppercase">
+              PlayStation Studios, 2015-2025
+            </span>
+            <h2 className="mt-4 font-sans text-2xl font-bold text-foreground md:text-3xl">
+              Senior Staff Software Engineer
+            </h2>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90 md:text-lg">
-              I am building Zaks.io, a bootstrapped product company for the new workflows created by
-              AI agents. The business is the public version of a private habit: notice the broken
-              workflow, pull it apart, build the missing tool, and make the system easier to trust.
+              Game teams were attaching so much video to bug reports that uploads were overwhelming
+              Jira. I started SHIPwatch with an FFmpeg pipeline that converted those files for the
+              web, storage built for the load, and an API that moved video out of Jira without
+              breaking the teams&apos; existing work.
             </p>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/80">
-              The current line is connected: Splitch controls releases and experiments, Agent Paste
-              gives agent work an address, Insecur runs apps without plaintext .env files, Trace
-              Flow shows what the work cost and where it failed, and Neuron carries the
-              privacy-first AI automation core.
+            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
+              Regular studio visits showed what the tool needed to become. Teams asked for comments
+              tied to exact moments in a video, drawn annotations, and folders with permissions for
+              libraries containing thousands of files. When QA needed a faster way to reproduce a
+              bug with an engineer, we added live streaming from PlayStation development kits. One
+              studio used only the API and built its own tool on the video platform.
             </p>
-            <ul className="mt-6 space-y-5 text-foreground/80">
-              {currentWork.map((item) => (
-                <li key={item.name} className="flex items-start gap-3">
-                  <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-lime" />
-                  <span>
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-mono text-sm text-sky transition-colors hover:text-lime glow-sky"
-                    >
-                      {item.name}
-                    </a>
-                    <span className="font-sans"> - </span>
-                    <span className="font-sans">{item.copy}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 font-sans leading-relaxed text-foreground/70">
-              Zaks.io is also the part I did not have to learn inside a platform company:
-              distribution, pricing, customer discovery, and being willing to show the work before
-              it feels done.
+            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
+              I designed and built the React interface and its shared component library, then set
+              the usability standard as more engineers joined. I also specified the hardware,
+              configured the systems, ran the Docker Swarm deployment, and owned production
+              operations. The work covered the whole path between a studio&apos;s problem and the
+              software they relied on.
+            </p>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
+              SHIPwatch grew from my solo build into a platform used by more than 15 first-party
+              studios, where downtime could block game releases. The team grew to five engineers
+              across the United States and Europe, plus a full-time support specialist and technical
+              project manager. I led architecture and reviewed work across the application while
+              staying responsible for the hard production failures.
             </p>
           </section>
 
           <div
-            className="h-[2px] w-10 animate-fade-up bg-lime/40"
+            className="h-[2px] w-10 animate-fade-up bg-lime/40 motion-reduce:animate-none"
             style={{ animationDelay: '0.3s' }}
           />
 
-          <section className="animate-fade-up" style={{ animationDelay: '0.35s' }}>
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-lime">
-              2015-2025
-            </span>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              Ten years at PlayStation Studios. Worked across production systems, from hardware and
-              infrastructure through backend services, frontend tools, and product design. Then I
-              found a video problem worth solving: studios needed a secure way to share content
-              around the world and integrate it into production pipelines.
+          <section
+            className="animate-fade-up motion-reduce:animate-none"
+            style={{ animationDelay: '0.35s' }}
+          >
+            <span className="font-mono text-xs tracking-[0.2em] text-lime uppercase">Now</span>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/90 md:text-lg">
+              At{' '}
+              <a href="https://zaks.io" className={linkStyles}>
+                Zaks.io
+              </a>
+              , I am investigating how to coordinate coding agents without losing control of the
+              product or the code. I own product design, architecture, specifications, and final
+              verification. Agents perform most of the implementation and much of the review.
             </p>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              Software development was already the path before PlayStation. PlayStation was where
-              the work became mission-critical: bigger teams, bigger launches, and systems that had
-              to stay alive.
+            <p className="mt-4 font-sans leading-relaxed text-foreground/80">
+              The process starts with detailed specs and acceptance criteria. I turn them into small
+              dependency-ordered tickets, then agents implement and review each piece. Returned work
+              gets checked against the original behavior, sent back when it misses, and followed
+              through tests and preview deployments. The point is to find where this way of building
+              succeeds, where it fails, and what it actually costs.
             </p>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              So I built SHIPwatch. What started as a solution to one studio&apos;s problem became
-              release-critical infrastructure used by more than 15 first-party studios. I evolved it
-              through multiple generations, from VMs to Docker to Docker Swarm, always redesigning
-              to keep it scalable, reliable, and modern.
-            </p>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              Grew it from a solo project into a seven-person engineering team, ran operations, and
-              talked regularly with studio heads, technical directors, and producers. It was the
-              kind of tool where downtime meant delayed AAA releases. They trusted me to keep it
-              running.
-            </p>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/70">
-              That job taught me the standard I still care about: software is real when people
-              depend on it and you are accountable for keeping it alive.
+            <p className="mt-4 font-sans leading-relaxed text-foreground/80">
+              <a href="https://trace-flow.dev?ref=isaacsuttell.com" className={linkStyles}>
+                Trace Flow
+              </a>{' '}
+              grew out of the need to see agent activity, failures, and costs.{' '}
+              <a href="https://agent-paste.sh?ref=isaacsuttell.com" className={linkStyles}>
+                Agent Paste
+              </a>{' '}
+              gives completed reports and demos a durable URL.{' '}
+              <a href="https://chat.zaks.io?ref=isaacsuttell.com" className={linkStyles}>
+                Neuron
+              </a>{' '}
+              is the application where this work first took shape and remains my daily test bed.
             </p>
           </section>
 
           <div
-            className="h-[2px] w-10 animate-fade-up bg-lime/40"
+            className="h-[2px] w-10 animate-fade-up bg-lime/40 motion-reduce:animate-none"
             style={{ animationDelay: '0.4s' }}
           />
 
-          <section className="animate-fade-up" style={{ animationDelay: '0.45s' }}>
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-lime">Earlier</span>
+          <section
+            className="animate-fade-up motion-reduce:animate-none"
+            style={{ animationDelay: '0.45s' }}
+          >
+            <span className="font-mono text-xs tracking-[0.2em] text-lime uppercase">Earlier</span>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              Grew up in the Pacific Northwest. Moved to California for college and never left. SLO,
-              LA, San Francisco, now San Diego.
+              I earned a BFA in Art and Design from Cal Poly San Luis Obispo in 2008, with a
+              concentration in Photography and Digital Imagery. Photography trained the same
+              curiosity that drew me to computers. It taught me to study light, structure, and the
+              small choices that change what someone sees.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              Cal Poly, BFA in Art and Design with a concentration in Photography and Digital
-              Imagery. Everyone assumed I&apos;d become a computer scientist. Instead, photography
-              gave me a visual language and a sharper sense of composition, constraints, and taste.
-            </p>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              That led to a &quot;web guy&quot; position at MC Squared, a luxury real estate
-              marketing firm in downtown LA. The creative background made me useful because the work
-              needed both taste and implementation.
-            </p>
-            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              No formal CS degree, just an intense curiosity and a habit of taking things apart to
-              understand them. That has stayed constant through computers, photography, WebGL,
-              PlayStation production systems, and now Zaks.io.
+              A Craigslist ad for a &quot;web guy&quot; brought me to MC Squared, a luxury real
+              estate marketing firm in Los Angeles. I taught myself the parts I did not know,
+              brought the visual and technical work together, and became Digital Director. I led the
+              firm&apos;s web development and design until I joined PlayStation.
             </p>
           </section>
 
           <div
-            className="h-[2px] w-10 animate-fade-up bg-lime/40"
+            className="h-[2px] w-10 animate-fade-up bg-lime/40 motion-reduce:animate-none"
             style={{ animationDelay: '0.5s' }}
           />
 
-          <section className="animate-fade-up" style={{ animationDelay: '0.55s' }}>
+          <section
+            className="animate-fade-up motion-reduce:animate-none"
+            style={{ animationDelay: '0.55s' }}
+          >
             <a
               href="mailto:isaac@zaks.io"
-              className="font-mono text-sm tracking-wider text-muted transition-colors hover:text-sky glow-sky"
+              className={`font-mono text-sm tracking-wider ${linkStyles}`}
             >
               isaac@zaks.io
             </a>

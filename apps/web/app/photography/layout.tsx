@@ -14,11 +14,11 @@ export default function PhotographyLayout({ children }: { children: ReactNode })
 
       {/* Back link */}
       <Link
-        href="/projects"
+        href="/"
         className="fixed top-6 left-6 md:top-10 md:left-12 font-mono text-sm tracking-[0.15em] uppercase text-muted hover:text-foreground transition-colors z-20 animate-fade-up glow-lime"
         style={{ animationDelay: '0.1s' }}
       >
-        ← Projects
+        ← Home
       </Link>
 
       {children}
