@@ -16,32 +16,36 @@ export function CreativeProject({ title, href, image, preview, summary }: Creati
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
-  const [motionAllowed, setMotionAllowed] = useState(false);
+  const [previewAllowed, setPreviewAllowed] = useState(false);
   const [visible, setVisible] = useState(false);
   const [frameReady, setFrameReady] = useState(false);
-  const active = (hovered || focused) && motionAllowed && visible;
+  const active = (hovered || focused) && previewAllowed && visible;
 
   useEffect(() => {
-    const preference = window.matchMedia('(prefers-reduced-motion: no-preference)');
-    const updateMotion = () => setMotionAllowed(preference.matches);
-    updateMotion();
-    preference.addEventListener('change', updateMotion);
+    // Playback only starts from mouse or pen hover and keyboard focus, so touch-only
+    // devices would download the video without ever playing it.
+    const preference = window.matchMedia(
+      '(prefers-reduced-motion: no-preference) and (hover: hover)'
+    );
+    const updatePreviewAllowed = () => setPreviewAllowed(preference.matches);
+    updatePreviewAllowed();
+    preference.addEventListener('change', updatePreviewAllowed);
 
     const link = linkRef.current;
     const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
     if (link) observer.observe(link);
 
     return () => {
-      preference.removeEventListener('change', updateMotion);
+      preference.removeEventListener('change', updatePreviewAllowed);
       observer.disconnect();
     };
   }, []);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !visible || !motionAllowed || !preview) return;
+    if (!video || !visible || !previewAllowed || !preview) return;
     if (video.getAttribute('src') !== preview) video.src = preview;
-  }, [visible, motionAllowed, preview]);
+  }, [visible, previewAllowed, preview]);
 
   useEffect(() => {
     const video = videoRef.current;
