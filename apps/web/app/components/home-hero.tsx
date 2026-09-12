@@ -3,7 +3,23 @@ import Link from 'next/link';
 import rosette from '../photography/astro/data/rosette-nebula.json';
 import { formatExposure } from '../photography/astro/astro-format';
 
-const nights = new Set(rosette.sessions.map((session) => session.date).filter(Boolean)).size;
+const captureDates = new Set(rosette.sessions.map((session) => session.date));
+const captureYears = [...new Set([...captureDates].map((date) => date.slice(0, 4)))].sort();
+const processingSoftware = rosette.equipment.find(
+  (group) => group.label === 'Processing software'
+)?.items;
+
+if (captureDates.size === 0 || !processingSoftware?.length) {
+  throw new Error(
+    `Rosette record is missing capture dates or processing software: ${rosette.slug}`
+  );
+}
+
+const nights = captureDates.size;
+const captureYear =
+  captureYears.length === 1 ? captureYears[0] : `${captureYears[0]}–${captureYears.at(-1)}`;
+const software = new Intl.ListFormat('en', { type: 'conjunction' }).format(processingSoftware);
+
 export function HomeHero() {
   return (
     <header className="grid gap-y-8 pt-8 md:pt-12 lg:grid-cols-[5fr_7fr] lg:grid-rows-[auto_auto_auto] lg:gap-x-12 lg:gap-y-0">
@@ -35,12 +51,13 @@ export function HomeHero() {
               {rosette.title} <span className="text-foreground/60">/ {rosette.catalog}</span>
             </span>
             <span>
-              {formatExposure(rosette.integrationSeconds)} exposure · {nights} nights · 2020
+              {formatExposure(rosette.integrationSeconds)} exposure · {nights} nights ·{' '}
+              {captureYear}
             </span>
           </div>
           <p className="mt-3 font-sans text-sm leading-relaxed">
-            Photographed from my backyard with a telescope setup I assembled. Capture automated with
-            Voyager; stacked and processed in Astro Pixel Processor and PixInsight.
+            Photographed from my backyard on a telescope rig I assembled. Capture was automated with
+            Voyager, and I processed the data with {software}.
           </p>
           <div className="mt-4 flex flex-wrap gap-x-6 gap-y-3">
             <Link href="/photography/astro" className="portfolio-link">
