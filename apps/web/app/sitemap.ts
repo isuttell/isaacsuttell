@@ -7,7 +7,6 @@ const staticPages: MetadataRoute.Sitemap = [
   { url: BASE_URL, changeFrequency: 'monthly', priority: 1 },
   { url: `${BASE_URL}/blog`, changeFrequency: 'weekly', priority: 0.9 },
   { url: `${BASE_URL}/about`, changeFrequency: 'monthly', priority: 0.7 },
-  { url: `${BASE_URL}/projects`, changeFrequency: 'monthly', priority: 0.7 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
