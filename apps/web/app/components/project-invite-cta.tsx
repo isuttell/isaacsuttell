@@ -27,10 +27,10 @@ export function ProjectInviteCTA() {
 
         <div className="shrink-0">
           <Link
-            href="/projects"
+            href="/#work"
             className="inline-flex items-center justify-center bg-lime text-background font-mono font-bold tracking-wide uppercase text-sm px-8 py-4 rounded hover:bg-lime/90 hover:scale-[1.02] transition-all"
           >
-            Request Invite
+            View work
           </Link>
         </div>
       </div>

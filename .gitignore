@@ -43,3 +43,10 @@ next-env.d.ts
 .turbo
 node_modules
 .playwright-mcp
+
+# Local preview takes; keep only the selected site assets in Git.
+/apps/web/public/previews/*
+!/apps/web/public/previews/gravitational-lensing-1080p60.mp4
+!/apps/web/public/previews/gravitational-lensing-1080p60-poster.png
+!/apps/web/public/previews/audio-visualizer-640-bounce.mp4
+!/apps/web/public/previews/audio-visualizer-640-bounce-poster.png
