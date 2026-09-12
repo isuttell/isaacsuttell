@@ -45,6 +45,34 @@ body {
   opacity: 0;
 }
 
+.animate-hero-image {
+  transform: scale(1.08) translate(-1.5%, -1%);
+}
+
+@keyframes hero-ken-burns {
+  from {
+    transform: scale(1.08) translate(-1.5%, -1%);
+  }
+  to {
+    transform: scale(1.25) translate(1.5%, 1%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-hero-image {
+    animation: hero-ken-burns 24s ease-in-out -6s infinite alternate;
+    will-change: transform;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .glow-lime:hover {
   text-shadow: 0 0 20px rgba(163, 230, 53, 0.4);
 }

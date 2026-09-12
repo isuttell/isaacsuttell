@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'qk9emm7xscimwo8u.public.blob.vercel-storage.com' },
     ],
   },
+  async redirects() {
+    return [{ source: '/projects', destination: '/', permanent: true }];
+  },
 };
 
 export default nextConfig;
