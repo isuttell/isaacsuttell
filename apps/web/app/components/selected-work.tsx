@@ -45,10 +45,10 @@ export function SelectedWork() {
             Product design, architecture &amp; verification
           </p>
           <p className="mt-5 font-sans text-base leading-[1.75] text-foreground/75">
-            I&apos;m investigating how to coordinate agents on substantial projects and verify their
-            work. Trace Flow helps me understand their activity, failures, and costs. Agent Paste
-            gives their reports and demos a URL people can open. Neuron is my daily AI chat
-            application, and Splitch handles feature flags and experiments.
+            I&apos;m working out how to coordinate agents on production software and verify their
+            work. Trace Flow shows me their activity, failures, and costs. Agent Paste gives their
+            reports and demos a URL people can open. Neuron is my daily AI chat application, and
+            Splitch handles feature flags and experiments.
           </p>
           <p className="mt-3 font-sans text-sm leading-[1.75] text-foreground/60">
             I own the design, specifications, and verification. Agents do most of the implementation
@@ -56,7 +56,7 @@ export function SelectedWork() {
           </p>
           <div className="mt-6 flex flex-wrap gap-x-7 gap-y-4">
             <a
-              href="https://trace-flow.dev"
+              href="https://trace-flow.dev?ref=isaacsuttell.com"
               target="_blank"
               rel="noopener noreferrer"
               className="portfolio-link"
@@ -64,7 +64,7 @@ export function SelectedWork() {
               Trace Flow <span aria-hidden="true">↗</span>
             </a>
             <a
-              href="https://agent-paste.sh"
+              href="https://agent-paste.sh?ref=isaacsuttell.com"
               target="_blank"
               rel="noopener noreferrer"
               className="portfolio-link"
@@ -72,7 +72,7 @@ export function SelectedWork() {
               Agent Paste <span aria-hidden="true">↗</span>
             </a>
             <a
-              href="https://chat.zaks.io"
+              href="https://chat.zaks.io?ref=isaacsuttell.com"
               target="_blank"
               rel="noopener noreferrer"
               className="portfolio-link"
@@ -80,7 +80,7 @@ export function SelectedWork() {
               Neuron <span aria-hidden="true">↗</span>
             </a>
             <a
-              href="https://splitch.dev"
+              href="https://splitch.dev?ref=isaacsuttell.com"
               target="_blank"
               rel="noopener noreferrer"
               className="portfolio-link"
