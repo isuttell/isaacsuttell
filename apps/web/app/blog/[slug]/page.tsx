@@ -199,7 +199,9 @@ export default async function ArticlePage({ params }: Props) {
           </section>
         )}
 
-        <SiteFooter />
+        <div className="max-w-3xl mx-auto px-6 md:px-12">
+          <SiteFooter />
+        </div>
       </main>
     </div>
   );
