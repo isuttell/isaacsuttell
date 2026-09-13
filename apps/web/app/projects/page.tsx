@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import { SiteFooter } from '../components/site-footer';
+import { mediaUrl } from '../lib/media';
 
 export const metadata: Metadata = {
   title: 'Side Projects | Isaac Suttell',
@@ -13,7 +14,7 @@ const projects = [
     id: 'blackhole',
     title: 'Gravitational Lensing',
     href: 'https://blackhole.zaks.io/',
-    image: '/blackhole-simulation.webp',
+    image: mediaUrl('/blackhole-simulation.webp'),
     description:
       'Real-time ray marching through curved spacetime using Schwarzschild geodesics. Light paths computed per-pixel to simulate gravitational lensing, the photon sphere, and relativistic Doppler effects.',
     tech: 'Three.js · WebGL2 · GLSL',
@@ -22,7 +23,7 @@ const projects = [
     id: 'audio-viz',
     title: 'Audio Visualizer',
     href: 'https://visualizer.zaks.io/',
-    image: '/blackhole-audio-visualizer.webp',
+    image: mediaUrl('/blackhole-audio-visualizer.webp'),
     description:
       'Black spheres orbit each other while a particle system emits to the beat of music frequencies. Particles fall into the black holes according to orbital dynamics.',
     tech: 'Three.js · WebGL2 · GLSL · AI-generated music and visual presets',
@@ -34,7 +35,7 @@ const photography = [
     id: 'astro',
     title: 'Astrophotography',
     href: '/photography/astro',
-    image: '/photography/astro/2020-11-28-NGC2244_p.jpg',
+    image: mediaUrl('/photography/astro/2020-11-28-NGC2244_p.jpg'),
     description: 'Deep-sky imaging of galaxies, nebulae, and star clusters.',
     tech: 'Sky-Watcher Evostar 120ED DS-PRO APO · ZWO ASI 1600MM',
   },
@@ -42,7 +43,7 @@ const photography = [
     id: 'fashion',
     title: 'Fashion Photography',
     href: '/photography/fashion',
-    image: '/photography/fashion/fashion-007.jpg',
+    image: mediaUrl('/photography/fashion/fashion-007.jpg'),
     description: 'Portrait and fashion work from my photography years, 2008-2012.',
     tech: 'Canon 1Ds Mark III',
   },

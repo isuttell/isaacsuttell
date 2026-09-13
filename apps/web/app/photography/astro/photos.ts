@@ -1,4 +1,5 @@
 import type { AstroPhoto } from './astro-photo';
+import { mediaUrl } from '../../lib/media';
 import crescent from './data/crescent-nebula.json';
 import virgo from './data/virgo-cluster.json';
 import m3 from './data/m3.json';
@@ -31,5 +32,5 @@ export const astroPhotos: AstroPhoto[] = [
   if (!categories.has(photo.category) || photo.width <= 0 || photo.height <= 0) {
     throw new Error(`Invalid astrophotography record: ${photo.slug}`);
   }
-  return photo as AstroPhoto;
+  return { ...photo, src: mediaUrl(photo.src) } as AstroPhoto;
 });
