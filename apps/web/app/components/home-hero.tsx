@@ -1,24 +1,40 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import rosette from '../photography/astro/data/rosette-nebula.json';
+import { astroPhotos } from '../photography/astro/photos';
 import { formatExposure } from '../photography/astro/astro-format';
 
-const captureDates = new Set(rosette.sessions.map((session) => session.date));
-const captureYears = [...new Set([...captureDates].map((date) => date.slice(0, 4)))].sort();
-const processingSoftware = rosette.equipment.find(
-  (group) => group.label === 'Processing software'
-)?.items;
+// Read the record through the shared list so the hero gets the Blob-resolved src.
+function loadRosette() {
+  const photo = astroPhotos.find((candidate) => candidate.slug === 'rosette-nebula');
+  if (!photo) {
+    throw new Error('Rosette Nebula record is missing from the astrophotography list');
+  }
 
-if (captureDates.size === 0 || !processingSoftware?.length) {
-  throw new Error(
-    `Rosette record is missing capture dates or processing software: ${rosette.slug}`
+  const captureDates = new Set(
+    photo.sessions.flatMap((session) => (session.date === null ? [] : [session.date]))
   );
+  const captureYears = [...new Set([...captureDates].map((date) => date.slice(0, 4)))].sort();
+  const processingSoftware = photo.equipment.find(
+    (group) => group.label === 'Processing software'
+  )?.items;
+
+  if (captureDates.size === 0 || !processingSoftware?.length || photo.integrationSeconds === null) {
+    throw new Error(
+      `Rosette record is missing capture dates, exposure, or processing software: ${photo.slug}`
+    );
+  }
+
+  return {
+    photo,
+    exposure: formatExposure(photo.integrationSeconds),
+    nights: captureDates.size,
+    captureYear:
+      captureYears.length === 1 ? captureYears[0] : `${captureYears[0]}–${captureYears.at(-1)}`,
+    software: new Intl.ListFormat('en', { type: 'conjunction' }).format(processingSoftware),
+  };
 }
 
-const nights = captureDates.size;
-const captureYear =
-  captureYears.length === 1 ? captureYears[0] : `${captureYears[0]}–${captureYears.at(-1)}`;
-const software = new Intl.ListFormat('en', { type: 'conjunction' }).format(processingSoftware);
+const { photo: rosette, exposure, nights, captureYear, software } = loadRosette();
 
 export function HomeHero() {
   return (
@@ -51,8 +67,7 @@ export function HomeHero() {
               {rosette.title} <span className="text-foreground/60">/ {rosette.catalog}</span>
             </span>
             <span>
-              {formatExposure(rosette.integrationSeconds)} exposure · {nights} nights ·{' '}
-              {captureYear}
+              {exposure} exposure · {nights} nights · {captureYear}
             </span>
           </div>
           <p className="mt-3 font-sans text-sm leading-relaxed">
