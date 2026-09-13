@@ -43,3 +43,6 @@ next-env.d.ts
 .turbo
 node_modules
 .playwright-mcp
+
+# Local preview takes. The selected ones are uploaded to Vercel Blob.
+/apps/web/public/previews/
