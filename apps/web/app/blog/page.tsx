@@ -143,7 +143,9 @@ export default async function BlogPage() {
             </div>
           </section>
         )}
-        <SiteFooter />
+        <div className="max-w-5xl mx-auto px-6 md:px-12 lg:px-20">
+          <SiteFooter />
+        </div>
       </main>
     </div>
   );
