@@ -36,6 +36,9 @@ function loadRosette() {
 
 const { photo: rosette, exposure, nights, captureYear, software } = loadRosette();
 
+const inlineLinkStyles =
+  'text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:text-sky hover:decoration-sky focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky';
+
 export function HomeHero() {
   return (
     <header className="grid gap-y-8 pt-8 md:pt-12 lg:grid-cols-[5fr_7fr] lg:grid-rows-[auto_auto_auto] lg:gap-x-12 lg:gap-y-0">
@@ -92,16 +95,18 @@ export function HomeHero() {
         <p className="mt-5 font-sans text-[17px] leading-[1.7] text-foreground/75 md:text-lg">
           I&apos;m a software engineer with a background in art and design. I spent ten years
           building SHIPwatch at PlayStation. Now I build AI applications and tools at{' '}
-          <a
-            href="https://zaks.io"
-            className="text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:text-sky hover:decoration-sky focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky"
-          >
+          <a href="https://zaks.io" className={inlineLinkStyles}>
             Zaks.io
+          </a>
+          , where I also{' '}
+          <a href="https://zaks.io/#consulting" className={inlineLinkStyles}>
+            help small teams put coding agents to work
           </a>
           .
         </p>
         <p className="mt-4 font-sans text-[17px] leading-[1.7] text-foreground/75 md:text-lg">
-          Away from that work, I photograph the night sky and make interactive simulations.
+          Away from that work, I photograph the night sky and make games and interactive
+          simulations.
         </p>
         <div className="mt-7 flex flex-wrap gap-x-7 gap-y-4">
           <Link href="/about" className="portfolio-link">

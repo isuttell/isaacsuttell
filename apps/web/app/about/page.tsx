@@ -79,9 +79,21 @@ export default function About() {
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               I visited studios regularly, and the teams told me what they needed: comments tied to
               exact moments in a video, drawn annotations, and folders with permissions for
-              libraries of thousands of files. When QA needed a faster way to reproduce a bug with
-              an engineer, we added live streaming from PlayStation development kits. One studio
-              used only the API and built its own tool on the video platform.
+              libraries of thousands of files. One studio used only the API and built its own tool
+              on the video platform.
+            </p>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
+              When QA needed a faster way to reproduce a bug with an engineer, I built live
+              streaming from PlayStation development kits so the engineer could watch and direct the
+              repro as it happened. My first version ran on FFmpeg. When the Wowza setup that
+              replaced it could not get latency low enough, I rebuilt it on MediaMTX.
+            </p>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
+              I built on-premises Whisper transcription so people could search inside long play
+              sessions and read subtitles under the player. Later I added Ask SHIPwatch, a Claude
+              Sonnet agent with tools over the videos, comments, subtitles, and Jira tickets.
+              Someone could ask which bugs were still open on a long playthrough instead of
+              scrubbing through it.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               I designed and built the React interface and its shared component library, then set
@@ -93,8 +105,10 @@ export default function About() {
               SHIPwatch grew from my solo build into a platform used by more than 15 first-party
               studios, where downtime could block game releases. The team grew to five engineers
               across the United States and Europe, plus a full-time support specialist and technical
-              project manager. I led architecture and reviewed work across the application while
-              staying responsible for the hard production failures.
+              project manager. When engineers who joined after my original Go backend spent their
+              time learning Go instead of shipping, I rewrote it in Node.js over about two months so
+              the whole team could work across the stack. I led architecture and reviewed work
+              across the application while staying responsible for the hard production failures.
             </p>
           </section>
 
@@ -115,7 +129,7 @@ export default function About() {
               </a>
               , I am investigating how to coordinate coding agents without losing control of the
               product or the code. I own product design, architecture, specifications, and final
-              verification. Agents perform most of the implementation and much of the review.
+              verification. Agents implement and maintain the code and do much of the review.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/80">
               The process starts with detailed specs and acceptance criteria. I turn them into small
@@ -137,6 +151,15 @@ export default function About() {
                 Neuron
               </a>{' '}
               is the application where this work first took shape and remains my daily test bed.
+            </p>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/80">
+              I also help small teams put coding agents to work with the same process: specs an
+              agent can finish, review gates before anything merges, and a clear view of what the
+              agents cost. The details are on{' '}
+              <a href="https://zaks.io/#consulting" className={linkStyles}>
+                Zaks.io
+              </a>
+              .
             </p>
           </section>
 

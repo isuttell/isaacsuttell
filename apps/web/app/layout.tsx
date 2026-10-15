@@ -4,7 +4,7 @@ import { ConvexAuthNextjsServerProvider } from '@convex-dev/auth/nextjs/server';
 import { ConvexClientProvider } from './convex-client-provider';
 import { Analytics } from '@vercel/analytics/next';
 import { UserMenu } from './components/user-menu';
-import { BASE_URL } from './lib/config';
+import { BASE_URL, SITE_DESCRIPTION } from './lib/config';
 import { safeJsonLd } from './lib/format';
 import './globals.css';
 
@@ -23,8 +23,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: 'Isaac Suttell',
-  description:
-    'Software engineer with a background in art and design. Built SHIPwatch at PlayStation Studios. Now building AI applications at Zaks.io, photographing the night sky, and making interactive simulations.',
+  description: SITE_DESCRIPTION,
   authors: [{ name: 'Isaac Suttell', url: BASE_URL }],
   creator: 'Isaac Suttell',
   alternates: {
