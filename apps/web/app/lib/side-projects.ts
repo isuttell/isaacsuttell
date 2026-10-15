@@ -17,7 +17,7 @@ export const sideProjects = [
     image: mediaUrl('/previews/slop-analyzer-report-720p60-poster.png'),
     preview: mediaUrl('/previews/slop-analyzer-report-720p60.mp4'),
     summary:
-      'Scans a webpage for formulaic writing and stock design patterns, then marks each flagged sentence on a screenshot of the page.',
+      'An experiment with Jev, TypeSafe AI’s decision model. It scans a webpage for formulaic writing and stock design patterns, then marks each flagged sentence on a screenshot of the page.',
   },
   {
     id: 'blackhole',
