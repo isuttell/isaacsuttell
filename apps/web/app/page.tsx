@@ -2,11 +2,11 @@ import Link from 'next/link';
 import './portfolio.css';
 import { Starfield } from '@isaacsuttell/ui';
 import { SiteFooter } from './components/site-footer';
-import { CreativeProject } from './components/creative-project';
+import { SideProject } from './components/side-project';
 import { HomeHero } from './components/home-hero';
 import { SelectedWork } from './components/selected-work';
 import { QuietStarfield } from './components/quiet-starfield';
-import { creativeProjects } from './lib/creative-projects';
+import { sideProjects } from './lib/side-projects';
 import { siteLinks } from './lib/site-links';
 
 export default function Home() {
@@ -34,18 +34,18 @@ export default function Home() {
         <div className="home-depth-section">
           <QuietStarfield />
           <SelectedWork />
-          <section aria-labelledby="creative-heading" className="mt-20 lg:mt-28">
+          <section aria-labelledby="side-projects-heading" className="mt-20 lg:mt-28">
             <div className="mb-9 flex flex-wrap items-baseline justify-between gap-4">
               <h2
-                id="creative-heading"
+                id="side-projects-heading"
                 className="font-mono text-xs uppercase tracking-[0.16em] text-sky"
               >
-                Creative coding
+                Side projects
               </h2>
             </div>
             <div className="grid gap-10 md:grid-cols-2 md:gap-8">
-              {creativeProjects.map((project) => (
-                <CreativeProject
+              {sideProjects.map((project) => (
+                <SideProject
                   key={project.id}
                   title={project.title}
                   href={project.href}

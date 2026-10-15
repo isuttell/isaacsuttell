@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
-interface CreativeProjectProps {
+interface SideProjectProps {
   title: string;
   href: string;
   image: string;
@@ -11,7 +11,7 @@ interface CreativeProjectProps {
   summary: string;
 }
 
-export function CreativeProject({ title, href, image, preview, summary }: CreativeProjectProps) {
+export function SideProject({ title, href, image, preview, summary }: SideProjectProps) {
   const linkRef = useRef<HTMLAnchorElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [hovered, setHovered] = useState(false);
@@ -92,7 +92,7 @@ export function CreativeProject({ title, href, image, preview, summary }: Creati
         onPointerLeave={() => setHovered(false)}
         onFocus={(event) => setFocused(event.currentTarget.matches(':focus-visible'))}
         onBlur={() => setFocused(false)}
-        className="creative-project-link group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky"
+        className="side-project-link group block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky"
       >
         <div className="relative aspect-video overflow-hidden">
           <Image
