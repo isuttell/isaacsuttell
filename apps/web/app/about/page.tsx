@@ -153,11 +153,9 @@ export default function About() {
               is the application where this work first took shape and remains my daily test bed.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/80">
-              I also help small teams put coding agents to work with the same process: specs an
-              agent can finish, review gates before anything merges, and a clear view of what the
-              agents cost. The details are on{' '}
+              Through Zaks.io, I also{' '}
               <a href="https://zaks.io/#consulting" className={linkStyles}>
-                Zaks.io
+                help small teams put coding agents to work
               </a>
               .
             </p>
