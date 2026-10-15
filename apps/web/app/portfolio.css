@@ -28,12 +28,12 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .portfolio-link > span[aria-hidden],
-  .creative-project-link h3 > span[aria-hidden] {
+  .side-project-link h3 > span[aria-hidden] {
     transition: transform 180ms ease;
   }
 
   .portfolio-link:is(:hover, :focus-visible) > span[aria-hidden],
-  .creative-project-link:is(:hover, :focus-visible) h3 > span[aria-hidden] {
+  .side-project-link:is(:hover, :focus-visible) h3 > span[aria-hidden] {
     transform: translateX(2px);
   }
 }
