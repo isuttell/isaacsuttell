@@ -72,10 +72,9 @@ export default function About() {
             </h2>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90 md:text-lg">
               Game teams were attaching so much video to bug reports that uploads were overwhelming
-              Jira. I took over another engineer&apos;s early Go prototype and turned it into
-              SHIPwatch: an FFmpeg pipeline that converted those files for the web, storage built
-              for the load, and an API that moved video out of Jira without breaking the teams&apos;
-              existing work.
+              Jira. I started SHIPwatch with an FFmpeg pipeline that converted those files for the
+              web, storage built for the load, and an API that moved video out of Jira without
+              breaking the teams&apos; existing work.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               I visited studios regularly, and the teams told me what they needed: comments tied to
@@ -103,14 +102,13 @@ export default function About() {
               operations.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
-              I was SHIPwatch&apos;s first developer, and it grew into a platform used by more than
-              15 first-party studios, where downtime could block game releases. The team grew to
-              five engineers across the United States and Europe, plus a full-time support
-              specialist and technical project manager. When engineers who joined spent their time
-              learning the inherited Go backend instead of shipping, I rewrote it in Node.js over
-              about two months so the whole team could work across the stack. I led architecture and
-              reviewed work across the application while staying responsible for the hard production
-              failures.
+              SHIPwatch grew from my solo build into a platform used by more than 15 first-party
+              studios, where downtime could block game releases. The team grew to five engineers
+              across the United States and Europe, plus a full-time support specialist and technical
+              project manager. When engineers who joined spent their time learning the Go backend
+              instead of shipping, I rewrote it in Node.js over about two months so the whole team
+              could work across the stack. I led architecture and reviewed work across the
+              application while staying responsible for the hard production failures.
             </p>
           </section>
 
