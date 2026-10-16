@@ -2,16 +2,15 @@
 
 Software and infrastructure engineer building open-source AI-agent systems at [Zaks.io](https://zaks.io).
 
-I spent ten years at PlayStation Studios, where I built and operated SHIPwatch from its initial implementation into release-critical video infrastructure used by more than 15 first-party studios. I grew from its sole developer into technical lead for a seven-person team and worked directly with AAA studios worldwide.
+I spent ten years at PlayStation Studios, where I built and operated SHIPwatch from its initial implementation into release-critical video infrastructure used by more than 15 first-party studios. I grew from its sole developer into technical lead for five engineers plus support and project management, and worked directly with studio teams across North America, Europe, and Japan. I also built its low-latency dev-kit streaming and Ask SHIPwatch, a Claude Sonnet agent with tools over the platform's videos, subtitles, and Jira tickets.
 
-Now I design serverless systems on Cloudflare and direct AI agents through implementation and review. Trace Flow came out of wanting to know what those agents are doing at scale, where they fail, and what they cost.
+Now I design serverless systems on Cloudflare and Vercel. I own the architecture, specifications, and verification; agents implement and maintain the code and do much of the review. Trace Flow came out of wanting to know what those agents are doing at scale, where they fail, and what they cost.
 
 ## Current work
 
 - [Trace Flow](https://trace-flow.dev) ingests coding-agent transcripts and makes tool use, cost, latency, and workflow behavior inspectable.
 - [Splitch](https://github.com/zaks-io/splitch) provides feature flags and A/B experimentation for humans and agents.
 - [Agent Paste](https://github.com/zaks-io/agent-paste) publishes agent-built output to stable human-readable URLs and machine-readable manifests.
-- [Insecur](https://github.com/zaks-io/insecur) lets agents and CI use credentials at runtime without exposing them to prompts, logs, or files.
 
 The common thread is observability and reliability.
 

@@ -25,7 +25,9 @@ export function SelectedWork() {
           </p>
           <p className="mt-3 font-sans text-base leading-[1.75] text-foreground/75">
             I designed the interface, led a team of five engineers plus support and project
-            management, and worked directly with the studios relying on it.
+            management, and worked directly with the studios relying on it. I also built its
+            low-latency dev-kit streaming and Ask SHIPwatch, a Claude Sonnet agent with tools over
+            the platform&apos;s videos, subtitles, and Jira tickets.
           </p>
           <Link href="/about#shipwatch" className="portfolio-link mt-6">
             The SHIPwatch story <span aria-hidden="true">→</span>
@@ -51,8 +53,8 @@ export function SelectedWork() {
             Splitch handles feature flags and experiments.
           </p>
           <p className="mt-3 font-sans text-sm leading-[1.75] text-foreground/60">
-            I own the design, specifications, and verification. Agents do most of the implementation
-            and much of the code review.
+            I own the design, specifications, and verification. Agents implement and maintain the
+            code and do much of the code review.
           </p>
           <div className="mt-6 flex flex-wrap gap-x-7 gap-y-4">
             <a

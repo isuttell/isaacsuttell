@@ -79,9 +79,21 @@ export default function About() {
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               I visited studios regularly, and the teams told me what they needed: comments tied to
               exact moments in a video, drawn annotations, and folders with permissions for
-              libraries of thousands of files. When QA needed a faster way to reproduce a bug with
-              an engineer, we added live streaming from PlayStation development kits. One studio
-              used only the API and built its own tool on the video platform.
+              libraries of thousands of files. One studio used only the API and built its own tool
+              on the video platform.
+            </p>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
+              When QA needed a faster way to reproduce a bug with an engineer, I built live
+              streaming from PlayStation development kits so the engineer could watch and direct the
+              repro as it happened. My first version ran on FFmpeg. When the Wowza setup that
+              replaced it could not get latency low enough, I rebuilt it on MediaMTX.
+            </p>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/90">
+              I built on-premises Whisper transcription so people could search inside long play
+              sessions and read subtitles under the player. Later I added Ask SHIPwatch, a Claude
+              Sonnet agent with tools over the videos, comments, subtitles, and Jira tickets.
+              Someone could ask which bugs were still open on a long playthrough instead of
+              scrubbing through it.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/90">
               I designed and built the React interface and its shared component library, then set
@@ -115,7 +127,7 @@ export default function About() {
               </a>
               , I am investigating how to coordinate coding agents without losing control of the
               product or the code. I own product design, architecture, specifications, and final
-              verification. Agents perform most of the implementation and much of the review.
+              verification. Agents implement and maintain the code and do much of the review.
             </p>
             <p className="mt-4 font-sans leading-relaxed text-foreground/80">
               The process starts with detailed specs and acceptance criteria. I turn them into small
@@ -137,6 +149,13 @@ export default function About() {
                 Neuron
               </a>{' '}
               is the application where this work first took shape and remains my daily test bed.
+            </p>
+            <p className="mt-4 font-sans leading-relaxed text-foreground/80">
+              Through Zaks.io, I also{' '}
+              <a href="https://zaks.io/#consulting" className={linkStyles}>
+                help small teams put coding agents to work
+              </a>
+              .
             </p>
           </section>
 

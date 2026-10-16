@@ -1,6 +1,6 @@
 import { fetchQuery } from 'convex/nextjs';
 import { api } from '@isaacsuttell/backend/convex/_generated/api';
-import { BASE_URL } from '../lib/config';
+import { BASE_URL, SITE_DESCRIPTION } from '../lib/config';
 
 export async function GET() {
   try {
@@ -9,15 +9,18 @@ export async function GET() {
     const articleList = articles
       .map((a) => `- [${a.title}](${BASE_URL}/blog/${encodeURIComponent(a.slug)}): ${a.excerpt}`)
       .join('\n');
+    const blogSection = articles.length > 0 ? `\n## Blog Posts\n\n${articleList}\n` : '';
 
     const markdown = `# Isaac Suttell
 
-> Personal site and blog by Isaac Suttell — writing about design, engineering, and building things.
+> ${SITE_DESCRIPTION}
 
-## Blog Posts
+## Pages
 
-${articleList}
-`;
+- [About](${BASE_URL}/about): SHIPwatch at PlayStation Studios, agent-directed work at Zaks.io, and the art and photography background behind both
+- [Selected work](${BASE_URL}/#work): SHIPwatch, Trace Flow, Agent Paste, Neuron, and Splitch
+- [Astrophotography](${BASE_URL}/photography/astro): deep-sky photographs captured and processed from a backyard telescope rig
+${blogSection}`;
 
     return new Response(markdown, {
       headers: {
