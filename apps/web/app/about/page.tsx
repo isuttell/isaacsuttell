@@ -105,10 +105,10 @@ export default function About() {
               SHIPwatch grew from my solo build into a platform used by more than 15 first-party
               studios, where downtime could block game releases. The team grew to five engineers
               across the United States and Europe, plus a full-time support specialist and technical
-              project manager. When engineers who joined spent their time learning the Go backend
-              instead of shipping, I rewrote it in Node.js over about two months so the whole team
-              could work across the stack. I led architecture and reviewed work across the
-              application while staying responsible for the hard production failures.
+              project manager. When engineers who joined after my original Go backend spent their
+              time learning Go instead of shipping, I rewrote it in Node.js over about two months so
+              the whole team could work across the stack. I led architecture and reviewed work
+              across the application while staying responsible for the hard production failures.
             </p>
           </section>
 
